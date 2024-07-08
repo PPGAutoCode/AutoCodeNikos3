@@ -24,27 +24,8 @@ namespace ProjectName.Services
 
         public async Task<string> CreateFAQ(CreateFAQDto request)
         {
-            // Step 1: Validate the request payload
-            if (string.IsNullOrEmpty(request.Question) || string.IsNullOrEmpty(request.Answer) ||
-                string.IsNullOrEmpty(request.Langcode) || request.FaqOrder == 0)
-            {
-                throw new BusinessException("DP-422", "Client Error");
-            }
+            ValidateCreateFAQRequest(request);
 
-            // Step 2: Fetch FAQ category details
-            var faqCategories = new List<FAQCategory>();
-            foreach (var categoryId in request.FAQCategories)
-            {
-                var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
-                var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
-                if (category == null)
-                {
-                    throw new TechnicalException("DP-404", "Technical Error");
-                }
-                faqCategories.Add(category);
-            }
-
-            // Step 3: Create a new FAQ object
             var faq = new FAQ
             {
                 Id = Guid.NewGuid(),
@@ -57,239 +38,256 @@ namespace ProjectName.Services
                 Changed = DateTime.UtcNow
             };
 
-            // Step 4: Create new list of FAQFAQCategories type objects
-            var fAQFAQCategories = faqCategories.Select(category => new FAQFAQCategory
+            var fAQFAQCategories = new List<FAQFAQCategory>();
+            foreach (var categoryId in request.FAQCategories)
             {
-                Id = Guid.NewGuid(),
-                FAQId = faq.Id,
-                FAQCategoryId = category.Id
-            }).ToList();
+                var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
+                var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
+                if (category == null)
+                {
+                    throw new BusinessException("DP-404", "FAQ category not found");
+                }
 
-            // Step 5: In a single SQL transaction
+                fAQFAQCategories.Add(new FAQFAQCategory
+                {
+                    Id = Guid.NewGuid(),
+                    FAQId = faq.Id,
+                    FAQCategoryId = categoryId
+                });
+            }
+
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
-                    // Insert faq in database table FAQs
-                    var insertFaqQuery = @"INSERT INTO FAQs (Id, Question, Answer, Langcode, Status, FaqOrder, Created, Changed) 
-                                           VALUES (@Id, @Question, @Answer, @Langcode, @Status, @FaqOrder, @Created, @Changed)";
-                    await _dbConnection.ExecuteAsync(insertFaqQuery, faq, transaction);
+                    await _dbConnection.ExecuteAsync(
+                        "INSERT INTO FAQs (Id, Question, Answer, Langcode, Status, FaqOrder, Created, Changed) VALUES (@Id, @Question, @Answer, @Langcode, @Status, @FaqOrder, @Created, @Changed)",
+                        faq, transaction);
 
-                    // Insert fAQFAQCategories in database table FAQFAQCategories
-                    var insertFaqFaqCategoriesQuery = @"INSERT INTO FAQFAQCategories (Id, FAQId, FAQCategoryId) 
-                                                        VALUES (@Id, @FAQId, @FAQCategoryId)";
-                    await _dbConnection.ExecuteAsync(insertFaqFaqCategoriesQuery, fAQFAQCategories, transaction);
+                    await _dbConnection.ExecuteAsync(
+                        "INSERT INTO FAQFAQCategories (Id, FAQId, FAQCategoryId) VALUES (@Id, @FAQId, @FAQCategoryId)",
+                        fAQFAQCategories, transaction);
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
+                    throw new TechnicalException("DP-500", "A technical exception has occurred, please contact your system administrator");
                 }
             }
 
-            // Step 6: Return FAQ id from the database
             return faq.Id.ToString();
         }
 
         public async Task<FAQ> GetFAQ(FAQRequestDto request)
         {
-            // Step 1: Validate the request payload
             if (request.Id == Guid.Empty)
             {
-                throw new BusinessException("DP-422", "Client Error");
+                throw new BusinessException("DP-422", "Invalid FAQ ID");
             }
 
-            // Step 2: Fetch faq from FAQs database table by id
-            var faqQuery = @"SELECT * FROM FAQs WHERE Id = @Id";
-            var faq = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(faqQuery, new { request.Id });
+            var faq = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(
+                "SELECT * FROM FAQs WHERE Id = @Id", new { request.Id });
 
             if (faq == null)
             {
-                throw new TechnicalException("DP-404", "Technical Error");
+                throw new TechnicalException("DP-404", "FAQ not found");
             }
 
-            // Step 3: Fetch Faq Categories
-            var faqCategoryIdsQuery = @"SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId = @FAQId";
-            var faqCategoryIds = await _dbConnection.QueryAsync<Guid>(faqCategoryIdsQuery, new { FAQId = faq.Id });
+            var categoryIds = await _dbConnection.QueryAsync<Guid>(
+                "SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId = @Id", new { request.Id });
 
-            var faqCategories = new List<FAQCategory>();
-            foreach (var categoryId in faqCategoryIds)
+            var categories = new List<FAQCategory>();
+            foreach (var categoryId in categoryIds)
             {
                 var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
                 var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
                 if (category == null)
                 {
-                    throw new TechnicalException("DP-404", "Technical Error");
+                    throw new TechnicalException("DP-404", "FAQ category not found");
                 }
-                faqCategories.Add(category);
+                categories.Add(category);
             }
 
-            faq.FAQCategories = faqCategories.Select(c => c.Id).ToList();
-
+            faq.FAQCategories = categories.Select(c => c.Id).ToList();
             return faq;
         }
 
         public async Task<string> UpdateFAQ(UpdateFAQDto request)
         {
-            // Step 1: Validate the request payload
-            if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.Question) || string.IsNullOrEmpty(request.Answer) ||
-                string.IsNullOrEmpty(request.Langcode) || request.FaqOrder == 0)
+            ValidateUpdateFAQRequest(request);
+
+            var existingFAQ = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(
+                "SELECT * FROM FAQs WHERE Id = @Id", new { request.Id });
+
+            if (existingFAQ == null)
             {
-                throw new BusinessException("DP-422", "Client Error");
+                throw new BusinessException("DP-404", "FAQ not found");
             }
 
-            // Step 2: Fetch the existing FAQ object from the database
-            var faqQuery = @"SELECT * FROM FAQs WHERE Id = @Id";
-            var existingFaq = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(faqQuery, new { request.Id });
+            existingFAQ.Question = request.Question;
+            existingFAQ.Answer = request.Answer;
+            existingFAQ.Langcode = request.Langcode;
+            existingFAQ.Status = request.Status;
+            existingFAQ.FaqOrder = request.FaqOrder;
+            existingFAQ.Changed = DateTime.UtcNow;
 
-            if (existingFaq == null)
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
-            }
+            var existingCategoryIds = await _dbConnection.QueryAsync<Guid>(
+                "SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId = @Id", new { request.Id });
 
-            // Step 3: Fetch and validate FAQ Categories
-            var existingFaqCategoryIdsQuery = @"SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId = @FAQId";
-            var existingFaqCategoryIds = await _dbConnection.QueryAsync<Guid>(existingFaqCategoryIdsQuery, new { FAQId = existingFaq.Id });
-
-            var faqCategories = new List<FAQCategory>();
-            for categoryId in request.FAQCategories:
-                var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
-                var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
-                if (category == null)
-                {
-                    throw new TechnicalException("DP-404", "Technical Error");
-                }
-                faqCategories.Add(category);
-
-            // Step 4: Update FAQ Categories
-            var categoriesToRemove = existingFaqCategoryIds.Except(request.FAQCategories).ToList();
-            var categoriesToAdd = request.FAQCategories.Except(existingFaqCategoryIds).ToList();
+            var categoriesToRemove = existingCategoryIds.Except(request.FAQCategories).ToList();
+            var categoriesToAdd = request.FAQCategories.Except(existingCategoryIds).ToList();
 
             using (var transaction = _dbConnection.BeginTransaction())
             {
-                try:
-                    // Remove Old Categories
+                try
+                {
+                    await _dbConnection.ExecuteAsync(
+                        "UPDATE FAQs SET Question = @Question, Answer = @Answer, Langcode = @Langcode, Status = @Status, FaqOrder = @FaqOrder, Changed = @Changed WHERE Id = @Id",
+                        existingFAQ, transaction);
+
                     if (categoriesToRemove.Any())
                     {
-                        var deleteFaqFaqCategoriesQuery = @"DELETE FROM FAQFAQCategories WHERE FAQId = @FAQId AND FAQCategoryId = @FAQCategoryId";
-                        await _dbConnection.ExecuteAsync(deleteFaqFaqCategoriesQuery, categoriesToRemove.Select(id => new { FAQId = existingFaq.Id, FAQCategoryId = id }), transaction);
+                        await _dbConnection.ExecuteAsync(
+                            "DELETE FROM FAQFAQCategories WHERE FAQId = @Id AND FAQCategoryId IN @CategoriesToRemove",
+                            new { request.Id, CategoriesToRemove = categoriesToRemove }, transaction);
                     }
 
-                    // Add New Categories
-                    var newFaqFaqCategories = categoriesToAdd.Select(id => new FAQFAQCategory
+                    foreach (var categoryId in categoriesToAdd)
                     {
-                        Id = Guid.NewGuid(),
-                        FAQId = existingFaq.Id,
-                        FAQCategoryId = id
-                    }).ToList();
+                        var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
+                        var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
+                        if (category == null)
+                        {
+                            throw new BusinessException("DP-404", "FAQ category not found");
+                        }
 
-                    var insertFaqFaqCategoriesQuery = @"INSERT INTO FAQFAQCategories (Id, FAQId, FAQCategoryId) 
-                                                        VALUES (@Id, @FAQId, @FAQCategoryId)";
-                    await _dbConnection.ExecuteAsync(insertFaqFaqCategoriesQuery, newFaqFaqCategories, transaction);
-
-                    // Update the FAQ object
-                    existingFaq.Question = request.Question;
-                    existingFaq.Answer = request.Answer;
-                    existingFaq.Langcode = request.Langcode;
-                    existingFaq.Status = request.Status;
-                    existingFaq.FaqOrder = request.FaqOrder;
-                    existingFaq.Changed = DateTime.UtcNow;
-
-                    var updateFaqQuery = @"UPDATE FAQs 
-                                           SET Question = @Question, Answer = @Answer, Langcode = @Langcode, 
-                                               Status = @Status, FaqOrder = @FaqOrder, Changed = @Changed 
-                                           WHERE Id = @Id";
-                    await _dbConnection.ExecuteAsync(updateFaqQuery, existingFaq, transaction);
+                        await _dbConnection.ExecuteAsync(
+                            "INSERT INTO FAQFAQCategories (Id, FAQId, FAQCategoryId) VALUES (@Id, @FAQId, @FAQCategoryId)",
+                            new { Id = Guid.NewGuid(), FAQId = request.Id, FAQCategoryId = categoryId }, transaction);
+                    }
 
                     transaction.Commit();
-                except Exception:
+                }
+                catch (Exception)
+                {
                     transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
+                    throw new TechnicalException("DP-500", "A technical exception has occurred, please contact your system administrator");
+                }
             }
 
-            return existingFaq.Id.ToString();
+            return existingFAQ.Id.ToString();
         }
 
         public async Task<bool> DeleteFAQ(DeleteFAQDto request)
         {
-            // Step 1: Validate the request payload
-            if (request.Id == Guid.Empty)
+            ValidateDeleteFAQRequest(request);
+
+            var existingFAQ = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(
+                "SELECT * FROM FAQs WHERE Id = @Id", new { request.Id });
+
+            if (existingFAQ == null)
             {
-                throw new BusinessException("DP-422", "Client Error");
+                throw new BusinessException("DP-404", "FAQ not found");
             }
 
-            // Step 2: Fetch the existing FAQ object from the database
-            var faqQuery = @"SELECT * FROM FAQs WHERE Id = @Id";
-            var existingFaq = await _dbConnection.QuerySingleOrDefaultAsync<FAQ>(faqQuery, new { request.Id });
-
-            if (existingFaq == null)
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
-            }
-
-            // Step 3: Delete the FAQ object from the database
             using (var transaction = _dbConnection.BeginTransaction())
             {
-                try:
-                    var deleteFaqFaqCategoriesQuery = @"DELETE FROM FAQFAQCategories WHERE FAQId = @FAQId";
-                    await _dbConnection.ExecuteAsync(deleteFaqFaqCategoriesQuery, new { FAQId = existingFaq.Id }, transaction);
+                try
+                {
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM FAQFAQCategories WHERE FAQId = @Id", new { request.Id }, transaction);
 
-                    var deleteFaqQuery = @"DELETE FROM FAQs WHERE Id = @Id";
-                    await _dbConnection.ExecuteAsync(deleteFaqQuery, new { existingFaq.Id }, transaction);
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM FAQs WHERE Id = @Id", new { request.Id }, transaction);
 
                     transaction.Commit();
-                except Exception:
+                }
+                catch (Exception)
+                {
                     transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
+                    throw new TechnicalException("DP-500", "A technical exception has occurred, please contact your system administrator");
+                }
             }
 
-            return True;
+            return true;
         }
 
         public async Task<List<FAQ>> GetListFAQ(ListFAQRequestDto request)
         {
-            // Step 1: Validate Input
-            if (request.PageLimit <= 0 || request.PageOffset < 0)
+            ValidateListFAQRequest(request);
+
+            var query = "SELECT * FROM FAQs";
+            if (!string.IsNullOrEmpty(request.SortField) && !string.IsNullOrEmpty(request.SortOrder))
             {
-                throw new BusinessException("DP-422", "Client Error");
+                query += $" ORDER BY {request.SortField} {request.SortOrder}";
+            }
+            query += " OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
+
+            var faqs = await _dbConnection.QueryAsync<FAQ>(query, new { request.PageOffset, request.PageLimit });
+
+            if (faqs.Count() == 0)
+            {
+                throw new TechnicalException("DP-400", "No FAQs found");
             }
 
-            // Step 2: Fetch FAQs
-            var faqsQuery = @"SELECT * FROM FAQs 
-                              ORDER BY 
-                              CASE WHEN @SortField IS NOT NULL AND @SortOrder = 'ASC' THEN @SortField END ASC,
-                              CASE WHEN @SortField IS NOT NULL AND @SortOrder = 'DESC' THEN @SortField END DESC
-                              OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
-
-            var faqs = await _dbConnection.QueryAsync<FAQ>(faqsQuery, new { request.SortField, request.SortOrder, request.PageOffset, request.PageLimit });
-
-            if (faqs == null or not faqs.Any())
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
-            }
-
-            // Step 3: Fetch Related FAQ Categories
             var faqIds = faqs.Select(f => f.Id).ToList();
-            var faqCategoryIdsQuery = @"SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId IN @FAQIds";
-            var faqCategoryIds = await _dbConnection.QueryAsync<Guid>(faqCategoryIdsQuery, new { FAQIds = faqIds });
+            var categoryIds = await _dbConnection.QueryAsync<Guid>(
+                "SELECT FAQCategoryId FROM FAQFAQCategories WHERE FAQId IN @Ids", new { Ids = faqIds });
 
-            var faqCategories = new List<FAQCategory>();
-            for categoryId in faqCategoryIds:
+            var categories = new List<FAQCategory>();
+            foreach (var categoryId in categoryIds)
+            {
                 var categoryRequest = new FAQCategoryRequestDto { Id = categoryId };
                 var category = await _faqCategoryService.GetFAQCategory(categoryRequest);
                 if (category == null)
                 {
-                    throw new TechnicalException("DP-404", "Technical Error");
+                    throw new TechnicalException("DP-404", "FAQ category not found");
                 }
-                faqCategories.Add(category);
+                categories.Add(category);
+            }
 
-            // Step 4: Response Preparation
-            for faq in faqs:
-                faq.FAQCategories = faqCategories.Where(c => c.Id == faq.Id).Select(c => c.Id).ToList();
+            foreach (var faq in faqs)
+            {
+                faq.FAQCategories = categories.Where(c => categoryIds.Contains(c.Id)).Select(c => c.Id).ToList();
+            }
 
             return faqs.ToList();
+        }
+
+        private void ValidateCreateFAQRequest(CreateFAQDto request)
+        {
+            if (string.IsNullOrEmpty(request.Question) || string.IsNullOrEmpty(request.Answer) ||
+                string.IsNullOrEmpty(request.Langcode) || request.FaqOrder == 0)
+            {
+                throw new BusinessException("DP-422", "Missing required parameters");
+            }
+        }
+
+        private void ValidateUpdateFAQRequest(UpdateFAQDto request)
+        {
+            if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.Question) || string.IsNullOrEmpty(request.Answer) ||
+                string.IsNullOrEmpty(request.Langcode) || request.FaqOrder == 0)
+            {
+                throw new BusinessException("DP-422", "Missing required parameters");
+            }
+        }
+
+        private void ValidateDeleteFAQRequest(DeleteFAQDto request)
+        {
+            if (request.Id == Guid.Empty)
+            {
+                throw new BusinessException("DP-422", "Missing required parameters");
+            }
+        }
+
+        private void ValidateListFAQRequest(ListFAQRequestDto request)
+        {
+            if (request.PageLimit == 0 || request.PageOffset == 0)
+            {
+                throw new BusinessException("DP-422", "Missing required parameters");
+            }
         }
     }
 }
