@@ -1,0 +1,9 @@
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.AssemblyInfoInputs.cache
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.AssemblyInfo.cs
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.MvcApplicationPartsAssemblyInfo.cs
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.MvcApplicationPartsAssemblyInfo.cache
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.RazorAssemblyInfo.cache
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.RazorAssemblyInfo.cs

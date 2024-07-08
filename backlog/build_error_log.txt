@@ -1,0 +1,78 @@
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,103): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,105): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,114): error CS1001: Identifier expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,114): error CS1514: { expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,12): error CS1003: Syntax error, ',' expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,125): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,132): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,144): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,151): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,151): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,164): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,173): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,193): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,201): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,211): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,225): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,234): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,238): error CS1010: Newline in constant
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,238): error CS1012: Too many characters in character literal
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,37): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,51): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(1,81): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(10,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(11,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(12,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(13,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(17,18): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(17,33): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(17,34): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(18,18): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(18,42): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(18,43): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(19,18): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(19,32): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(19,33): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(20,59): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(20,61): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(20,62): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(21,41): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(21,46): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(21,46): error CS1026: ) expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(21,46): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(23,10): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(23,15): error CS8124: Tuple must contain at least two elements.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(23,16): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(24,12): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(24,16): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(25,2): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(25,3): error CS8803: Top-level statements must precede namespace and type declarations.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(3,1): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(3,2): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(3,3): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(3,4): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(4,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(40,1): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(40,2): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(40,3): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,1): error CS0116: A namespace cannot directly contain members such as fields, methods or statements
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,13): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,170): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,170): error CS1022: Type or namespace definition, or end-of-file expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,27): error CS1003: Syntax error, ',' expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,40): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(42,62): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(44,1): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(44,2): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(44,3): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(45,8): error CS1003: Syntax error, ',' expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(46,1): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(46,2): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(46,3): error CS1056: Unexpected character '`'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(48,105): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(5,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(6,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(7,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(8,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(9,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations
+Error: 77 Error(s)
