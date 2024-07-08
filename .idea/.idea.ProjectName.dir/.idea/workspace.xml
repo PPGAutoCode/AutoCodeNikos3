@@ -7,11 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="">
+    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="programs.cs push">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectName.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectName.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" afterDir="false" />
@@ -43,7 +41,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/appsettings.Development.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/appsettings.Development.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
   <component name="KubernetesApiProvider"><![CDATA[{
@@ -118,8 +120,25 @@
       <workItem from="1720451961421" duration="173000" />
       <workItem from="1720452149320" duration="472000" />
       <workItem from="1720452665995" duration="130000" />
-      <workItem from="1720453098728" duration="2234000" />
+      <workItem from="1720453098728" duration="3600000" />
     </task>
+    <task id="LOCAL-00001" summary="push program.cs and appsettings json">
+      <option name="closed" value="true" />
+      <created>1720456254469</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720456254469</updated>
+    </task>
+    <task id="LOCAL-00002" summary="programs.cs push">
+      <option name="closed" value="true" />
+      <created>1720456310289</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1720456310289</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,22 +148,51 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="push program.cs and appsettings json" />
+    <MESSAGE value="programs.cs push" />
+    <option name="LAST_COMMIT_MESSAGE" value="programs.cs push" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>118</line>
+          <line>121</line>
           <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
             <startOffsets>
-              <option value="4269" />
+              <option value="4344" />
             </startOffsets>
             <endOffsets>
-              <option value="4303" />
+              <option value="4487" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="2" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
+          <line>150</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
+            <startOffsets>
+              <option value="5734" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5763" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
+          <line>157</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
+            <startOffsets>
+              <option value="6109" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6152" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
