@@ -7,7 +7,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="" />
+    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectName.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectName.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,13 +43,16 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/FAQService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/FAQService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/FAQService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/FAQService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/FAQService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/appsettings.Development.json" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
@@ -88,6 +114,11 @@
       <workItem from="1720097027212" duration="576000" />
       <workItem from="1720100472301" duration="4461000" />
       <workItem from="1720165070356" duration="28211000" />
+      <workItem from="1720451106918" duration="844000" />
+      <workItem from="1720451961421" duration="173000" />
+      <workItem from="1720452149320" duration="472000" />
+      <workItem from="1720452665995" duration="130000" />
+      <workItem from="1720453098728" duration="2234000" />
     </task>
     <servers />
   </component>
@@ -104,68 +135,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>133</line>
+          <line>118</line>
           <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
             <startOffsets>
-              <option value="5027" />
+              <option value="4269" />
             </startOffsets>
             <endOffsets>
-              <option value="5091" />
+              <option value="4303" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>137</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
-            <startOffsets>
-              <option value="5294" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5352" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>147</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
-            <startOffsets>
-              <option value="5845" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5874" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>156</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
-            <startOffsets>
-              <option value="6358" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6384" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/FAQService.cs</url>
-          <line>162</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/FAQService.cs" containingFunctionPresentation="Method 'UpdateFAQ'">
-            <startOffsets>
-              <option value="6730" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6798" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="32" />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
