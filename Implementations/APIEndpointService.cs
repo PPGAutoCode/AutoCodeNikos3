@@ -242,5 +242,116 @@ namespace ProjectName.Services
 
             return existingAPIEndpoint.Id.ToString();
         }
+        public async Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto request)
+        {
+            // Step 1: Validate Request Payload
+            if (request.Id == Guid.Empty)
+            {
+                throw new BusinessException("DP-422", "Invalid request payload");
+            }
+
+            // Step 2: Fetch Existing API Endpoint
+            var existingEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>(
+                "SELECT * FROM APIEndpoints WHERE Id = @Id", new { request.Id });
+
+            if (existingEndpoint == null)
+            {
+                throw new TechnicalException("DP-404", "API Endpoint not found");
+            }
+
+            // Step 3: Fetch and Validate Related Entities
+            var apiTagIds = await _dbConnection.QueryAsync<Guid>(
+                "SELECT ApiTagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id });
+
+            // Step 4: Fetch and Validate AppEnvironment
+            var appEnvironment = await _dbConnection.QueryFirstOrDefaultAsync<AppEnvironment>(
+                "SELECT * FROM AppEnvironments WHERE Id = @Id", new { existingEndpoint.AppEnvironment });
+
+            if (appEnvironment == null)
+            {
+                throw new TechnicalException("DP-404", "AppEnvironment not found");
+            }
+
+            // Step 5: Fetch and Validate Attachments
+            var attachments = new List<Guid> { existingEndpoint.Documentation, existingEndpoint.Swagger, existingEndpoint.Tour };
+            foreach (var attachmentId in attachments.Where(a => a != Guid.Empty))
+            {
+                var attachment = await _dbConnection.QueryFirstOrDefaultAsync<Attachment>(
+                    "SELECT * FROM Attachments WHERE Id = @Id", new { attachmentId });
+
+                if (attachment == null)
+                {
+                    throw new TechnicalException("DP-404", "Attachment not found");
+                }
+            }
+
+            // Step 6: Delete APIEndpoint Object
+            using (var transaction = _dbConnection.BeginTransaction())
+            {
+                try
+                {
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id }, transaction);
+
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM APIEndpoints WHERE Id = @Id", new { request.Id }, transaction);
+
+                    foreach (var attachmentId in attachments.Where(a => a != Guid.Empty))
+                    {
+                        await _dbConnection.ExecuteAsync(
+                            "DELETE FROM Attachments WHERE Id = @Id", new { attachmentId }, transaction);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw new TechnicalException("DP-500", "Technical error occurred while deleting API Endpoint");
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto request)
+        {
+            // Step 1: Validate Input
+            if (request.PageLimit <= 0 || request.PageOffset < 0)
+            {
+                throw new BusinessException("DP-422", "Invalid pagination parameters");
+            }
+
+            // Step 2: Fetch API Endpoints
+            var query = "SELECT * FROM APIEndpoints ORDER BY Id OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+            var parameters = new { Offset = request.PageOffset, Limit = request.PageLimit };
+            var apiEndpoints = await _dbConnection.QueryAsync<APIEndpoint>(query, parameters);
+
+            if (apiEndpoints == null || !apiEndpoints.Any())
+            {
+                throw new TechnicalException("DP-404", "No API Endpoints found");
+            }
+
+            // Step 3: Fetch Related Tags
+            var apiEndpointIds = apiEndpoints.Select(ae => ae.Id).ToList();
+            var apiTagIds = await _dbConnection.QueryAsync<Guid>(
+                "SELECT ApiTagId FROM APIEndpointTags WHERE APIEndpointId IN @Ids", new { Ids = apiEndpointIds });
+
+            var apiTags = await _dbConnection.QueryAsync<ApiTag>(
+                "SELECT * FROM ApiTags WHERE Id IN @Ids", new { Ids = apiTagIds });
+
+            if (apiTags == null || !apiTags.Any())
+            {
+                throw new TechnicalException("DP-404", "No API Tags found");
+            }
+
+            // Step 4: Response Preparation
+            foreach (var apiEndpoint in apiEndpoints)
+            {
+                apiEndpoint.ApiTags = apiTags.Where(at => apiTagIds.Contains(at.Id)).ToList();
+            }
+
+            return apiEndpoints.ToList();
+        }
     }
 }
