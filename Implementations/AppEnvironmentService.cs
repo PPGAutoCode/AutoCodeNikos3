@@ -38,7 +38,7 @@ namespace ProjectName.Services
             };
 
             const string sql = @"
-                INSERT INTO AppEnvironment (Id, Name, Version, Created, Changed, CreatorId, ChangedUser)
+                INSERT INTO AppEnvironments (Id, Name, Version, Created, Changed, CreatorId, ChangedUser)
                 VALUES (@Id, @Name, @Version, @Created, @Changed, @CreatorId, @ChangedUser);
             ";
 
@@ -61,7 +61,7 @@ namespace ProjectName.Services
             }
 
             const string sql = @"
-                SELECT * FROM AppEnvironment WHERE Id = @Id;
+                SELECT * FROM AppEnvironments WHERE Id = @Id;
             ";
 
             try
@@ -87,7 +87,7 @@ namespace ProjectName.Services
             }
 
             const string selectSql = @"
-                SELECT * FROM AppEnvironment WHERE Id = @Id;
+                SELECT * FROM AppEnvironments WHERE Id = @Id;
             ";
 
             var existingAppEnvironment = await _dbConnection.QuerySingleOrDefaultAsync<AppEnvironment>(selectSql, new { request.Id });
@@ -102,7 +102,7 @@ namespace ProjectName.Services
             existingAppEnvironment.ChangedUser = request.ChangedUser;
 
             const string updateSql = @"
-                UPDATE AppEnvironment
+                UPDATE AppEnvironments
                 SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser
                 WHERE Id = @Id;
             ";
@@ -126,7 +126,7 @@ namespace ProjectName.Services
             }
 
             const string selectSql = @"
-                SELECT * FROM AppEnvironment WHERE Id = @Id;
+                SELECT * FROM AppEnvironments WHERE Id = @Id;
             ";
 
             var existingAppEnvironment = await _dbConnection.QuerySingleOrDefaultAsync<AppEnvironment>(selectSql, new { request.Id });
@@ -136,7 +136,7 @@ namespace ProjectName.Services
             }
 
             const string deleteSql = @"
-                DELETE FROM AppEnvironment WHERE Id = @Id;
+                DELETE FROM AppEnvironments WHERE Id = @Id;
             ";
 
             try
@@ -157,12 +157,13 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string sql = @"
-                SELECT * FROM AppEnvironment
-                ORDER BY Id
-                OFFSET @PageOffset ROWS
-                FETCH NEXT @PageLimit ROWS ONLY;
+            var sql = @"
+                SELECT * FROM AppEnvironments
+                ORDER BY {0} {1}
+                OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY;
             ";
+
+            sql = string.Format(sql, request.SortField ?? "Id", request.SortOrder ?? "ASC");
 
             try
             {

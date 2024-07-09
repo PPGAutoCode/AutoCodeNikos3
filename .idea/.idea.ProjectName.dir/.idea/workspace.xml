@@ -8,7 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Implementations/AppEnvironmentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Implementations/AppEnvironmentService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectName.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectName.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
@@ -18,6 +18,7 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" afterDir="false" />
@@ -26,6 +27,7 @@
       <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
     </list>
@@ -47,10 +49,10 @@
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/appsettings.Development.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="Toolset" />
@@ -66,7 +68,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.ProjectName.executor": "Run",
+    ".NET Launch Settings Profile.ProjectName.executor": "Debug",
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -121,6 +123,7 @@
       <workItem from="1720452149320" duration="472000" />
       <workItem from="1720452665995" duration="130000" />
       <workItem from="1720453098728" duration="5421000" />
+      <workItem from="1720511876847" duration="4775000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />
