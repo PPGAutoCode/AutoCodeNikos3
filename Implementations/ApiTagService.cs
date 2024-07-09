@@ -149,14 +149,14 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var sql = "SELECT * FROM ApiTags";
+            var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
+            var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            if (!string.IsNullOrEmpty(request.SortField) && !string.IsNullOrEmpty(request.SortOrder))
-            {
-                sql += $" ORDER BY {request.SortField} {request.SortOrder}";
-            }
-
-            sql += " OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
+            var sql = $@"
+                SELECT * FROM ApiTags
+                ORDER BY {sortField} {sortOrder}
+                OFFSET @PageOffset ROWS
+                FETCH NEXT @PageLimit ROWS ONLY";
 
             try
             {
