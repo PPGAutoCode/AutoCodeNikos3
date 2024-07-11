@@ -31,8 +31,8 @@ namespace ProjectName.Services
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
-                Version = request.Version,
-                Created = request.Created,
+                Version = 1,
+                Created = DateTime.Now,
                 CreatorId = request.CreatorId
             };
 
@@ -59,7 +59,6 @@ namespace ProjectName.Services
             }
 
             ApiTag apiTag;
-
             if (request.Id != Guid.Empty)
             {
                 const string sql = "SELECT * FROM ApiTags WHERE Id = @Id";
@@ -69,6 +68,11 @@ namespace ProjectName.Services
             {
                 const string sql = "SELECT * FROM ApiTags WHERE Name = @Name";
                 apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Name });
+            }
+
+            if (apiTag == null)
+            {
+                throw new TechnicalException("DP-404", "Technical Error");
             }
 
             return apiTag;
@@ -82,27 +86,26 @@ namespace ProjectName.Services
             }
 
             const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
-            var existingApiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
+            var apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
 
-            if (existingApiTag == null)
+            if (apiTag == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            existingApiTag.Name = request.Name;
-            existingApiTag.Version = request.Version;
-            existingApiTag.Changed = request.Changed;
-            existingApiTag.ChangedUser = request.ChangedUser;
+            apiTag.Name = request.Name;
+            apiTag.Changed = DateTime.Now;
+            apiTag.ChangedUser = request.ChangedUser;
 
             const string updateSql = @"
                 UPDATE ApiTags
-                SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser
+                SET Name = @Name, Changed = @Changed, ChangedUser = @ChangedUser
                 WHERE Id = @Id";
 
             try
             {
-                await _dbConnection.ExecuteAsync(updateSql, existingApiTag);
-                return existingApiTag.Id.ToString();
+                await _dbConnection.ExecuteAsync(updateSql, apiTag);
+                return apiTag.Id.ToString();
             }
             catch (Exception)
             {
@@ -118,9 +121,9 @@ namespace ProjectName.Services
             }
 
             const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
-            var existingApiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
+            var apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
 
-            if (existingApiTag == null)
+            if (apiTag == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
