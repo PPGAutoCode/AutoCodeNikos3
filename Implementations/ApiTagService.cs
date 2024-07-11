@@ -71,11 +71,6 @@ namespace ProjectName.Services
                 apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Name });
             }
 
-            if (apiTag == null)
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
-            }
-
             return apiTag;
         }
 
@@ -145,9 +140,9 @@ namespace ProjectName.Services
 
         public async Task<List<ApiTag>> GetListApiTag(ListApiTagRequestDto request)
         {
-            if (request.PageLimit <= 0 || request.PageOffset < 0)
+            if (request.PageLimit <= 0 || request.PageOffset <= 0)
             {
-                throw new BusinessException("DP-422", "Client Error");
+                throw new TechnicalException("DP-400", "Technical Error");
             }
 
             var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
