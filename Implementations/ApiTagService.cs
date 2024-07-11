@@ -140,7 +140,7 @@ namespace ProjectName.Services
 
         public async Task<List<ApiTag>> GetListApiTag(ListApiTagRequestDto request)
         {
-            if (request.PageLimit <= 0 || request.PageOffset <= 0)
+            if (request.PageLimit <= 0 || request.PageOffset < 0)
             {
                 throw new TechnicalException("DP-400", "Technical Error");
             }
