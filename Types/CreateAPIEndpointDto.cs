@@ -11,7 +11,7 @@ namespace ProjectName.Types
         public string? Description { get; set; }
         public Guid? Documentation { get; set; }
         public string? EndpointUrls { get; set; }
-        public Guid? AppEnvironment { get; set; }
+        public Guid AppEnvironment { get; set; }
         public Guid? Swagger { get; set; }
         public Guid? Tour { get; set; }
         public string? ApiVersion { get; set; }

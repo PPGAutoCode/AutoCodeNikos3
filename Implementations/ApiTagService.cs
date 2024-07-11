@@ -33,12 +33,15 @@ namespace ProjectName.Services
                 Name = request.Name,
                 Version = request.Version,
                 Created = request.Created,
-                CreatorId = request.CreatorId
+                CreatorId = request.CreatorId,
+                Changed = null,
+                ChangedUser = null
             };
 
             const string sql = @"
-                INSERT INTO ApiTags (Id, Name, Version, Created, CreatorId)
-                VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
+                INSERT INTO ApiTags (Id, Name, Version, Created, CreatorId, Changed, ChangedUser)
+                VALUES (@Id, @Name, @Version, @Created, @CreatorId, @Changed, @ChangedUser);
+            ";
 
             try
             {
@@ -61,12 +64,12 @@ namespace ProjectName.Services
             ApiTag apiTag;
             if (request.Id != Guid.Empty)
             {
-                const string sql = "SELECT * FROM ApiTags WHERE Id = @Id";
+                const string sql = "SELECT * FROM ApiTags WHERE Id = @Id;";
                 apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Id });
             }
             else
             {
-                const string sql = "SELECT * FROM ApiTags WHERE Name = @Name";
+                const string sql = "SELECT * FROM ApiTags WHERE Name = @Name;";
                 apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Name });
             }
 
@@ -85,7 +88,7 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
+            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id;";
             var existingApiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
 
             if (existingApiTag == null)
@@ -101,7 +104,8 @@ namespace ProjectName.Services
             const string updateSql = @"
                 UPDATE ApiTags
                 SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser
-                WHERE Id = @Id";
+                WHERE Id = @Id;
+            ";
 
             try
             {
@@ -121,7 +125,7 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
+            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id;";
             var existingApiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
 
             if (existingApiTag == null)
@@ -129,7 +133,7 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            const string deleteSql = "DELETE FROM ApiTags WHERE Id = @Id";
+            const string deleteSql = "DELETE FROM ApiTags WHERE Id = @Id;";
 
             try
             {
@@ -156,7 +160,8 @@ namespace ProjectName.Services
                 SELECT * FROM ApiTags
                 ORDER BY {sortField} {sortOrder}
                 OFFSET @PageOffset ROWS
-                FETCH NEXT @PageLimit ROWS ONLY";
+                FETCH NEXT @PageLimit ROWS ONLY;
+            ";
 
             try
             {
