@@ -1,3 +1,5 @@
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetListAPIEndpoint(ListAPIEndpointRequestDto)'
-Error: 2 Error(s)
+Error: 4 Error(s)

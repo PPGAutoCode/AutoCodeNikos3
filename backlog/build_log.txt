@@ -4,15 +4,19 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   Determining projects to restore...
   All projects are up-to-date for restore.
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetListAPIEndpoint(ListAPIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 
 Build FAILED.
 
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetListAPIEndpoint(ListAPIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
     1 Warning(s)
-    2 Error(s)
+    4 Error(s)
 
-Time Elapsed 00:00:02.31
+Time Elapsed 00:00:06.80
