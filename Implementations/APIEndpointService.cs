@@ -102,7 +102,7 @@ namespace ProjectName.Services
             existingEndpoint.Promote = request.Promote;
             existingEndpoint.UrlAlias = request.UrlAlias;
             existingEndpoint.Published = request.Published;
-            existingEndpoint.Changed = DateTime.UtcNow;
+         
 
             // Step 9: Database Transactions
             using (var transaction = _dbConnection.BeginTransaction())
