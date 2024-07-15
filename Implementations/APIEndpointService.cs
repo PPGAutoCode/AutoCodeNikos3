@@ -33,7 +33,10 @@ namespace ProjectName.Services
             }
 
             // Step 2: Fetch Existing API Endpoint
-            var existingEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
+            var existingEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>(
+                "SELECT * FROM ApiEndpoints WHERE Id = @Id",
+                new { request.Id });
+
             if (existingEndpoint == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
@@ -55,61 +58,54 @@ namespace ProjectName.Services
             }
 
             // Step 4: If apiTag does not exist, create API tags
-            var newTags = request.ApiTags.Except(apiTags.Select(t => t.Name)).ToList();
-            foreach (var newTag in newTags)
+            foreach (var tagName in request.ApiTags.Where(tagName => apiTags.All(t => t.Name != tagName)))
             {
-                var createApiTagDto = new CreateApiTagDto { Name = newTag };
+                var createApiTagDto = new CreateApiTagDto { Name = tagName };
                 await _apiTagService.CreateApiTag(createApiTagDto);
             }
 
             // Step 5: Define API Tags for Removal
-            var tagsToRemove = existingEndpoint.ApiTags.Select(t => t.Id).Except(apiTags.Select(t => t.Id)).ToList();
+            var tagsToRemove = existingEndpoint.ApiTags.Where(existingTag => !request.ApiTags.Contains(existingTag.Name)).ToList();
 
             // Step 6: Define API Tags for Addition
-            var tagsToAdd = apiTags.Select(t => t.Id).Except(existingEndpoint.ApiTags.Select(t => t.Id)).ToList();
+            var tagsToAdd = request.ApiTags.Where(tagName => existingEndpoint.ApiTags.All(t => t.Name != tagName)).ToList();
 
             // Step 7: Handle Attachments
             if (request.Documentation != null)
             {
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Documentation };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                existingEndpoint.Documentation = await _attachmentService.CreateAttachment(request.Documentation);
             }
+
             if (request.Swagger != null)
             {
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Swagger };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                existingEndpoint.Swagger = await _attachmentService.CreateAttachment(request.Swagger);
             }
+
             if (request.Tour != null)
             {
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Tour };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                existingEndpoint.Tour = await _attachmentService.CreateAttachment(request.Tour);
             }
 
-            var documentationId = request.Documentation?.Id ?? existingEndpoint.Documentation;
-            var swaggerId = request.Swagger?.Id ?? existingEndpoint.Swagger;
-            var tourId = request.Tour?.Id ?? existingEndpoint.Tour;
-
             // Step 9: Update the APIEndpoint object
-            var updatedEndpoint = new APIEndpoint
-            {
-                Id = existingEndpoint.Id,
-                ApiName = request.ApiName,
-                ApiScope = request.ApiScope,
-                ApiScopeProduction = request.ApiScopeProduction,
-                Deprecated = request.Deprecated,
-                Description = request.Description,
-                Documentation = documentationId,
-                EndpointUrls = request.EndpointUrls,
-                AppEnvironment = request.AppEnvironment,
-                Swagger = swaggerId,
-                Tour = tourId,
-                ApiVersion = request.ApiVersion,
-                Langcode = request.Langcode,
-                Sticky = request.Sticky,
-                Promote = request.Promote,
-                UrlAlias = request.UrlAlias,
-                Published = request.Published
-            };
+            existingEndpoint.ApiName = request.ApiName;
+            existingEndpoint.ApiScope = request.ApiScope;
+            existingEndpoint.ApiScopeProduction = request.ApiScopeProduction;
+            existingEndpoint.Deprecated = request.Deprecated;
+            existingEndpoint.Description = request.Description;
+            existingEndpoint.EndpointUrls = request.EndpointUrls;
+            existingEndpoint.AppEnvironment = request.AppEnvironment;
+            existingEndpoint.ApiVersion = request.ApiVersion;
+            existingEndpoint.Langcode = request.Langcode;
+            existingEndpoint.Sticky = request.Sticky;
+            existingEndpoint.Promote = request.Promote;
+            existingEndpoint.UrlAlias = request.UrlAlias;
+            existingEndpoint.Published = request.Published;
 
             // Step 10: Database Transactions
             using (var transaction = _dbConnection.BeginTransaction())
@@ -117,19 +113,29 @@ namespace ProjectName.Services
                 try
                 {
                     // Step 12: Remove Old Tags
-                    foreach (var tagId in tagsToRemove)
+                    foreach (var tag in tagsToRemove)
                     {
-                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE ApiEndpointId = @ApiEndpointId AND ApiTagId = @ApiTagId", new { ApiEndpointId = existingEndpoint.Id, ApiTagId = tagId }, transaction);
+                        await _dbConnection.ExecuteAsync(
+                            "DELETE FROM APIEndpointTags WHERE ApiEndpointId = @ApiEndpointId AND ApiTagId = @ApiTagId",
+                            new { ApiEndpointId = existingEndpoint.Id, ApiTagId = tag.Id },
+                            transaction);
                     }
 
                     // Step 14: Add New Tags
-                    foreach (var tagId in tagsToAdd)
+                    foreach (var tagName in tagsToAdd)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (ApiEndpointId, ApiTagId) VALUES (@ApiEndpointId, @ApiTagId)", new { ApiEndpointId = existingEndpoint.Id, ApiTagId = tagId }, transaction);
+                        var apiTag = await _apiTagService.GetApiTag(new ApiTagRequestDto { Name = tagName });
+                        await _dbConnection.ExecuteAsync(
+                            "INSERT INTO APIEndpointTags (Id, ApiEndpointId, ApiTagId) VALUES (@Id, @ApiEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), ApiEndpointId = existingEndpoint.Id, ApiTagId = apiTag.Id },
+                            transaction);
                     }
 
-                    // Step 16: Insert the updated APIEndpoint object
-                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id", updatedEndpoint, transaction);
+                    // Step 16: Insert the updated APIEndpoint object in the database table
+                    await _dbConnection.ExecuteAsync(
+                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
+                        existingEndpoint,
+                        transaction);
 
                     transaction.Commit();
                 }
