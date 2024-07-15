@@ -6,7 +6,7 @@ using ProjectName.Types;
 namespace ProjectName.Interfaces
 {
     /// <summary>
-    /// Service interface for managing API endpoints.
+    /// Interface for managing API endpoints.
     /// </summary>
     public interface IAPIEndpointService
     {
@@ -14,7 +14,7 @@ namespace ProjectName.Interfaces
         /// Creates a new API endpoint.
         /// </summary>
         /// <param name="createAPIEndpointDto">Data transfer object for creating an API endpoint.</param>
-        /// <returns>The ID of the newly created API endpoint.</returns>
+        /// <returns>The identifier of the created API endpoint.</returns>
         Task<string> CreateAPIEndpoint(CreateAPIEndpointDto createAPIEndpointDto);
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ProjectName.Interfaces
         /// Updates an existing API endpoint.
         /// </summary>
         /// <param name="updateAPIEndpointDto">Data transfer object for updating an API endpoint.</param>
-        /// <returns>The ID of the updated API endpoint.</returns>
+        /// <returns>The identifier of the updated API endpoint.</returns>
         Task<string> UpdateAPIEndpoint(UpdateAPIEndpointDto updateAPIEndpointDto);
 
         /// <summary>
