@@ -33,10 +33,7 @@ namespace ProjectName.Services
             }
 
             // Step 2: Fetch Existing API Endpoint
-            var existingEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>(
-                "SELECT * FROM ApiEndpoints WHERE Id = @Id",
-                new { request.Id });
-
+            var existingEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
             if (existingEndpoint == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
@@ -48,8 +45,7 @@ namespace ProjectName.Services
             {
                 foreach (var tagName in request.ApiTags)
                 {
-                    var apiTagRequestDto = new ApiTagRequestDto { Name = tagName };
-                    var apiTag = await _apiTagService.GetApiTag(apiTagRequestDto);
+                    var apiTag = await _apiTagService.GetApiTag(new ApiTagRequestDto { Name = tagName });
                     if (apiTag != null)
                     {
                         apiTags.Add(apiTag);
@@ -60,36 +56,31 @@ namespace ProjectName.Services
             // Step 4: If apiTag does not exist, create API tags
             foreach (var tagName in request.ApiTags.Where(tagName => apiTags.All(t => t.Name != tagName)))
             {
-                var createApiTagDto = new CreateApiTagDto { Name = tagName };
-                await _apiTagService.CreateApiTag(createApiTagDto);
+                await _apiTagService.CreateApiTag(new CreateApiTagDto { Name = tagName });
             }
 
             // Step 5: Define API Tags for Removal
-            var tagsToRemove = existingEndpoint.ApiTags.Where(existingTag => !request.ApiTags.Contains(existingTag.Name)).ToList();
+            var existingTags = await _dbConnection.QueryAsync<ApiTag>("SELECT * FROM ApiTags WHERE Id IN (SELECT ApiTagId FROM APIEndpointTags WHERE APIEndpointId = @Id)", new { request.Id });
+            var tagsToRemove = existingTags.Where(et => !request.ApiTags.Contains(et.Name)).ToList();
 
             // Step 6: Define API Tags for Addition
-            var tagsToAdd = request.ApiTags.Where(tagName => existingEndpoint.ApiTags.All(t => t.Name != tagName)).ToList();
+            var tagsToAdd = request.ApiTags.Where(tagName => existingTags.All(t => t.Name != tagName)).ToList();
 
             // Step 7: Handle Attachments
             if (request.Documentation != null)
             {
-                var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Documentation };
-                await _attachmentService.DeleteAttachment(deleteAttachmentDto);
-                existingEndpoint.Documentation = await _attachmentService.CreateAttachment(request.Documentation);
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Documentation });
+                existingEndpoint.Documentation = Guid.Parse(await _attachmentService.CreateAttachment(request.Documentation));
             }
-
             if (request.Swagger != null)
             {
-                var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Swagger };
-                await _attachmentService.DeleteAttachment(deleteAttachmentDto);
-                existingEndpoint.Swagger = await _attachmentService.CreateAttachment(request.Swagger);
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Swagger });
+                existingEndpoint.Swagger = Guid.Parse(await _attachmentService.CreateAttachment(request.Swagger));
             }
-
             if (request.Tour != null)
             {
-                var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingEndpoint.Tour };
-                await _attachmentService.DeleteAttachment(deleteAttachmentDto);
-                existingEndpoint.Tour = await _attachmentService.CreateAttachment(request.Tour);
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Tour });
+                existingEndpoint.Tour = Guid.Parse(await _attachmentService.CreateAttachment(request.Tour));
             }
 
             // Step 9: Update the APIEndpoint object
@@ -115,27 +106,18 @@ namespace ProjectName.Services
                     // Step 12: Remove Old Tags
                     foreach (var tag in tagsToRemove)
                     {
-                        await _dbConnection.ExecuteAsync(
-                            "DELETE FROM APIEndpointTags WHERE ApiEndpointId = @ApiEndpointId AND ApiTagId = @ApiTagId",
-                            new { ApiEndpointId = existingEndpoint.Id, ApiTagId = tag.Id },
-                            transaction);
+                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @APIEndpointId AND ApiTagId = @ApiTagId", new { APIEndpointId = request.Id, ApiTagId = tag.Id }, transaction);
                     }
 
                     // Step 14: Add New Tags
                     foreach (var tagName in tagsToAdd)
                     {
-                        var apiTag = await _apiTagService.GetApiTag(new ApiTagRequestDto { Name = tagName });
-                        await _dbConnection.ExecuteAsync(
-                            "INSERT INTO APIEndpointTags (Id, ApiEndpointId, ApiTagId) VALUES (@Id, @ApiEndpointId, @ApiTagId)",
-                            new { Id = Guid.NewGuid(), ApiEndpointId = existingEndpoint.Id, ApiTagId = apiTag.Id },
-                            transaction);
+                        var newTag = await _apiTagService.GetApiTag(new ApiTagRequestDto { Name = tagName });
+                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (APIEndpointId, ApiTagId) VALUES (@APIEndpointId, @ApiTagId)", new { APIEndpointId = request.Id, ApiTagId = newTag.Id }, transaction);
                     }
 
                     // Step 16: Insert the updated APIEndpoint object in the database table
-                    await _dbConnection.ExecuteAsync(
-                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
-                        existingEndpoint,
-                        transaction);
+                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id", existingEndpoint, transaction);
 
                     transaction.Commit();
                 }
