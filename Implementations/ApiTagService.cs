@@ -27,7 +27,15 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var apiTag = new ApiTag
+            var existingTag = await _dbConnection.QueryFirstOrDefaultAsync<ApiTag>(
+                "SELECT * FROM ApiTags WHERE Name = @Name", new { request.Name });
+
+            if (existingTag != null)
+            {
+                return existingTag.Id.ToString();
+            }
+
+            var newApiTag = new ApiTag
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
@@ -36,19 +44,17 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            const string sql = @"
-                INSERT INTO ApiTags (Id, Name, Version, Created, CreatorId)
-                VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
+            var sql = @"INSERT INTO ApiTags (Id, Name, Version, Created, CreatorId) 
+                        VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
 
-            try
-            {
-                await _dbConnection.ExecuteAsync(sql, apiTag);
-                return apiTag.Id.ToString();
-            }
-            catch (Exception)
+            var rowsAffected = await _dbConnection.ExecuteAsync(sql, newApiTag);
+
+            if (rowsAffected == 0)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
+
+            return newApiTag.Id.ToString();
         }
 
         public async Task<ApiTag> GetApiTag(ApiTagRequestDto request)
@@ -59,20 +65,16 @@ namespace ProjectName.Services
             }
 
             ApiTag apiTag;
+
             if (request.Id != Guid.Empty)
             {
-                const string sql = "SELECT * FROM ApiTags WHERE Id = @Id";
-                apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Id });
+                apiTag = await _dbConnection.QueryFirstOrDefaultAsync<ApiTag>(
+                    "SELECT * FROM ApiTags WHERE Id = @Id", new { request.Id });
             }
             else
             {
-                const string sql = "SELECT * FROM ApiTags WHERE Name = @Name";
-                apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(sql, new { request.Name });
-            }
-
-            if (apiTag == null)
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
+                apiTag = await _dbConnection.QueryFirstOrDefaultAsync<ApiTag>(
+                    "SELECT * FROM ApiTags WHERE Name = @Name", new { request.Name });
             }
 
             return apiTag;
@@ -80,13 +82,13 @@ namespace ProjectName.Services
 
         public async Task<string> UpdateApiTag(UpdateApiTagDto request)
         {
-            if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.Name))
+            if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.Name) || request.ChangedUser == Guid.Empty)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
-            var apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
+            var apiTag = await _dbConnection.QueryFirstOrDefaultAsync<ApiTag>(
+                "SELECT * FROM ApiTags WHERE Id = @Id", new { request.Id });
 
             if (apiTag == null)
             {
@@ -94,23 +96,22 @@ namespace ProjectName.Services
             }
 
             apiTag.Name = request.Name;
+            apiTag.Version += 1;
             apiTag.Changed = DateTime.Now;
             apiTag.ChangedUser = request.ChangedUser;
 
-            const string updateSql = @"
-                UPDATE ApiTags
-                SET Name = @Name, Changed = @Changed, ChangedUser = @ChangedUser
-                WHERE Id = @Id";
+            var sql = @"UPDATE ApiTags 
+                        SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser 
+                        WHERE Id = @Id";
 
-            try
-            {
-                await _dbConnection.ExecuteAsync(updateSql, apiTag);
-                return apiTag.Id.ToString();
-            }
-            catch (Exception)
+            var rowsAffected = await _dbConnection.ExecuteAsync(sql, apiTag);
+
+            if (rowsAffected == 0)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
+
+            return apiTag.Id.ToString();
         }
 
         public async Task<bool> DeleteApiTag(DeleteApiTagDto request)
@@ -120,25 +121,23 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM ApiTags WHERE Id = @Id";
-            var apiTag = await _dbConnection.QuerySingleOrDefaultAsync<ApiTag>(selectSql, new { request.Id });
+            var apiTag = await _dbConnection.QueryFirstOrDefaultAsync<ApiTag>(
+                "SELECT * FROM ApiTags WHERE Id = @Id", new { request.Id });
 
             if (apiTag == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            const string deleteSql = "DELETE FROM ApiTags WHERE Id = @Id";
+            var rowsAffected = await _dbConnection.ExecuteAsync(
+                "DELETE FROM ApiTags WHERE Id = @Id", new { request.Id });
 
-            try
-            {
-                await _dbConnection.ExecuteAsync(deleteSql, new { request.Id });
-                return true;
-            }
-            catch (Exception)
+            if (rowsAffected == 0)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
+
+            return true;
         }
 
         public async Task<List<ApiTag>> GetListApiTag(ListApiTagRequestDto request)
@@ -151,20 +150,14 @@ namespace ProjectName.Services
             var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
             var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            var sql = $@"
-                SELECT * FROM ApiTags
-                ORDER BY {sortField} {sortOrder}
-                OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
+            var sql = $@"SELECT * FROM ApiTags 
+                         ORDER BY {sortField} {sortOrder} 
+                         OFFSET @PageOffset ROWS 
+                         FETCH NEXT @PageLimit ROWS ONLY";
 
-            try
-            {
-                var apiTags = await _dbConnection.QueryAsync<ApiTag>(sql, new { request.PageOffset, request.PageLimit });
-                return apiTags.ToList();
-            }
-            catch (Exception)
-            {
-                throw new TechnicalException("DP-500", "Technical Error");
-            }
+            var apiTags = await _dbConnection.QueryAsync<ApiTag>(sql, new { request.PageOffset, request.PageLimit });
+
+            return apiTags.ToList();
         }
     }
 }
