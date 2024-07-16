@@ -42,7 +42,6 @@ namespace ProjectName.Services
             }
 
             // Step 3: Fetch and validate related entities
-            // AppEnvironment
             var appEnvironmentRequest = new AppEnvironmentRequestDto { Id = request.AppEnvironment };
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
             if (appEnvironment == null)
@@ -50,7 +49,7 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // ApiTags
+            // Step 4: Handle ApiTags
             List<Guid> tagIds = new List<Guid>();
             if (request.ApiTags != null)
             {
@@ -68,82 +67,71 @@ namespace ProjectName.Services
                 }
             }
 
-            // Handle Tags Removal and Addition
-            var existingTags = await _dbConnection.QueryAsync<Guid>("SELECT TagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id });
-            var tagsToRemove = existingTags.Except(tagIds).ToList();
-            var tagsToAdd = tagIds.Except(existingTags).ToList();
-
-            // Handle Attachments
-            Guid? documentationId = null;
-            Guid? swaggerId = null;
-            Guid? tourId = null;
-
-            async Task HandleAttachment(CreateAttachmentDto attachmentDto, Guid? existingAttachmentId, ref Guid? newAttachmentId)
+            // Step 5: Handle Attachments
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid existingAttachmentId, Func<APIEndpoint, Guid> getExistingAttachmentId, Action<APIEndpoint, Guid> setNewAttachmentId)
             {
-                if (attachmentDto != null)
+                if (newAttachment != null)
                 {
-                    var attachmentRequest = new AttachmentRequestDto { Id = existingAttachmentId ?? Guid.Empty };
-                    var existingAttachment = await _attachmentService.GetAttachment(attachmentRequest);
-                    if (existingAttachment == null || existingAttachment.FileName != attachmentDto.FileName)
+                    if (existingAttachmentId != Guid.Empty)
                     {
-                        if (existingAttachmentId != null)
+                        var attachmentRequest = new AttachmentRequestDto { Id = existingAttachmentId };
+                        var existingAttachment = await _attachmentService.GetAttachment(attachmentRequest);
+                        if (existingAttachment == null || existingAttachment.FileName != newAttachment.FileName)
                         {
-                            var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId.Value };
+                            var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId };
                             await _attachmentService.DeleteAttachment(deleteAttachmentDto);
                         }
-                        var createAttachmentDto = new CreateAttachmentDto { FileName = attachmentDto.FileName, FileUrl = attachmentDto.FileUrl };
-                        newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(createAttachmentDto));
                     }
+                    var createAttachmentDto = new CreateAttachmentDto { FileName = newAttachment.FileName, FileUrl = newAttachment.FileUrl };
+                    var attachmentId = Guid.Parse(await _attachmentService.CreateAttachment(createAttachmentDto));
+                    setNewAttachmentId(existingAPIEndpoint, attachmentId);
                 }
-                else if (existingAttachmentId != null)
+                else if (existingAttachmentId != Guid.Empty)
                 {
-                    var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId.Value };
+                    var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId };
                     await _attachmentService.DeleteAttachment(deleteAttachmentDto);
-                    newAttachmentId = null;
+                    setNewAttachmentId(existingAPIEndpoint, Guid.Empty);
                 }
             }
 
-            await HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, ref documentationId);
-            await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, ref swaggerId);
-            await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, ref tourId);
+            await HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, e => e.Documentation, (e, id) => e.Documentation = id);
+            await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, e => e.Swagger, (e, id) => e.Swagger = id);
+            await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, e => e.Tour, (e, id) => e.Tour = id);
 
-            // Update the APIEndpoint object
+            // Step 6: Update the APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
             existingAPIEndpoint.ApiScope = request.ApiScope;
             existingAPIEndpoint.ApiScopeProduction = request.ApiScopeProduction;
             existingAPIEndpoint.Deprecated = request.Deprecated;
             existingAPIEndpoint.Description = request.Description;
-            existingAPIEndpoint.Documentation = documentationId;
             existingAPIEndpoint.EndpointUrls = request.EndpointUrls;
             existingAPIEndpoint.AppEnvironment = request.AppEnvironment;
-            existingAPIEndpoint.Swagger = swaggerId;
-            existingAPIEndpoint.Tour = tourId;
             existingAPIEndpoint.ApiVersion = request.ApiVersion;
             existingAPIEndpoint.Langcode = request.Langcode;
             existingAPIEndpoint.Sticky = request.Sticky;
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
+            existingAPIEndpoint.ApiTags = tagIds;
 
-            // Perform Database Updates in a Single Transaction
+            // Step 7: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
                     // Remove Old Tags
-                    foreach (var tagId in tagsToRemove)
-                    {
-                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @APIEndpointId AND TagId = @TagId", new { request.Id, tagId }, transaction);
-                    }
+                    await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
 
                     // Add New Tags
-                    foreach (var tagId in tagsToAdd)
+                    foreach (var tagId in tagIds)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, TagId) VALUES (@Id, @APIEndpointId, @TagId)", new { Id = Guid.NewGuid(), request.Id, tagId }, transaction);
+                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
                     // Update APIEndpoint object in the database table
-                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id", existingAPIEndpoint, transaction);
+                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
+                        existingAPIEndpoint, transaction);
 
                     transaction.Commit();
                 }
