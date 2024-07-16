@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using ProjectName.ControllersExceptions;
 using ProjectName.Interfaces;
 using ProjectName.Types;
+using ProjectName.ControllersExceptions;
 
 namespace ProjectName.Services
 {
@@ -35,7 +35,7 @@ namespace ProjectName.Services
             }
 
             // Step 2: Fetch Existing API Endpoint
-            var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
+            var existingAPIEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
             if (existingAPIEndpoint == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
@@ -50,18 +50,21 @@ namespace ProjectName.Services
             }
 
             // Step 4: Handle ApiTags
-            var apiTags = new List<ApiTag>();
-            foreach (var tagName in request.ApiTags)
+            List<Guid> tagIds = new List<Guid>();
+            if (request.ApiTags != null)
             {
-                var apiTagRequest = new ApiTagRequestDto { Name = tagName };
-                var apiTag = await _apiTagService.GetApiTag(apiTagRequest);
-                if (apiTag == null)
+                foreach (var tagName in request.ApiTags)
                 {
-                    var createApiTagDto = new CreateApiTagDto { Name = tagName };
-                    await _apiTagService.CreateApiTag(createApiTagDto);
-                    apiTag = await _apiTagService.GetApiTag(apiTagRequest);
+                    var apiTagRequest = new ApiTagRequestDto { Name = tagName };
+                    var apiTag = await _apiTagService.GetApiTag(apiTagRequest);
+                    if (apiTag == null)
+                    {
+                        var createApiTagDto = new CreateApiTagDto { Name = tagName };
+                        await _apiTagService.CreateApiTag(createApiTagDto);
+                        apiTag = await _apiTagService.GetApiTag(apiTagRequest);
+                    }
+                    tagIds.Add(apiTag.Id);
                 }
-                apiTags.Add(apiTag);
             }
 
             // Step 5: Handle Attachments
@@ -110,13 +113,19 @@ namespace ProjectName.Services
                 try
                 {
                     // Remove Old Tags
-                    await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
+                    if (request.ApiTags != null)
+                    {
+                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id }, transaction);
+                    }
 
                     // Add New Tags
-                    foreach (var tag in apiTags)
+                    if (request.ApiTags != null)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
-                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tag.Id }, transaction);
+                        foreach (var tagId in tagIds)
+                        {
+                            await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                                new { Id = Guid.NewGuid(), APIEndpointId = request.Id, ApiTagId = tagId }, transaction);
+                        }
                     }
 
                     // Update APIEndpoint object in the database table
