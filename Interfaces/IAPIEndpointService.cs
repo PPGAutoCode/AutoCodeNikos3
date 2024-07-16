@@ -15,14 +15,14 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="createAPIEndpointDto">Data transfer object for creating an API endpoint.</param>
         /// <returns>The identifier of the created API endpoint.</returns>
-        Task<string> CreateAPIEndpoint(CreateAPIEndpointDto createAPIEndpointDto);
+        //Task<string> CreateAPIEndpoint(CreateAPIEndpointDto createAPIEndpointDto);
 
         /// <summary>
         /// Retrieves an API endpoint by its request details.
         /// </summary>
         /// <param name="apiEndpointRequestDto">Data transfer object for requesting an API endpoint.</param>
         /// <returns>The requested API endpoint.</returns>
-        Task<APIEndpoint> GetAPIEndpoint(APIEndpointRequestDto apiEndpointRequestDto);
+       // Task<APIEndpoint> GetAPIEndpoint(APIEndpointRequestDto apiEndpointRequestDto);
 
         /// <summary>
         /// Updates an existing API endpoint.
@@ -36,13 +36,13 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="deleteAPIEndpointDto">Data transfer object for deleting an API endpoint.</param>
         /// <returns>True if the API endpoint was deleted successfully, otherwise false.</returns>
-        Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
+        //Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
 
         /// <summary>
         /// Retrieves a list of API endpoints based on the request details.
         /// </summary>
         /// <param name="listAPIEndpointRequestDto">Data transfer object for requesting a list of API endpoints.</param>
         /// <returns>A list of API endpoints.</returns>
-        Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto listAPIEndpointRequestDto);
+        //Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto listAPIEndpointRequestDto);
     }
 }
