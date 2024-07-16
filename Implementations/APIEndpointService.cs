@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using ProjectName.ControllersExceptions;
 using ProjectName.Interfaces;
 using ProjectName.Types;
-using ProjectName.ControllersExceptions;
 
 namespace ProjectName.Services
 {
@@ -35,7 +35,7 @@ namespace ProjectName.Services
             }
 
             // Step 2: Fetch Existing API Endpoint
-            var existingAPIEndpoint = await _dbConnection.QueryFirstOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
+            var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
             if (existingAPIEndpoint == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
@@ -73,7 +73,7 @@ namespace ProjectName.Services
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAPIEndpoint.Documentation };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
                 var documentationId = await _attachmentService.CreateAttachment(request.Documentation);
-                existingAPIEndpoint.Documentation = new Guid(documentationId);
+                existingAPIEndpoint.Documentation = documentationId;
             }
 
             if (request.Swagger != null)
@@ -81,7 +81,7 @@ namespace ProjectName.Services
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAPIEndpoint.Swagger };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
                 var swaggerId = await _attachmentService.CreateAttachment(request.Swagger);
-                existingAPIEndpoint.Swagger = new Guid(swaggerId);
+                existingAPIEndpoint.Swagger = swaggerId;
             }
 
             if (request.Tour != null)
@@ -89,7 +89,7 @@ namespace ProjectName.Services
                 var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAPIEndpoint.Tour };
                 await _attachmentService.DeleteAttachment(deleteAttachmentDto);
                 var tourId = await _attachmentService.CreateAttachment(request.Tour);
-                existingAPIEndpoint.Tour = new Guid(tourId);
+                existingAPIEndpoint.Tour = tourId;
             }
 
             // Step 6: Update the APIEndpoint object
@@ -106,6 +106,7 @@ namespace ProjectName.Services
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
+            existingAPIEndpoint.ApiTags = tagIds.Select(id => new ApiTag { Id = id }).ToList();
 
             // Step 7: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
@@ -113,19 +114,13 @@ namespace ProjectName.Services
                 try
                 {
                     // Remove Old Tags
-                    if (request.ApiTags != null)
-                    {
-                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id }, transaction);
-                    }
+                    await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
 
                     // Add New Tags
-                    if (request.ApiTags != null)
+                    foreach (var tagId in tagIds)
                     {
-                        foreach (var tagId in tagIds)
-                        {
-                            await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
-                                new { Id = Guid.NewGuid(), APIEndpointId = request.Id, ApiTagId = tagId }, transaction);
-                        }
+                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
                     // Update APIEndpoint object in the database table
