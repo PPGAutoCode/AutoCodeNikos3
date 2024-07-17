@@ -31,12 +31,14 @@ namespace ProjectName.Services
             // Step 1: Validate UpdateAPIEndpointDto
             if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.ApiName) || string.IsNullOrEmpty(request.Langcode) || string.IsNullOrEmpty(request.UrlAlias))
             {
-                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto.");
+                throw new BusinessException("DP-422", "Validation failed: Required fields are missing.");
             }
 
             // Step 2: Fetch Existing API Endpoint
             var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>(
-                "SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
+                "SELECT * FROM ApiEndpoints WHERE Id = @Id",
+                new { request.Id });
+
             if (existingAPIEndpoint == null)
             {
                 throw new BusinessException("DP-404", "APIEndpoint not found.");
@@ -68,15 +70,7 @@ namespace ProjectName.Services
                 }
             }
 
-            // Step 5: Handle Tags Removal
-            var existingTags = await _dbConnection.QueryAsync<Guid>(
-                "SELECT TagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id });
-            var tagsToRemove = existingTags.Except(newTagIds).ToList();
-
-            // Step 6: Handle Tags Addition
-            var tagsToAdd = newTagIds.Except(existingTags).ToList();
-
-            // Step 7: Handle Attachments
+            // Step 5: Handle Attachments
             async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid?, Guid?> attachmentHandler)
             {
                 if (newAttachment != null)
@@ -87,10 +81,15 @@ namespace ProjectName.Services
                         if (existingAttachment.FileName != newAttachment.FileName)
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                            var newAttachmentId = await _attachmentService.CreateAttachment(newAttachment);
+                            attachmentHandler(new Guid(newAttachmentId));
                         }
                     }
-                    var newAttachmentId = await _attachmentService.CreateAttachment(newAttachment);
-                    attachmentHandler(newAttachmentId);
+                    else
+                    {
+                        var newAttachmentId = await _attachmentService.CreateAttachment(newAttachment);
+                        attachmentHandler(new Guid(newAttachmentId));
+                    }
                 }
                 else if (existingAttachmentId.HasValue)
                 {
@@ -103,7 +102,7 @@ namespace ProjectName.Services
             await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, id => existingAPIEndpoint.Swagger = id);
             await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, id => existingAPIEndpoint.Tour = id);
 
-            // Step 8: Update the APIEndpoint object
+            // Step 6: Update the APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
             existingAPIEndpoint.ApiScope = request.ApiScope;
             existingAPIEndpoint.ApiScopeProduction = request.ApiScopeProduction;
@@ -119,33 +118,32 @@ namespace ProjectName.Services
             existingAPIEndpoint.Published = request.Published;
             existingAPIEndpoint.ApiTags = newTagIds;
 
-            // Step 9: Perform Database Updates in a Single Transaction
+            // Step 7: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
+                    // Update APIEndpoint
                     await _dbConnection.ExecuteAsync(
                         "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
                         existingAPIEndpoint, transaction);
 
-                    if (tagsToRemove.Any())
-                    {
-                        await _dbConnection.ExecuteAsync(
-                            "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id AND TagId IN @TagsToRemove",
-                            new { request.Id, TagsToRemove = tagsToRemove }, transaction);
-                    }
+                    // Remove Old Tags
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id",
+                        new { existingAPIEndpoint.Id }, transaction);
 
-                    if (tagsToAdd.Any())
+                    // Add New Tags
+                    foreach (var tagId in newTagIds)
                     {
-                        var newTags = tagsToAdd.Select(tagId => new { APIEndpointId = request.Id, TagId = tagId });
                         await _dbConnection.ExecuteAsync(
-                            "INSERT INTO APIEndpointTags (APIEndpointId, TagId) VALUES (@APIEndpointId, @TagId)",
-                            newTags, transaction);
+                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator.");
