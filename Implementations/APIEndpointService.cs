@@ -31,13 +31,12 @@ namespace ProjectName.Services
             // Step 1: Validate UpdateAPIEndpointDto
             if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.ApiName) || string.IsNullOrEmpty(request.Langcode) || string.IsNullOrEmpty(request.UrlAlias))
             {
-                throw new BusinessException("DP-422", "Validation failed: Required fields are missing.");
+                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto.");
             }
 
             // Step 2: Fetch Existing API Endpoint
             var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>(
                 "SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
-
             if (existingAPIEndpoint == null)
             {
                 throw new BusinessException("DP-404", "APIEndpoint not found.");
@@ -46,7 +45,6 @@ namespace ProjectName.Services
             // Step 3: Fetch and validate related entities
             var appEnvironmentRequest = new AppEnvironmentRequestDto { Id = request.AppEnvironment };
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
-
             if (appEnvironment == null)
             {
                 throw new BusinessException("DP-404", "AppEnvironment not found.");
@@ -60,14 +58,12 @@ namespace ProjectName.Services
                 {
                     var apiTagRequest = new ApiTagRequestDto { Name = tagName };
                     var apiTag = await _apiTagService.GetApiTag(apiTagRequest);
-
                     if (apiTag == null)
                     {
                         var createApiTagDto = new CreateApiTagDto { Name = tagName };
                         await _apiTagService.CreateApiTag(createApiTagDto);
                         apiTag = await _apiTagService.GetApiTag(apiTagRequest);
                     }
-
                     newTagIds.Add(apiTag.Id);
                 }
             }
@@ -75,7 +71,6 @@ namespace ProjectName.Services
             // Step 5: Handle Tags Removal
             var existingTags = await _dbConnection.QueryAsync<Guid>(
                 "SELECT TagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { request.Id });
-
             var tagsToRemove = existingTags.Except(newTagIds).ToList();
 
             // Step 6: Handle Tags Addition
@@ -89,14 +84,13 @@ namespace ProjectName.Services
                     if (existingAttachmentId.HasValue)
                     {
                         var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId.Value });
-                        if (existingAttachment != null && existingAttachment.FileName != newAttachment.FileName)
+                        if (existingAttachment.FileName != newAttachment.FileName)
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
                         }
                     }
-
                     var newAttachmentId = await _attachmentService.CreateAttachment(newAttachment);
-                    attachmentHandler(new Guid(newAttachmentId));
+                    attachmentHandler(newAttachmentId);
                 }
                 else if (existingAttachmentId.HasValue)
                 {
@@ -123,6 +117,7 @@ namespace ProjectName.Services
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
+            existingAPIEndpoint.ApiTags = newTagIds;
 
             // Step 9: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
@@ -130,14 +125,14 @@ namespace ProjectName.Services
                 try
                 {
                     await _dbConnection.ExecuteAsync(
-                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published, Documentation = @Documentation, Swagger = @Swagger, Tour = @Tour WHERE Id = @Id",
+                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
                         existingAPIEndpoint, transaction);
 
                     if (tagsToRemove.Any())
                     {
                         await _dbConnection.ExecuteAsync(
-                            "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id AND TagId IN @TagIds",
-                            new { request.Id, TagIds = tagsToRemove }, transaction);
+                            "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id AND TagId IN @TagsToRemove",
+                            new { request.Id, TagsToRemove = tagsToRemove }, transaction);
                     }
 
                     if (tagsToAdd.Any())

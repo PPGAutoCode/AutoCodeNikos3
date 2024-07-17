@@ -1,8 +1,10 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(108,136): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(109,118): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(110,109): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(119,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(47,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(61,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(66,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: 7 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(102,136): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(103,118): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(104,109): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(113,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(120,43): error CS0029: Cannot implicitly convert type 'System.Collections.Generic.List<System.Guid>' to 'System.Collections.Generic.List<ProjectName.Types.ApiTag>'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(46,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(59,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(63,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(93,39): error CS1503: Argument 1: cannot convert from 'string' to 'System.Guid?'
+Error: 9 Error(s)
