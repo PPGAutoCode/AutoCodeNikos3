@@ -1,10 +1,9 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(108,138): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(109,120): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(110,111): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(119,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(45,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(58,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(62,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(89,48): error CS1503: Argument 1: cannot convert from 'string' to 'System.Guid?'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(95,44): error CS1503: Argument 1: cannot convert from 'string' to 'System.Guid?'
-Error: 9 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(105,61): error CS0037: Cannot convert null to 'Guid' because it is a non-nullable value type
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(110,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(111,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(112,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(121,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(46,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(59,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(63,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
+Error: 8 Error(s)
