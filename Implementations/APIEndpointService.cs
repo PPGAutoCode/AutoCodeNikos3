@@ -50,44 +50,45 @@ namespace ProjectName.Services
             }
 
             // Step 4: Handle Tags
-            List<Guid> newTagIds = new List<Guid>();
+            List<Guid> tagIds = new List<Guid>();
             if (request.ApiTags != null)
             {
                 foreach (var tagName in request.ApiTags)
                 {
-                    var tagRequest = new ApiTagRequestDto { Name = tagName };
-                    var tag = await _apiTagService.GetApiTag(tagRequest);
-                    if (tag == null)
+                    var apiTagRequest = new ApiTagRequestDto { Name = tagName };
+                    var apiTag = await _apiTagService.GetApiTag(apiTagRequest);
+                    if (apiTag == null)
                     {
-                        var createTagDto = new CreateApiTagDto { Name = tagName };
-                        await _apiTagService.CreateApiTag(createTagDto);
-                        tag = await _apiTagService.GetApiTag(tagRequest);
+                        var createApiTagDto = new CreateApiTagDto { Name = tagName };
+                        await _apiTagService.CreateApiTag(createApiTagDto);
+                        apiTag = await _apiTagService.GetApiTag(apiTagRequest);
                     }
-                    newTagIds.Add(tag.Id);
+                    tagIds.Add(apiTag.Id);
                 }
             }
 
             // Step 5: Handle Attachments
-            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid existingAttachmentId, Func<CreateAttachmentDto, Task<string>> createAttachment)
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid existingAttachmentId, Func<CreateAttachmentDto, Task<string>> createAttachmentAction)
             {
                 if (newAttachment != null)
                 {
                     if (existingAttachmentId != Guid.Empty)
                     {
-                        var existingAttachmentRequest = new AttachmentRequestDto { Id = existingAttachmentId };
-                        var existingAttachment = await _attachmentService.GetAttachment(existingAttachmentRequest);
-                        if (existingAttachment != null && existingAttachment.FileName != newAttachment.FileName)
+                        var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId });
+                        if (existingAttachment == null || existingAttachment.FileName != newAttachment.FileName)
                         {
-                            var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId };
-                            await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                            await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
+                            await createAttachmentAction(newAttachment);
                         }
                     }
-                    await createAttachment(newAttachment);
+                    else
+                    {
+                        await createAttachmentAction(newAttachment);
+                    }
                 }
                 else if (existingAttachmentId != Guid.Empty)
                 {
-                    var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId };
-                    await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                    await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                 }
             }
 
@@ -109,7 +110,7 @@ namespace ProjectName.Services
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
-            existingAPIEndpoint.ApiTags = newTagIds;
+            existingAPIEndpoint.ApiTags = tagIds;
 
             // Step 7: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
@@ -120,13 +121,15 @@ namespace ProjectName.Services
                     await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
 
                     // Add New Tags
-                    foreach (var tagId in newTagIds)
+                    foreach (var tagId in tagIds)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (APIEndpointId, ApiTagId) VALUES (@APIEndpointId, @ApiTagId)", new { APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
+                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
-                    // Update APIEndpoint object in the database table
-                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id", existingAPIEndpoint, transaction);
+                    // Update APIEndpoint
+                    await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
+                        existingAPIEndpoint, transaction);
 
                     transaction.Commit();
                 }
