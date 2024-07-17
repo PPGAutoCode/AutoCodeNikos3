@@ -71,25 +71,30 @@ namespace ProjectName.Services
             }
 
             // Step 5: Handle Attachments
-            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid?, Guid?> attachmentHandler)
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid> updateAttachmentField)
             {
                 if (newAttachment != null)
                 {
                     if (existingAttachmentId.HasValue)
                     {
                         var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId.Value });
-                        if (existingAttachment != null && existingAttachment.FileName != newAttachment.FileName)
+                        if (existingAttachment.FileName != newAttachment.FileName)
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                            var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                            updateAttachmentField(newAttachmentId);
                         }
                     }
-                    var newAttachmentId = await _attachmentService.CreateAttachment(newAttachment);
-                    attachmentHandler(new Guid(newAttachmentId));
+                    else
+                    {
+                        var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                        updateAttachmentField(newAttachmentId);
+                    }
                 }
                 else if (existingAttachmentId.HasValue)
                 {
                     await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
-                    attachmentHandler(null);
+                    updateAttachmentField(Guid.Empty);
                 }
             }
 
@@ -122,30 +127,26 @@ namespace ProjectName.Services
                         "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
                         existingAPIEndpoint, transaction);
 
-                    // Remove Old Tags
+                    // Remove old tags
                     await _dbConnection.ExecuteAsync(
-                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id AND ApiTagId NOT IN @NewTagIds",
-                        new { existingAPIEndpoint.Id, NewTagIds = newTagIds }, transaction);
+                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id",
+                        new { existingAPIEndpoint.Id }, transaction);
 
-                    // Add New Tags
-                    var existingTagIds = (await _dbConnection.QueryAsync<Guid>(
-                        "SELECT ApiTagId FROM APIEndpointTags WHERE APIEndpointId = @Id",
-                        new { existingAPIEndpoint.Id }, transaction)).ToList();
-
-                    var tagsToAdd = newTagIds.Except(existingTagIds).ToList();
-                    foreach (var tagId in tagsToAdd)
+                    // Add new tags
+                    if (newTagIds.Any())
                     {
+                        var tagInserts = newTagIds.Select(tagId => new { APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId });
                         await _dbConnection.ExecuteAsync(
-                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
-                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
+                            "INSERT INTO APIEndpointTags (APIEndpointId, ApiTagId) VALUES (@APIEndpointId, @ApiTagId)",
+                            tagInserts, transaction);
                     }
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw;
+                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator", ex);
                 }
             }
 
