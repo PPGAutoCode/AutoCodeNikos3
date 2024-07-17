@@ -1,9 +1,9 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(100,62): error CS1503: Argument 2: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(109,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(45,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(58,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(62,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(94,57): error CS0037: Cannot convert null to 'Guid' because it is a non-nullable value type
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(98,71): error CS1503: Argument 2: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(99,65): error CS1503: Argument 2: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(103,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(104,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(105,36): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'ProjectName.Types.CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(114,50): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(121,43): error CS0029: Cannot implicitly convert type 'System.Collections.Generic.List<System.Guid>' to 'System.Collections.Generic.List<ProjectName.Types.ApiTag>'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(47,77): error CS0266: Cannot implicitly convert type 'System.Guid?' to 'System.Guid'. An explicit conversion exists (are you missing a cast?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(61,71): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(66,76): error CS0029: Cannot implicitly convert type 'System.Guid' to 'string'
 Error: 8 Error(s)
