@@ -31,7 +31,7 @@ namespace ProjectName.Services
             // Step 1: Validate UpdateAPIEndpointDto
             if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.ApiName) || string.IsNullOrEmpty(request.Langcode) || string.IsNullOrEmpty(request.UrlAlias))
             {
-                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto.");
+                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto");
             }
 
             // Step 2: Fetch Existing API Endpoint
@@ -40,7 +40,7 @@ namespace ProjectName.Services
 
             if (existingAPIEndpoint == null)
             {
-                throw new BusinessException("DP-404", "APIEndpoint not found.");
+                throw new BusinessException("DP-404", "APIEndpoint not found");
             }
 
             // Step 3: Fetch and validate related entities
@@ -48,7 +48,7 @@ namespace ProjectName.Services
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
             if (appEnvironment == null)
             {
-                throw new BusinessException("DP-404", "AppEnvironment not found.");
+                throw new BusinessException("DP-404", "AppEnvironment not found");
             }
 
             // Step 4: Handle Tags
@@ -70,7 +70,7 @@ namespace ProjectName.Services
             }
 
             // Step 5: Handle Attachments
-            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<CreateAttachmentDto, Task<string>> createAttachment, Func<Guid, Task<bool>> deleteAttachment)
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid, string> attachmentField)
             {
                 if (newAttachment != null)
                 {
@@ -79,27 +79,27 @@ namespace ProjectName.Services
                         var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId.Value });
                         if (existingAttachment == null || existingAttachment.FileName != newAttachment.FileName)
                         {
-                            await deleteAttachment(existingAttachmentId.Value);
-                            var newAttachmentId = Guid.Parse(await createAttachment(newAttachment));
-                            existingAttachmentId = newAttachmentId;
+                            await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                            var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                            attachmentField(newAttachmentId);
                         }
                     }
                     else
                     {
-                        var newAttachmentId = Guid.Parse(await createAttachment(newAttachment));
-                        existingAttachmentId = newAttachmentId;
+                        var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                        attachmentField(newAttachmentId);
                     }
                 }
                 else if (existingAttachmentId.HasValue)
                 {
-                    await deleteAttachment(existingAttachmentId.Value);
-                    existingAttachmentId = null;
+                    await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                    attachmentField(Guid.Empty);
                 }
             }
 
-            await HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, _attachmentService.CreateAttachment, _attachmentService.DeleteAttachment);
-            await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, _attachmentService.CreateAttachment, _attachmentService.DeleteAttachment);
-            await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, _attachmentService.CreateAttachment, _attachmentService.DeleteAttachment);
+            await HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, id => existingAPIEndpoint.Documentation = id);
+            await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, id => existingAPIEndpoint.Swagger = id);
+            await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, id => existingAPIEndpoint.Tour = id);
 
             // Step 6: Update APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
@@ -124,45 +124,31 @@ namespace ProjectName.Services
                 {
                     await _dbConnection.ExecuteAsync(
                         "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, Documentation = @Documentation, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, Swagger = @Swagger, Tour = @Tour, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
-                        new
-                        {
-                            existingAPIEndpoint.Id,
-                            existingAPIEndpoint.ApiName,
-                            existingAPIEndpoint.ApiScope,
-                            existingAPIEndpoint.ApiScopeProduction,
-                            existingAPIEndpoint.Deprecated,
-                            existingAPIEndpoint.Description,
-                            existingAPIEndpoint.Documentation,
-                            existingAPIEndpoint.EndpointUrls,
-                            existingAPIEndpoint.AppEnvironment,
-                            existingAPIEndpoint.Swagger,
-                            existingAPIEndpoint.Tour,
-                            existingAPIEndpoint.ApiVersion,
-                            existingAPIEndpoint.Langcode,
-                            existingAPIEndpoint.Sticky,
-                            existingAPIEndpoint.Promote,
-                            existingAPIEndpoint.UrlAlias,
-                            existingAPIEndpoint.Published
-                        },
-                        transaction);
+                        existingAPIEndpoint, transaction);
 
-                    // Handle Tags Removal and Addition
-                    await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
+                    // Remove Old Tags
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id",
+                        new { existingAPIEndpoint.Id }, transaction);
+
+                    // Add New Tags
                     foreach (var tagId in newTagIds)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (APIEndpointId, ApiTagId) VALUES (@APIEndpointId, @ApiTagId)", new { APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
+                        await _dbConnection.ExecuteAsync(
+                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator.");
+                    throw;
                 }
             }
 
-            return "APIEndpoint updated successfully.";
+            return "APIEndpoint updated successfully";
         }
     }
 }
