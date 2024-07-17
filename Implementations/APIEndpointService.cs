@@ -68,32 +68,29 @@ namespace ProjectName.Services
             }
 
             // Step 5: Handle Attachments
-            async Task HandleAttachment(Guid? existingAttachmentId, CreateAttachmentDto newAttachment, string attachmentType)
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid existingAttachmentId, Func<CreateAttachmentDto, Task<string>> createAttachment)
             {
                 if (newAttachment != null)
                 {
-                    if (existingAttachmentId.HasValue && existingAttachmentId != Guid.Empty)
+                    if (existingAttachmentId != Guid.Empty)
                     {
-                        var existingAttachmentRequest = new AttachmentRequestDto { Id = existingAttachmentId.Value };
-                        var existingAttachment = await _attachmentService.GetAttachment(existingAttachmentRequest);
+                        var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId });
                         if (existingAttachment != null && existingAttachment.FileName != newAttachment.FileName)
                         {
-                            var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId.Value };
-                            await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                            await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                         }
                     }
-                    await _attachmentService.CreateAttachment(newAttachment);
+                    await createAttachment(newAttachment);
                 }
-                else if (existingAttachmentId.HasValue && existingAttachmentId != Guid.Empty)
+                else if (existingAttachmentId != Guid.Empty)
                 {
-                    var deleteAttachmentDto = new DeleteAttachmentDto { Id = existingAttachmentId.Value };
-                    await _attachmentService.DeleteAttachment(deleteAttachmentDto);
+                    await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                 }
             }
 
-            await HandleAttachment(existingAPIEndpoint.Documentation, request.Documentation, "Documentation");
-            await HandleAttachment(existingAPIEndpoint.Swagger, request.Swagger, "Swagger");
-            await HandleAttachment(existingAPIEndpoint.Tour, request.Tour, "Tour");
+            await HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, _attachmentService.CreateAttachment);
+            await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, _attachmentService.CreateAttachment);
+            await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, _attachmentService.CreateAttachment);
 
             // Step 6: Update APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
@@ -126,7 +123,7 @@ namespace ProjectName.Services
                             new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
-                    // Update APIEndpoint object in the database table
+                    // Update APIEndpoint
                     await _dbConnection.ExecuteAsync("UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
                         existingAPIEndpoint, transaction);
 
