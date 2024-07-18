@@ -8,7 +8,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(21,46): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(40,27): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(56,38): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(14,38): error CS0535: 'AttachmentService' does not implement interface member 'IAttachmentService.HandleAttachement(CreateAttachmentDto, Guid?, Action<Guid?>)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 
 Build FAILED.
 
@@ -17,8 +16,7 @@ Build FAILED.
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(21,46): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(40,27): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(56,38): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(14,38): error CS0535: 'AttachmentService' does not implement interface member 'IAttachmentService.HandleAttachement(CreateAttachmentDto, Guid?, Action<Guid?>)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
     1 Warning(s)
-    5 Error(s)
+    4 Error(s)
 
-Time Elapsed 00:00:03.75
+Time Elapsed 00:00:02.29
