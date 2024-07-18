@@ -35,7 +35,8 @@ namespace ProjectName.Services
             }
 
             // Step 2: Fetch Existing API Endpoint
-            var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>("SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
+            var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>(
+                "SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
             if (existingAPIEndpoint == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
@@ -99,7 +100,7 @@ namespace ProjectName.Services
             await HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, id => existingAPIEndpoint.Swagger = id);
             await HandleAttachment(request.Tour, existingAPIEndpoint.Tour, id => existingAPIEndpoint.Tour = id);
 
-            // Step 6: Update the APIEndpoint object
+            // Step 6: Update APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
             existingAPIEndpoint.ApiScope = request.ApiScope;
             existingAPIEndpoint.ApiScopeProduction = request.ApiScopeProduction;
@@ -121,13 +122,20 @@ namespace ProjectName.Services
                 try
                 {
                     // Remove Old Tags
-                    await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
+                    var existingTags = await _dbConnection.QueryAsync<Guid>("SELECT TagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
+                    var tagsToRemove = existingTags.Except(newTagIds);
+                    foreach (var tagId in tagsToRemove)
+                    {
+                        await _dbConnection.ExecuteAsync("DELETE FROM APIEndpointTags WHERE APIEndpointId = @APIEndpointId AND TagId = @TagId",
+                            new { APIEndpointId = existingAPIEndpoint.Id, TagId = tagId }, transaction);
+                    }
 
                     // Add New Tags
-                    foreach (var tagId in newTagIds)
+                    var tagsToAdd = newTagIds.Except(existingTags);
+                    foreach (var tagId in tagsToAdd)
                     {
-                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
-                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
+                        await _dbConnection.ExecuteAsync("INSERT INTO APIEndpointTags (APIEndpointId, TagId) VALUES (@APIEndpointId, @TagId)",
+                            new { APIEndpointId = existingAPIEndpoint.Id, TagId = tagId }, transaction);
                     }
 
                     // Update APIEndpoint
