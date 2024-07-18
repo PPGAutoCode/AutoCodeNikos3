@@ -138,7 +138,7 @@ namespace ProjectName.Services
 
             var attachments = await _dbConnection.QueryAsync<Attachment>(sql, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
 
-            if (attachments == null)
+            if (attachments == null || !attachments.Any())
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -156,14 +156,14 @@ namespace ProjectName.Services
                     if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
                     {
                         await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                        var newId = await CreateAttachment(newAttachment);
-                        updateAttachmentFieldId(Guid.Parse(newId));
+                        var newId = Guid.Parse(await CreateAttachment(newAttachment));
+                        updateAttachmentFieldId(newId);
                     }
                 }
                 else
                 {
-                    var newId = await CreateAttachment(newAttachment);
-                    updateAttachmentFieldId(Guid.Parse(newId));
+                    var newId = Guid.Parse(await CreateAttachment(newAttachment));
+                    updateAttachmentFieldId(newId);
                 }
             }
             else
