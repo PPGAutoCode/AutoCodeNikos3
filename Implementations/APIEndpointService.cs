@@ -78,18 +78,13 @@ namespace ProjectName.Services
                     if (existingAttachmentId.HasValue)
                     {
                         var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId.Value });
-                        if (existingAttachment.FileName != newAttachment.FileName)
+                        if (existingAttachment != null && !existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
-                            var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
-                            updateAttachmentField(newAttachmentId);
                         }
                     }
-                    else
-                    {
-                        var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
-                        updateAttachmentField(newAttachmentId);
-                    }
+                    var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                    updateAttachmentField(newAttachmentId);
                 }
                 else if (existingAttachmentId.HasValue)
                 {
@@ -133,20 +128,19 @@ namespace ProjectName.Services
                         new { existingAPIEndpoint.Id }, transaction);
 
                     // Add new tags
-                    if (newTagIds.Any())
+                    foreach (var tagId in newTagIds)
                     {
-                        var tagInserts = newTagIds.Select(tagId => new { APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId });
                         await _dbConnection.ExecuteAsync(
-                            "INSERT INTO APIEndpointTags (APIEndpointId, ApiTagId) VALUES (@APIEndpointId, @ApiTagId)",
-                            tagInserts, transaction);
+                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
                     }
 
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator", ex);
+                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator");
                 }
             }
 
