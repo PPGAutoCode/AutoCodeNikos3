@@ -156,20 +156,23 @@ namespace ProjectName.Services
                     if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
                     {
                         await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                        var newId = Guid.Parse(await CreateAttachment(newAttachment));
-                        updateAttachmentFieldId(newId);
+                        var newId = await CreateAttachment(newAttachment);
+                        updateAttachmentFieldId(Guid.Parse(newId));
                     }
                 }
                 else
                 {
-                    var newId = Guid.Parse(await CreateAttachment(newAttachment));
-                    updateAttachmentFieldId(newId);
+                    var newId = await CreateAttachment(newAttachment);
+                    updateAttachmentFieldId(Guid.Parse(newId));
                 }
             }
-            else if (existingAttachmentId != null)
+            else
             {
-                await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                updateAttachmentFieldId(null);
+                if (existingAttachmentId != null)
+                {
+                    await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
+                    updateAttachmentFieldId(null);
+                }
             }
         }
     }
