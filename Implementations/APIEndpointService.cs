@@ -31,7 +31,7 @@ namespace ProjectName.Services
             // Step 1: Validate UpdateAPIEndpointDto
             if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.ApiName) || string.IsNullOrEmpty(request.Langcode) || string.IsNullOrEmpty(request.UrlAlias))
             {
-                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto");
+                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto.");
             }
 
             // Step 2: Fetch Existing API Endpoint
@@ -41,7 +41,7 @@ namespace ProjectName.Services
 
             if (existingAPIEndpoint == null)
             {
-                throw new BusinessException("DP-404", "APIEndpoint not found");
+                throw new BusinessException("DP-404", "APIEndpoint not found.");
             }
 
             // Step 3: Fetch and validate related entities
@@ -49,7 +49,7 @@ namespace ProjectName.Services
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
             if (appEnvironment == null)
             {
-                throw new BusinessException("DP-404", "AppEnvironment not found");
+                throw new BusinessException("DP-404", "AppEnvironment not found.");
             }
 
             // Step 4: Handle Tags
@@ -78,13 +78,18 @@ namespace ProjectName.Services
                     if (existingAttachmentId.HasValue)
                     {
                         var existingAttachment = await _attachmentService.GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId.Value });
-                        if (existingAttachment != null && !existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
+                        if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                            var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                            updateAttachmentField(newAttachmentId);
                         }
                     }
-                    var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
-                    updateAttachmentField(newAttachmentId);
+                    else
+                    {
+                        var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
+                        updateAttachmentField(newAttachmentId);
+                    }
                 }
                 else if (existingAttachmentId.HasValue)
                 {
@@ -140,11 +145,11 @@ namespace ProjectName.Services
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator");
+                    throw;
                 }
             }
 
-            return "APIEndpoint updated successfully";
+            return "APIEndpoint updated successfully.";
         }
     }
 }
