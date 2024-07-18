@@ -146,7 +146,7 @@ namespace ProjectName.Services
             return attachments.ToList();
         }
 
-        public async Task<List<Attachment>> HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid, Task> updateAttachmentField)
+        public async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid, Task> updateAttachmentField)
         {
             if (newAttachment != null)
             {
@@ -156,14 +156,14 @@ namespace ProjectName.Services
                     if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
                     {
                         await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                        var newAttachmentId = Guid.Parse(await CreateAttachment(newAttachment));
-                        await updateAttachmentField(newAttachmentId);
+                        var newId = Guid.Parse(await CreateAttachment(newAttachment));
+                        await updateAttachmentField(newId);
                     }
                 }
                 else
                 {
-                    var newAttachmentId = Guid.Parse(await CreateAttachment(newAttachment));
-                    await updateAttachmentField(newAttachmentId);
+                    var newId = Guid.Parse(await CreateAttachment(newAttachment));
+                    await updateAttachmentField(newId);
                 }
             }
             else if (existingAttachmentId != null)
@@ -171,8 +171,6 @@ namespace ProjectName.Services
                 await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                 await updateAttachmentField(Guid.Empty);
             }
-
-            return await GetListAttachment(new ListAttachmentRequestDto { PageLimit = int.MaxValue, PageOffset = 0 });
         }
     }
 }
