@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using ProjectName.ControllersExceptions;
 using ProjectName.Interfaces;
 using ProjectName.Types;
+using ProjectName.ControllersExceptions;
 
 namespace ProjectName.Services
 {
@@ -31,16 +31,15 @@ namespace ProjectName.Services
             // Step 1: Validate UpdateAPIEndpointDto
             if (request.Id == Guid.Empty || string.IsNullOrEmpty(request.ApiName) || string.IsNullOrEmpty(request.Langcode) || string.IsNullOrEmpty(request.UrlAlias))
             {
-                throw new BusinessException("DP-422", "Missing required parameters in UpdateAPIEndpointDto");
+                throw new BusinessException("DP-422", "Client Error");
             }
 
             // Step 2: Fetch Existing API Endpoint
             var existingAPIEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>(
                 "SELECT * FROM ApiEndpoints WHERE Id = @Id", new { request.Id });
-
             if (existingAPIEndpoint == null)
             {
-                throw new BusinessException("DP-404", "APIEndpoint not found");
+                throw new TechnicalException("DP-404", "Technical Error");
             }
 
             // Step 3: Fetch and validate related entities
@@ -48,11 +47,11 @@ namespace ProjectName.Services
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
             if (appEnvironment == null)
             {
-                throw new BusinessException("DP-404", "AppEnvironment not found");
+                throw new TechnicalException("DP-404", "Technical Error");
             }
 
             // Step 4: Handle Tags
-            var newTags = new List<ApiTag>();
+            List<Guid> newTagIds = new List<Guid>();
             if (request.ApiTags != null)
             {
                 foreach (var tagName in request.ApiTags)
@@ -65,12 +64,12 @@ namespace ProjectName.Services
                         await _apiTagService.CreateApiTag(createApiTagDto);
                         apiTag = await _apiTagService.GetApiTag(apiTagRequest);
                     }
-                    newTags.Add(apiTag);
+                    newTagIds.Add(apiTag.Id);
                 }
             }
 
             // Step 5: Handle Attachments
-            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid?> updateAttachmentId)
+            async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid> updateAttachmentField)
             {
                 if (newAttachment != null)
                 {
@@ -81,22 +80,19 @@ namespace ProjectName.Services
                         {
                             await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
                             var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
-                            updateAttachmentId(newAttachmentId);
+                            updateAttachmentField(newAttachmentId);
                         }
                     }
                     else
                     {
                         var newAttachmentId = Guid.Parse(await _attachmentService.CreateAttachment(newAttachment));
-                        updateAttachmentId(newAttachmentId);
+                        updateAttachmentField(newAttachmentId);
                     }
                 }
-                else
+                else if (existingAttachmentId.HasValue)
                 {
-                    if (existingAttachmentId.HasValue)
-                    {
-                        await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
-                        updateAttachmentId(null);
-                    }
+                    await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId.Value });
+                    updateAttachmentField(Guid.Empty);
                 }
             }
 
@@ -118,49 +114,40 @@ namespace ProjectName.Services
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
-            existingAPIEndpoint.ApiTags = newTags.Select(t => t.Id).ToList();
+            existingAPIEndpoint.ApiTags = newTagIds;
 
-            // Step 7: In a single SQL transaction
+            // Step 7: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
-                    // Update the APIEndpoint
+                    // Remove Old Tags
+                    await _dbConnection.ExecuteAsync(
+                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
+
+                    // Add New Tags
+                    foreach (var tagId in newTagIds)
+                    {
+                        await _dbConnection.ExecuteAsync(
+                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, ApiTagId) VALUES (@Id, @APIEndpointId, @ApiTagId)",
+                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, ApiTagId = tagId }, transaction);
+                    }
+
+                    // Update APIEndpoint
                     await _dbConnection.ExecuteAsync(
                         "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
                         existingAPIEndpoint, transaction);
 
-                    // Handle Tags Removal and Addition
-                    var existingTags = await _dbConnection.QueryAsync<Guid>(
-                        "SELECT TagId FROM APIEndpointTags WHERE APIEndpointId = @Id", new { existingAPIEndpoint.Id }, transaction);
-
-                    var tagsToRemove = existingTags.Except(newTags.Select(t => t.Id)).ToList();
-                    var tagsToAdd = newTags.Select(t => t.Id).Except(existingTags).ToList();
-
-                    foreach (var tagId in tagsToRemove)
-                    {
-                        await _dbConnection.ExecuteAsync(
-                            "DELETE FROM APIEndpointTags WHERE APIEndpointId = @APIEndpointId AND TagId = @TagId",
-                            new { APIEndpointId = existingAPIEndpoint.Id, TagId = tagId }, transaction);
-                    }
-
-                    foreach (var tagId in tagsToAdd)
-                    {
-                        await _dbConnection.ExecuteAsync(
-                            "INSERT INTO APIEndpointTags (Id, APIEndpointId, TagId) VALUES (@Id, @APIEndpointId, @TagId)",
-                            new { Id = Guid.NewGuid(), APIEndpointId = existingAPIEndpoint.Id, TagId = tagId }, transaction);
-                    }
-
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("1001", "A technical exception has occurred, please contact your system administrator");
+                    throw new TechnicalException("DP-500", "Technical Error");
                 }
             }
 
-            return "APIEndpoint updated successfully";
+            return existingAPIEndpoint.Id.ToString();
         }
     }
 }

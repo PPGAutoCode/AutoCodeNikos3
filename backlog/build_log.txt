@@ -2,7 +2,7 @@ Microsoft (R) Build Engine version 17.0.1+b177f8fa7 for .NET
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Determining projects to restore...
-  Restored /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj (in 779 ms).
+  All projects are up-to-date for restore.
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(12,35): error CS0246: The type or namespace name 'IArticleService' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(21,46): error CS0246: The type or namespace name 'Article' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
@@ -19,4 +19,4 @@ Build FAILED.
     1 Warning(s)
     4 Error(s)
 
-Time Elapsed 00:00:06.60
+Time Elapsed 00:00:03.97
