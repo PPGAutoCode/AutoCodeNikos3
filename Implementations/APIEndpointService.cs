@@ -45,7 +45,7 @@ namespace ProjectName.Services
             }
 
             // Step 3: Fetch and validate related entities
-            // AppEnvironment
+            // 3.1: AppEnvironment
             var appEnvironmentRequest = new AppEnvironmentRequestDto { Id = request.AppEnvironment };
             var appEnvironment = await _appEnvironmentService.GetAppEnvironment(appEnvironmentRequest);
             if (appEnvironment == null)
@@ -53,7 +53,7 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // ApiTags
+            // 3.2: ApiTags
             List<Guid> tagIds = new List<Guid>();
             if (request.ApiTags != null)
             {
@@ -71,21 +71,27 @@ namespace ProjectName.Services
                 }
             }
 
-            // Handle Attachments
+            // Step 4: Handle Attachments
+            Guid? documentationId = null;
+            Guid? swaggerId = null;
+            Guid? tourId = null;
+
             if (request.Documentation != null)
             {
-                await _attachmentService.HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, (newDocId) => existingAPIEndpoint.Documentation = newDocId);
-            }
-            if (request.Swagger != null)
-            {
-                await _attachmentService.HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, (newSwaggerId) => existingAPIEndpoint.Swagger = newSwaggerId);
-            }
-            if (request.Tour != null)
-            {
-                await _attachmentService.HandleAttachment(request.Tour, existingAPIEndpoint.Tour, (newTourId) => existingAPIEndpoint.Tour = newTourId);
+                await _attachmentService.HandleAttachment(request.Documentation, existingAPIEndpoint.Documentation, id => documentationId = id);
             }
 
-            // Step 4: Update the APIEndpoint object
+            if (request.Swagger != null)
+            {
+                await _attachmentService.HandleAttachment(request.Swagger, existingAPIEndpoint.Swagger, id => swaggerId = id);
+            }
+
+            if (request.Tour != null)
+            {
+                await _attachmentService.HandleAttachment(request.Tour, existingAPIEndpoint.Tour, id => tourId = id);
+            }
+
+            // Step 5: Update the APIEndpoint object
             existingAPIEndpoint.ApiName = request.ApiName;
             existingAPIEndpoint.ApiScope = request.ApiScope;
             existingAPIEndpoint.ApiScopeProduction = request.ApiScopeProduction;
@@ -99,9 +105,11 @@ namespace ProjectName.Services
             existingAPIEndpoint.Promote = request.Promote;
             existingAPIEndpoint.UrlAlias = request.UrlAlias;
             existingAPIEndpoint.Published = request.Published;
-            existingAPIEndpoint.ApiTags = tagIds;
+            existingAPIEndpoint.Documentation = documentationId;
+            existingAPIEndpoint.Swagger = swaggerId;
+            existingAPIEndpoint.Tour = tourId;
 
-            // Step 5: Perform Database Updates in a Single Transaction
+            // Step 6: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
@@ -123,7 +131,7 @@ namespace ProjectName.Services
 
                     // Update APIEndpoint
                     await _dbConnection.ExecuteAsync(
-                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published WHERE Id = @Id",
+                        "UPDATE ApiEndpoints SET ApiName = @ApiName, ApiScope = @ApiScope, ApiScopeProduction = @ApiScopeProduction, Deprecated = @Deprecated, Description = @Description, EndpointUrls = @EndpointUrls, AppEnvironment = @AppEnvironment, ApiVersion = @ApiVersion, Langcode = @Langcode, Sticky = @Sticky, Promote = @Promote, UrlAlias = @UrlAlias, Published = @Published, Documentation = @Documentation, Swagger = @Swagger, Tour = @Tour WHERE Id = @Id",
                         existingAPIEndpoint,
                         transaction);
 

@@ -1,2 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(102,43): error CS0029: Cannot implicitly convert type 'System.Collections.Generic.List<System.Guid>' to 'System.Collections.Generic.List<ProjectName.Types.ApiTag>'
-Error: 1 Error(s)
+Error: 0 Error(s)
