@@ -146,7 +146,7 @@ namespace ProjectName.Services
             return attachments.ToList();
         }
 
-        public async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid, Task> updateAttachmentField)
+        public async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid?> updateAttachmentFieldId)
         {
             if (newAttachment != null)
             {
@@ -157,19 +157,19 @@ namespace ProjectName.Services
                     {
                         await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                         var newId = Guid.Parse(await CreateAttachment(newAttachment));
-                        await updateAttachmentField(newId);
+                        updateAttachmentFieldId(newId);
                     }
                 }
                 else
                 {
                     var newId = Guid.Parse(await CreateAttachment(newAttachment));
-                    await updateAttachmentField(newId);
+                    updateAttachmentFieldId(newId);
                 }
             }
             else if (existingAttachmentId != null)
             {
                 await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                await updateAttachmentField(Guid.Empty);
+                updateAttachmentFieldId(null);
             }
         }
     }
