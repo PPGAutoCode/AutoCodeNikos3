@@ -13,7 +13,7 @@ namespace ProjectName.Types
         public CreateAPIEndpointDto? Documentation { get; set; }
         public string? EndpointUrls { get; set; }
         public Guid AppEnvironment { get; set; }
-        public CreateAPIEndpointDto? Swagger { get; set; }
+        public CreateAttachmentDto Swagger { get; set; }
         public CreateAPIEndpointDto? Tour { get; set; }
         public string? ApiVersion { get; set; }
         public string Langcode { get; set; }
