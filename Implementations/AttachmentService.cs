@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using ProjectName.Types;
-using ProjectName.Interfaces;
 using ProjectName.ControllersExceptions;
+using ProjectName.Interfaces;
+using ProjectName.Types;
 
 namespace ProjectName.Services
 {
@@ -127,10 +128,12 @@ namespace ProjectName.Services
             }
 
             var sql = "SELECT * FROM Attachments";
+
             if (!string.IsNullOrEmpty(request.SortField) && !string.IsNullOrEmpty(request.SortOrder))
             {
                 sql += $" ORDER BY {request.SortField} {request.SortOrder}";
             }
+
             sql += " OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
 
             var attachments = await _dbConnection.QueryAsync<Attachment>(sql, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
@@ -140,7 +143,36 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-500", "Technical Error");
             }
 
-            return attachments.AsList();
+            return attachments.ToList();
+        }
+
+        public async Task<List<Attachment>> HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Func<Guid, Task> updateAttachmentField)
+        {
+            if (newAttachment != null)
+            {
+                if (existingAttachmentId != null)
+                {
+                    var existingAttachment = await GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId });
+                    if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
+                    {
+                        await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
+                        var newAttachmentId = Guid.Parse(await CreateAttachment(newAttachment));
+                        await updateAttachmentField(newAttachmentId);
+                    }
+                }
+                else
+                {
+                    var newAttachmentId = Guid.Parse(await CreateAttachment(newAttachment));
+                    await updateAttachmentField(newAttachmentId);
+                }
+            }
+            else if (existingAttachmentId != null)
+            {
+                await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
+                await updateAttachmentField(Guid.Empty);
+            }
+
+            return await GetListAttachment(new ListAttachmentRequestDto { PageLimit = int.MaxValue, PageOffset = 0 });
         }
     }
 }
