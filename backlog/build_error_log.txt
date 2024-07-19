@@ -1,4 +1,5 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(69,35): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(73,29): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(77,26): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: 3 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(303,28): error CS0103: The name 'True' does not exist in the current context
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(65,35): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(69,29): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(73,26): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: 4 Error(s)
