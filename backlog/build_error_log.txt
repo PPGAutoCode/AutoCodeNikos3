@@ -1,4 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(106,169): error CS0833: An anonymous type cannot have multiple properties with the same name
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(112,186): error CS0833: An anonymous type cannot have multiple properties with the same name
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(112,198): error CS0833: An anonymous type cannot have multiple properties with the same name
-Error: 3 Error(s)
+Error: 0 Error(s)
