@@ -2,21 +2,29 @@ Microsoft (R) Build Engine version 17.0.1+b177f8fa7 for .NET
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Determining projects to restore...
-  All projects are up-to-date for restore.
+  Restored /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj (in 1,3 sec).
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.UpdateAPIEndpoint(UpdateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(255,13): error CS1524: Expected catch or finally [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1514: { expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1513: } expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(258,9): error CS0106: The modifier 'public' is not valid for this item [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1524: Expected catch or finally [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1514: { expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1513: } expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(341,1): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 
 Build FAILED.
 
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.UpdateAPIEndpoint(UpdateAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(255,13): error CS1524: Expected catch or finally [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1514: { expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1513: } expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(258,9): error CS0106: The modifier 'public' is not valid for this item [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1524: Expected catch or finally [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1514: { expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1513: } expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(341,1): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
     1 Warning(s)
-    4 Error(s)
+    8 Error(s)
 
-Time Elapsed 00:00:02.29
+Time Elapsed 00:00:07.37
