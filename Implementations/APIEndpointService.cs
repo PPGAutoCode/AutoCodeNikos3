@@ -69,15 +69,15 @@ namespace ProjectName.Services
 
             // Step 5: Handle ApiTags Removal
             var existingTags = await _dbConnection.QueryAsync<ApiTag>("SELECT * FROM ApiTags WHERE Id IN (SELECT ApiTagId FROM APIEndpointTags WHERE APIEndpointId = @Id)", new { request.Id });
-            var tagsToRemove = existingTags.Where(et => !apiTags.Any(at => at.Id == et.Id)).ToList();
+            var tagsToRemove = existingTags.Where(existingTag => !apiTags.Any(tag => tag.Id == existingTag.Id)).ToList();
 
             // Step 6: Handle ApiTags Addition
-            var newTags = apiTags.Where(at => !existingTags.Any(et => et.Id == at.Id)).ToList();
+            var newTags = apiTags.Where(tag => !existingTags.Any(existingTag => existingTag.Id == tag.Id)).ToList();
 
             // Step 7: Handle Attachments
-            await _attachmentService.HandleAttachment(request.Documentation, existingEndpoint.Documentation, id => existingEndpoint.Documentation = id);
-            await _attachmentService.HandleAttachment(request.Swagger, existingEndpoint.Swagger, id => existingEndpoint.Swagger = id);
-            await _attachmentService.HandleAttachment(request.Tour, existingEndpoint.Tour, id => existingEndpoint.Tour = id);
+            await _attachmentService.HandleAttachment(request.Documentation, existingEndpoint.Documentation, (newDocId) => existingEndpoint.Documentation = newDocId);
+            await _attachmentService.HandleAttachment(request.Swagger, existingEndpoint.Swagger, (newSwaggerId) => existingEndpoint.Swagger = newSwaggerId);
+            await _attachmentService.HandleAttachment(request.Tour, existingEndpoint.Tour, (newTourId) => existingEndpoint.Tour = newTourId);
 
             // Step 8: Update the APIEndpoint object
             existingEndpoint.ApiName = request.ApiName;
