@@ -1,9 +1,4 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1513: } expected
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(242,20): error CS1514: { expected
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(255,13): error CS1524: Expected catch or finally
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(258,9): error CS0106: The modifier 'public' is not valid for this item
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1513: } expected
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1514: { expected
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(291,20): error CS1524: Expected catch or finally
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(341,1): error CS1022: Type or namespace definition, or end-of-file expected
-Error: 8 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(69,35): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(73,29): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(77,26): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: 3 Error(s)
