@@ -40,36 +40,37 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // Step 3: Fetch and Validate Related Entities
-            List<Guid> attachmentIds = new List<Guid>();
-            if (existingEndpoint.Documentation != null) attachmentIds.Add(existingEndpoint.Documentation);
-            if (existingEndpoint.Swagger != null) attachmentIds.Add(existingEndpoint.Swagger);
-            if (existingEndpoint.Tour != null) attachmentIds.Add(existingEndpoint.Tour);
+            // Step 3: Delete Related Attachments
+            if (existingEndpoint.Documentation != null)
+            {
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Documentation });
+            }
+            if (existingEndpoint.Swagger != null)
+            {
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Swagger });
+            }
+            if (existingEndpoint.Tour != null)
+            {
+                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Tour });
+            }
 
             // Step 4: Perform Database Updates in a Single Transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
-                    // Delete Attachments
-                    foreach (var attachmentId in attachmentIds)
-                    {
-                        await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = attachmentId });
-                    }
-
                     // Delete APIEndpointTags
                     await _dbConnection.ExecuteAsync(
                         "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id",
                         new { request.Id },
                         transaction);
 
-                    // Delete APIEndpoint
+                    // Delete ApiEndpoint
                     await _dbConnection.ExecuteAsync(
                         "DELETE FROM APIEndpoints WHERE Id = @Id",
                         new { request.Id },
                         transaction);
 
-                    // Commit the transaction
                     transaction.Commit();
                 }
                 catch (Exception)
