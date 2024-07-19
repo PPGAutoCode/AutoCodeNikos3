@@ -40,24 +40,24 @@ namespace ProjectName.Controllers
 
        
 
-        [HttpPost("delete")]
-        public async Task<IActionResult> DeleteAPIEndpoint([FromBody] Request<DeleteAPIEndpointDto> request)
-        {
-            return await SafeExecutor.ExecuteAsync(async () =>
-            {
-                var result = await _apiEndpointService.DeleteAPIEndpoint(request.Payload);
-                return Ok(new Response<bool> { Payload = result });
-            });
-        }
-
-        // [HttpPost("list")]
-        // public async Task<IActionResult> GetListAPIEndpoint([FromBody] Request<ListAPIEndpointRequestDto> request)
+        // [HttpPost("delete")]
+        // public async Task<IActionResult> DeleteAPIEndpoint([FromBody] Request<DeleteAPIEndpointDto> request)
         // {
         //     return await SafeExecutor.ExecuteAsync(async () =>
         //     {
-        //         var result = await _apiEndpointService.GetListAPIEndpoint(request.Payload);
-        //         return Ok(new Response<List<APIEndpoint>> { Payload = result });
+        //         var result = await _apiEndpointService.DeleteAPIEndpoint(request.Payload);
+        //         return Ok(new Response<bool> { Payload = result });
         //     });
         // }
+
+        [HttpPost("list")]
+        public async Task<IActionResult> GetListAPIEndpoint([FromBody] Request<ListAPIEndpointRequestDto> request)
+        {
+            return await SafeExecutor.ExecuteAsync(async () =>
+            {
+                var result = await _apiEndpointService.GetListAPIEndpoint(request.Payload);
+                return Ok(new Response<List<APIEndpoint>> { Payload = result });
+            });
+        }
     }
 }

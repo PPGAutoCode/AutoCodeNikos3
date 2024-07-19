@@ -36,13 +36,13 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="deleteAPIEndpointDto">Data transfer object for deleting an API endpoint.</param>
         /// <returns>True if the API endpoint was deleted successfully, otherwise false.</returns>
-        Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
+        //Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
 
         /// <summary>
         /// Retrieves a list of API endpoints based on the request details.
         /// </summary>
         /// <param name="listAPIEndpointRequestDto">Data transfer object for requesting a list of API endpoints.</param>
         /// <returns>A list of API endpoints.</returns>
-        //Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto listAPIEndpointRequestDto);
+        Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto listAPIEndpointRequestDto);
     }
 }
