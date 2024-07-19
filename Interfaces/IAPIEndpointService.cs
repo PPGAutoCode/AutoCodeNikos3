@@ -22,21 +22,21 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="apiEndpointRequestDto">Data transfer object for requesting an API endpoint.</param>
         /// <returns>The requested API endpoint.</returns>
-       // Task<APIEndpoint> GetAPIEndpoint(APIEndpointRequestDto apiEndpointRequestDto);
+       //Task<APIEndpoint> GetAPIEndpoint(APIEndpointRequestDto apiEndpointRequestDto);
 
         /// <summary>
         /// Updates an existing API endpoint.
         /// </summary>
         /// <param name="updateAPIEndpointDto">Data transfer object for updating an API endpoint.</param>
         /// <returns>The identifier of the updated API endpoint.</returns>
-        Task<string> UpdateAPIEndpoint(UpdateAPIEndpointDto updateAPIEndpointDto);
+        //Task<string> UpdateAPIEndpoint(UpdateAPIEndpointDto updateAPIEndpointDto);
 
         /// <summary>
         /// Deletes an API endpoint.
         /// </summary>
         /// <param name="deleteAPIEndpointDto">Data transfer object for deleting an API endpoint.</param>
         /// <returns>True if the API endpoint was deleted successfully, otherwise false.</returns>
-        //Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
+        Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto deleteAPIEndpointDto);
 
         /// <summary>
         /// Retrieves a list of API endpoints based on the request details.

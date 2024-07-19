@@ -38,25 +38,17 @@ namespace ProjectName.Controllers
         //     });
         // }
 
-        [HttpPost("update")]
-        public async Task<IActionResult> UpdateAPIEndpoint([FromBody] Request<UpdateAPIEndpointDto> request)
+       
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteAPIEndpoint([FromBody] Request<DeleteAPIEndpointDto> request)
         {
             return await SafeExecutor.ExecuteAsync(async () =>
             {
-                var result = await _apiEndpointService.UpdateAPIEndpoint(request.Payload);
-                return Ok(new Response<string> { Payload = result });
+                var result = await _apiEndpointService.DeleteAPIEndpoint(request.Payload);
+                return Ok(new Response<bool> { Payload = result });
             });
         }
-
-        // [HttpPost("delete")]
-        // public async Task<IActionResult> DeleteAPIEndpoint([FromBody] Request<DeleteAPIEndpointDto> request)
-        // {
-        //     return await SafeExecutor.ExecuteAsync(async () =>
-        //     {
-        //         var result = await _apiEndpointService.DeleteAPIEndpoint(request.Payload);
-        //         return Ok(new Response<bool> { Payload = result });
-        //     });
-        // }
 
         // [HttpPost("list")]
         // public async Task<IActionResult> GetListAPIEndpoint([FromBody] Request<ListAPIEndpointRequestDto> request)

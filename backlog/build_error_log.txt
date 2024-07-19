@@ -1,2 +1,4 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(14,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.UpdateAPIEndpoint(UpdateAPIEndpointDto)'
-Error: 1 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(45,75): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'System.Guid'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(46,69): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'System.Guid'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(47,66): error CS1503: Argument 1: cannot convert from 'System.Guid?' to 'System.Guid'
+Error: 3 Error(s)
