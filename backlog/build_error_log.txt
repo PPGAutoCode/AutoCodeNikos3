@@ -1,1 +1,15 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(238,20): error CS1513: } expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(238,20): error CS1514: { expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(280,33): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(280,33): error CS1513: } expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(283,13): error CS1524: Expected catch or finally
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(288,9): error CS0106: The modifier 'public' is not valid for this item
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(323,20): error CS1513: } expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(323,20): error CS1514: { expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(323,20): error CS1524: Expected catch or finally
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(335,33): error CS1002: ; expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(335,33): error CS1513: } expected
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(340,13): error CS1519: Invalid token 'return' in class, record, struct, or interface member declaration
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(340,24): error CS1519: Invalid token ';' in class, record, struct, or interface member declaration
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(393,1): error CS1022: Type or namespace definition, or end-of-file expected
+Error: 14 Error(s)
