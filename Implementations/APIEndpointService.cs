@@ -14,73 +14,71 @@ namespace ProjectName.Services
     public class APIEndpointService : IAPIEndpointService
     {
         private readonly IDbConnection _dbConnection;
-        private readonly IAttachmentService _attachmentService;
 
-        public APIEndpointService(IDbConnection dbConnection, IAttachmentService attachmentService)
+        public APIEndpointService(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
-            _attachmentService = attachmentService;
         }
 
-        public async Task<bool> DeleteAPIEndpoint(DeleteAPIEndpointDto request)
+        public async Task<List<APIEndpoint>> GetListAPIEndpoint(ListAPIEndpointRequestDto request)
         {
-            // Step 1: Validate Request Payload
-            if (request.Id == Guid.Empty)
+            // Step 1: Validate Input
+            if (request == null || request.PageLimit <= 0 || request.PageOffset < 0)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Step 2: Fetch Existing API Endpoint
-            var existingEndpoint = await _dbConnection.QuerySingleOrDefaultAsync<APIEndpoint>(
-                "SELECT * FROM APIEndpoints WHERE Id = @Id",
-                new { request.Id });
+            // Step 2: Fetch API Endpoints
+            var query = "SELECT * FROM APIEndpoints";
+            if (!string.IsNullOrEmpty(request.SortField) && !string.IsNullOrEmpty(request.SortOrder))
+            {
+                query += $" ORDER BY {request.SortField} {request.SortOrder}";
+            }
+            query += $" OFFSET {request.PageOffset} ROWS FETCH NEXT {request.PageLimit} ROWS ONLY";
 
-            if (existingEndpoint == null)
+            var apiEndpoints = await _dbConnection.QueryAsync<APIEndpoint>(query);
+
+            // Step 3: Pagination Check
+            if (request.PageLimit == 0 && request.PageOffset == 0)
+            {
+                throw new TechnicalException("DP-400", "Technical Error");
+            }
+
+            // Step 4: Fetch Related Tags
+            var apiEndpointIds = apiEndpoints.Select(ae => ae.Id).ToList();
+            var tagQuery = "SELECT * FROM APIEndpointTags WHERE APIEndpointId IN @apiEndpointIds";
+            var apiEndpointTags = await _dbConnection.QueryAsync<ApiTag>(tagQuery, new { apiEndpointIds });
+
+            if (apiEndpointTags == null || !apiEndpointTags.Any())
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // Step 3: Delete Related Attachments
-            if (existingEndpoint.Documentation != null)
+            // Step 5: Response Preparation
+            var response = apiEndpoints.Select(ae => new APIEndpoint
             {
-                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Documentation });
-            }
-            if (existingEndpoint.Swagger != null)
-            {
-                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Swagger });
-            }
-            if (existingEndpoint.Tour != null)
-            {
-                await _attachmentService.DeleteAttachment(new DeleteAttachmentDto { Id = existingEndpoint.Tour });
-            }
+                Id = ae.Id,
+                ApiName = ae.ApiName,
+                ApiScope = ae.ApiScope,
+                ApiScopeProduction = ae.ApiScopeProduction,
+                ApiTags = apiEndpointTags.Where(tag => tag.APIEndpointId == ae.Id).ToList(),
+                Deprecated = ae.Deprecated,
+                Description = ae.Description,
+                Documentation = ae.Documentation,
+                EndpointUrls = ae.EndpointUrls,
+                AppEnvironment = ae.AppEnvironment,
+                Swagger = ae.Swagger,
+                Tour = ae.Tour,
+                ApiVersion = ae.ApiVersion,
+                Langcode = ae.Langcode,
+                Sticky = ae.Sticky,
+                Promote = ae.Promote,
+                UrlAlias = ae.UrlAlias,
+                Published = ae.Published
+            }).ToList();
 
-            // Step 4: Perform Database Updates in a Single Transaction
-            using (var transaction = _dbConnection.BeginTransaction())
-            {
-                try
-                {
-                    // Delete APIEndpointTags
-                    await _dbConnection.ExecuteAsync(
-                        "DELETE FROM APIEndpointTags WHERE APIEndpointId = @Id",
-                        new { request.Id },
-                        transaction);
-
-                    // Delete ApiEndpoint
-                    await _dbConnection.ExecuteAsync(
-                        "DELETE FROM APIEndpoints WHERE Id = @Id",
-                        new { request.Id },
-                        transaction);
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
-                }
-            }
-
-            return true;
+            // Step 6: Return the Response
+            return response;
         }
     }
 }
