@@ -62,15 +62,15 @@ namespace ProjectName.Services
             Guid? documentationId = null, swaggerId = null, tourId = null;
             if (request.Documentation != null)
             {
-                documentationId = await _attachmentService.CreateAttachment(request.Documentation);
+                documentationId = Guid.Parse( await _attachmentService.CreateAttachment(request.Documentation));
             }
             if (request.Swagger != null)
             {
-                swaggerId = await _attachmentService.CreateAttachment(request.Swagger);
+                swaggerId = Guid.Parse(await _attachmentService.CreateAttachment(request.Swagger));
             }
             if (request.Tour != null)
             {
-                tourId = await _attachmentService.CreateAttachment(request.Tour);
+                tourId = Guid.Parse(await _attachmentService.CreateAttachment(request.Tour));
             }
 
             // 5. Create APIEndpoint object
@@ -325,7 +325,7 @@ namespace ProjectName.Services
                     await _dbConnection.ExecuteAsync(deleteEndpointQuery, new { Id = existingApiEndpoint.Id }, transaction);
 
                     transaction.Commit();
-                    return True;
+                    return true;
                 }
                 catch
                 {

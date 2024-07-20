@@ -1,5 +1,3 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(328,28): error CS0103: The name 'True' does not exist in the current context
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(65,35): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(69,29): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(73,26): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
-Error: 4 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(44,37): error CS1061: 'CreateImageDto' does not contain a definition for 'CreatorId' and no accessible extension method 'CreatorId' accepting a first argument of type 'CreateImageDto' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(45,39): error CS1061: 'CreateImageDto' does not contain a definition for 'ChangedUser' and no accessible extension method 'ChangedUser' accepting a first argument of type 'CreateImageDto' could be found (are you missing a using directive or an assembly reference?)
+Error: 2 Error(s)
