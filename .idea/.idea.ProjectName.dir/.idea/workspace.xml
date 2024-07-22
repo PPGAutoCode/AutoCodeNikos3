@@ -8,29 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Implementations/ImageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Implementations/ImageService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectName.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectName.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/CreateImageDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/CreateImageDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/UpdateImageDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/UpdateImageDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +106,7 @@
       <workItem from="1720691240687" duration="20949000" />
       <workItem from="1721034795047" duration="52157000" />
       <workItem from="1721495932640" duration="2297000" />
-      <workItem from="1721631015848" duration="1228000" />
+      <workItem from="1721631015848" duration="1522000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />
