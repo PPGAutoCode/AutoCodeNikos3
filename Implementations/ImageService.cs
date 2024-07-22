@@ -46,9 +46,9 @@ namespace ProjectName.Services
 
             // Step 4: Insert the newly created Image object to the database
             const string sql = "INSERT INTO Images (Id, ImageName, ImageData, ImagePath, AltText, Version, Created, CreatorId) VALUES (@Id, @ImageName, @ImageData, @ImagePath, @AltText, @Version, @Created, @CreatorId)";
-            int rowsAffected = await _dbConnection.ExecuteAsync(sql, image);
+            var affectedRows = await _dbConnection.ExecuteAsync(sql, image);
 
-            if (rowsAffected > 0)
+            if (affectedRows > 0)
             {
                 return image.Id.ToString();
             }
@@ -105,10 +105,10 @@ namespace ProjectName.Services
             existingImage.ChangedUser = request.ChangedUser;
 
             // Step 4: Insert the updated Image object to the database
-            const string updateSql = "UPDATE Images SET ImageName = @ImageName, ImageData = @ImageData, ImagePath = @ImagePath, AltText = @AltText, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser WHERE Id = @Id";
-            int rowsAffected = await _dbConnection.ExecuteAsync(updateSql, existingImage);
+            const string sql = "UPDATE Images SET ImageName = @ImageName, ImageData = @ImageData, ImagePath = @ImagePath, AltText = @AltText, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser WHERE Id = @Id";
+            var affectedRows = await _dbConnection.ExecuteAsync(sql, existingImage);
 
-            if (rowsAffected > 0)
+            if (affectedRows > 0)
             {
                 return existingImage.Id.ToString();
             }
@@ -134,10 +134,10 @@ namespace ProjectName.Services
             }
 
             // Step 3: Delete the Image object from the database
-            const string deleteSql = "DELETE FROM Images WHERE Id = @Id";
-            int rowsAffected = await _dbConnection.ExecuteAsync(deleteSql, new { Id = request.Id });
+            const string sql = "DELETE FROM Images WHERE Id = @Id";
+            var affectedRows = await _dbConnection.ExecuteAsync(sql, new { Id = request.Id });
 
-            if (rowsAffected > 0)
+            if (affectedRows > 0)
             {
                 return true;
             }
@@ -160,8 +160,8 @@ namespace ProjectName.Services
             string sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
             // Step 3: Fetch the list of Images from the database table Images based on the provided pagination parameters and optional sorting
-            string sql = $"SELECT * FROM Images ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
-            var images = await _dbConnection.QueryAsync<Image>(sql, new { Offset = request.PageOffset, Limit = request.PageLimit });
+            string sql = $"SELECT * FROM Images ORDER BY {sortField} {sortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
+            var images = await _dbConnection.QueryAsync<Image>(sql, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
 
             return images.ToList();
         }
@@ -176,11 +176,15 @@ namespace ProjectName.Services
                     if (existingImage != null && existingImage.ImagePath != newImage.ImagePath)
                     {
                         await DeleteImage(new DeleteImageDto { Id = existingImageId });
+                        var newImageId = Guid.Parse(await CreateImage(newImage));
+                        updateImageFieldId(newImageId);
                     }
                 }
-
-                var newImageId = await CreateImage(newImage);
-                updateImageFieldId(Guid.Parse(newImageId));
+                else
+                {
+                    var newImageId = Guid.Parse(await CreateImage(newImage));
+                    updateImageFieldId(newImageId);
+                }
             }
             else
             {
