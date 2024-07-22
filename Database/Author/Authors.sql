@@ -1,0 +1,9 @@
+#Path: Author
+#File: Authors.sql
+
+CREATE TABLE Authors (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Image UNIQUEIDENTIFIER NULL,
+    Details NVARCHAR(MAX) NULL
+);

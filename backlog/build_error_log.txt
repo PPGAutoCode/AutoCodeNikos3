@@ -1,1 +1,2 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(14,34): error CS0738: 'AuthorService' does not implement interface member 'IAuthorService.DeleteAuthor(DeleteAuthorDto)'. 'AuthorService.DeleteAuthor(DeleteAuthorDto)' cannot implement 'IAuthorService.DeleteAuthor(DeleteAuthorDto)' because it does not have the matching return type of 'Task<bool>'.
+Error: 1 Error(s)
