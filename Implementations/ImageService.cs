@@ -42,7 +42,6 @@ namespace ProjectName.Services
                 Created = DateTime.UtcNow,
                 Changed = DateTime.UtcNow,
                 CreatorId = request.CreatorId,
-                ChangedUser = request.ChangedUser
             };
 
             // Step 4: Insert the newly created Image object to the database
@@ -111,7 +110,9 @@ namespace ProjectName.Services
             existingImage.FileName = modifiedFileName;
             existingImage.ImageData = request.Image;
             existingImage.AltText = request.AltText;
+            existingImage.Version += 1;
             existingImage.Changed = DateTime.UtcNow;
+            existingImage.ChangedUser = request.ChangedUser;
 
             // Step 5: Insert the updated Image object to the database
             const string updateSql = @"
