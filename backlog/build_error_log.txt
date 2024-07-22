@@ -1,2 +1,4 @@
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/ImageController.cs(16,39): error CS0723: Cannot declare a variable of static type 'SafeExecutor'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/ImageController.cs(18,16): error CS0721: 'SafeExecutor': static types cannot be used as parameters
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(14,33): error CS0535: 'ImageService' does not implement interface member 'IImageService.HandleImage(CreateImageDto, Guid?, Action<Guid?>)'
-Error: 1 Error(s)
+Error: 3 Error(s)
