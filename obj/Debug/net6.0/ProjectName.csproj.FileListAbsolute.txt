@@ -31,13 +31,7 @@
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/System.Data.SqlClient.dll
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/System.Security.Permissions.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/runtimes/win-arm64/native/sni.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/runtimes/win-x64/native/sni.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/runtimes/win-x86/native/sni.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.csproj.CopyComplete
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ProjectName.dll
 /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/obj/Debug/net6.0/ref/ProjectName.dll

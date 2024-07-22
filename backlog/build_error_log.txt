@@ -1,3 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/BlogTagService.cs(14,35): error CS0535: 'BlogTagService' does not implement interface member 'IBlogTagService.UpdateBlogTag(UpdateBlogDto)'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Interfaces/IBlogTagService.cs(32,36): error CS0246: The type or namespace name 'UpdateBlogDto' could not be found (are you missing a using directive or an assembly reference?)
-Error: 2 Error(s)
+Error: 0 Error(s)
