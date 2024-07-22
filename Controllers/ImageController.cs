@@ -13,18 +13,16 @@ namespace ProjectName.Controllers
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
-        private readonly SafeExecutor _safeExecutor;
 
-        public ImageController(IImageService imageService, SafeExecutor safeExecutor)
+        public ImageController(IImageService imageService)
         {
             _imageService = imageService;
-            _safeExecutor = safeExecutor;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateImage([FromBody] Request<CreateImageDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.CreateImage(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -34,7 +32,7 @@ namespace ProjectName.Controllers
         [HttpPost("get")]
         public async Task<IActionResult> GetImage([FromBody] Request<ImageRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.GetImage(request.Payload);
                 return Ok(new Response<Image> { Payload = result });
@@ -44,7 +42,7 @@ namespace ProjectName.Controllers
         [HttpPost("update")]
         public async Task<IActionResult> UpdateImage([FromBody] Request<UpdateImageDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.UpdateImage(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -54,7 +52,7 @@ namespace ProjectName.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteImage([FromBody] Request<DeleteImageDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.DeleteImage(request.Payload);
                 return Ok(new Response<bool> { Payload = result });
@@ -64,7 +62,7 @@ namespace ProjectName.Controllers
         [HttpPost("list")]
         public async Task<IActionResult> GetListImage([FromBody] Request<ListImageRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.GetListImage(request.Payload);
                 return Ok(new Response<List<Image>> { Payload = result });

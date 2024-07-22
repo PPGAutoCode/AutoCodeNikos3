@@ -4,31 +4,15 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   Determining projects to restore...
   All projects are up-to-date for restore.
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(3,2): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(5,6): error CS1519: Invalid token '{' in class, record, struct, or interface member declaration [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(6,29): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(7,36): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(18,6): error CS1519: Invalid token '{' in class, record, struct, or interface member declaration [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(19,29): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(20,36): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(28,6): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(29,1): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(29,2): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Interfaces/IBlogTagService.cs(32,36): error CS0246: The type or namespace name 'UpdateBlogDto' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/BlogTagService.cs(14,35): error CS0535: 'BlogTagService' does not implement interface member 'IBlogTagService.UpdateBlogTag(UpdateBlogDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
 
 Build FAILED.
 
 /usr/local/share/dotnet/sdk/6.0.129/Sdks/Microsoft.NET.Sdk.Razor/targets/Sdk.Razor.CurrentVersion.targets(443,5): warning RAZORSDK1006: Detected Razor language version downgrade. This is typically caused by a reference to the Microsoft.AspNetCore.Razor.Design package. Consider removing this package reference. [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(3,2): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(5,6): error CS1519: Invalid token '{' in class, record, struct, or interface member declaration [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(6,29): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(7,36): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(18,6): error CS1519: Invalid token '{' in class, record, struct, or interface member declaration [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(19,29): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(20,36): error CS1014: A get or set accessor expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(28,6): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(29,1): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
-/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/Exceptions.cs(29,2): error CS1022: Type or namespace definition, or end-of-file expected [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Interfaces/IBlogTagService.cs(32,36): error CS0246: The type or namespace name 'UpdateBlogDto' could not be found (are you missing a using directive or an assembly reference?) [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
+/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/BlogTagService.cs(14,35): error CS0535: 'BlogTagService' does not implement interface member 'IBlogTagService.UpdateBlogTag(UpdateBlogDto)' [/Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/ProjectName.csproj]
     1 Warning(s)
-    10 Error(s)
+    2 Error(s)
 
-Time Elapsed 00:00:02.84
+Time Elapsed 00:00:04.69

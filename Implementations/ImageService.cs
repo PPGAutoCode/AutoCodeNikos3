@@ -22,17 +22,17 @@ namespace ProjectName.Services
 
         public async Task<string> CreateImage(CreateImageDto request)
         {
-            if (request == null || string.IsNullOrEmpty(request.FileName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
+            if (request == null || string.IsNullOrEmpty(request.ImageName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var modifiedFileName = request.FileName + "_original";
+            var modifiedFileName = request.ImageName + "_original";
             var image = new Image
             {
                 Id = Guid.NewGuid(),
-                FileName = modifiedFileName,
-                ImageData = Convert.ToBase64String(request.ImageData),
+                ImageName = modifiedFileName,
+                ImageData = request.ImageData,
                 ImagePath = request.ImagePath,
                 AltText = request.AltText,
                 Version = 1,
@@ -75,7 +75,7 @@ namespace ProjectName.Services
 
         public async Task<string> UpdateImage(UpdateImageDto request)
         {
-            if (request == null || request.Id == null || string.IsNullOrEmpty(request.FileName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
+            if (request == null || request.Id == null || string.IsNullOrEmpty(request.ImageName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -88,8 +88,8 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            existingImage.FileName = request.FileName;
-            existingImage.ImageData = Convert.ToBase64String(request.ImageData);
+            existingImage.ImageName = request.ImageName;
+            existingImage.ImageData = request.ImageData;
             existingImage.ImagePath = request.ImagePath;
             existingImage.AltText = request.AltText;
             existingImage.Version += 1;

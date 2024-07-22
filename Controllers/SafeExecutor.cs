@@ -22,9 +22,9 @@ namespace ProjectName.Controllers
             {
                 return new ObjectResult(new { exception = new { code = ex.Code, description = ex.Description } }) { StatusCode = 200 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ObjectResult(new { exception = new { code = "1001", description = "A technical exception has occurred, please contact your system administrator" } }) { StatusCode = 200 };
+                return new ObjectResult(new { exception = new { code = "1001", description = "A technical exception has occurred, please contact your system administrator" ,ex.Message} }) { StatusCode = 200 };
             }
         }
     }
