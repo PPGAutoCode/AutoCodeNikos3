@@ -25,7 +25,6 @@
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
@@ -127,7 +126,7 @@
       <workItem from="1720691240687" duration="20949000" />
       <workItem from="1721034795047" duration="52157000" />
       <workItem from="1721495932640" duration="2297000" />
-      <workItem from="1721631015848" duration="6450000" />
+      <workItem from="1721631015848" duration="6945000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />

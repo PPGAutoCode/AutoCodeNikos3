@@ -45,8 +45,9 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            var sql = @"INSERT INTO BlogTags (Id, Name, Version, Created, CreatorId) 
-                        VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
+            var sql = @"
+                INSERT INTO BlogTags (Id, Name, Version, Created, CreatorId)
+                VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
 
             try
             {
@@ -105,9 +106,10 @@ namespace ProjectName.Services
             blogTag.Changed = DateTime.Now;
             blogTag.ChangedUser = request.ChangedUser;
 
-            var sql = @"UPDATE BlogTags 
-                        SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser 
-                        WHERE Id = @Id";
+            var sql = @"
+                UPDATE BlogTags
+                SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser
+                WHERE Id = @Id";
 
             try
             {
@@ -136,7 +138,8 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            var sql = @"DELETE FROM BlogTags WHERE Id = @Id";
+            var sql = @"
+                DELETE FROM BlogTags WHERE Id = @Id";
 
             try
             {
@@ -156,22 +159,21 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var sql = @"SELECT * FROM BlogTags 
-                        ORDER BY @SortField @SortOrder 
-                        OFFSET @PageOffset ROWS 
-                        FETCH NEXT @PageLimit ROWS ONLY";
-
-            var parameters = new
+            if (string.IsNullOrEmpty(request.SortField) || string.IsNullOrEmpty(request.SortOrder))
             {
-                PageLimit = request.PageLimit,
-                PageOffset = request.PageOffset,
-                SortField = request.SortField ?? "Id",
-                SortOrder = request.SortOrder ?? "asc"
-            };
+                request.SortField = "Id";
+                request.SortOrder = "asc";
+            }
+
+            var sql = $@"
+                SELECT * FROM BlogTags
+                ORDER BY {request.SortField} {request.SortOrder}
+                OFFSET {request.PageOffset} ROWS
+                FETCH NEXT {request.PageLimit} ROWS ONLY";
 
             try
             {
-                var blogTags = await _dbConnection.QueryAsync<BlogTag>(sql, parameters);
+                var blogTags = await _dbConnection.QueryAsync<BlogTag>(sql);
                 return blogTags.ToList();
             }
             catch (Exception)
