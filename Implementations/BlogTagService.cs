@@ -29,7 +29,7 @@ namespace ProjectName.Services
 
             var existingTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
                 "SELECT * FROM BlogTags WHERE Name = @Name",
-                new { request.Name });
+                new { Name = request.Name });
 
             if (existingTag != null)
             {
@@ -45,15 +45,17 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            var sql = @"INSERT INTO BlogTags (Id, Name, Version, Created, CreatorId) 
-                        VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
+            var sql = @"
+                INSERT INTO BlogTags (Id, Name, Version, Created, CreatorId)
+                VALUES (@Id, @Name, @Version, @Created, @CreatorId)";
 
-            try
+            var rowsAffected = await _dbConnection.ExecuteAsync(sql, newBlogTag);
+
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(sql, newBlogTag);
                 return newBlogTag.Id.ToString();
             }
-            catch
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -61,24 +63,24 @@ namespace ProjectName.Services
 
         public async Task<BlogTag> GetBlogTag(BlogTagRequestDto request)
         {
-            if ((request.Id == Guid.Empty || request.Id == null) && string.IsNullOrEmpty(request.Name))
+            if (request.Id == null && string.IsNullOrEmpty(request.Name))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
             BlogTag blogTag = null;
 
-            if (request.Id != Guid.Empty && request.Id != null)
+            if (request.Id != null)
             {
                 blogTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
                     "SELECT * FROM BlogTags WHERE Id = @Id",
-                    new { request.Id });
+                    new { Id = request.Id });
             }
             else if (!string.IsNullOrEmpty(request.Name))
             {
                 blogTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
                     "SELECT * FROM BlogTags WHERE Name = @Name",
-                    new { request.Name });
+                    new { Name = request.Name });
             }
 
             return blogTag;
@@ -86,35 +88,37 @@ namespace ProjectName.Services
 
         public async Task<string> UpdateBlogTag(UpdateBlogTagDto request)
         {
-            if (request.Id == Guid.Empty || request.Id == null || string.IsNullOrEmpty(request.Name) || request.ChangedUser == Guid.Empty || request.ChangedUser == null)
+            if (request.Id == null || string.IsNullOrEmpty(request.Name) || request.ChangedUser == null)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var existingTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
+            var blogTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
                 "SELECT * FROM BlogTags WHERE Id = @Id",
-                new { request.Id });
+                new { Id = request.Id });
 
-            if (existingTag == null)
+            if (blogTag == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            existingTag.Name = request.Name;
-            existingTag.Version += 1;
-            existingTag.Changed = DateTime.Now;
-            existingTag.ChangedUser = request.ChangedUser;
+            blogTag.Name = request.Name;
+            blogTag.Version += 1;
+            blogTag.Changed = DateTime.Now;
+            blogTag.ChangedUser = request.ChangedUser;
 
-            var sql = @"UPDATE BlogTags 
-                        SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser 
-                        WHERE Id = @Id";
+            var sql = @"
+                UPDATE BlogTags
+                SET Name = @Name, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser
+                WHERE Id = @Id";
 
-            try
+            var rowsAffected = await _dbConnection.ExecuteAsync(sql, blogTag);
+
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(sql, existingTag);
-                return existingTag.Id.ToString();
+                return blogTag.Id.ToString();
             }
-            catch
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -122,28 +126,30 @@ namespace ProjectName.Services
 
         public async Task<bool> DeleteBlogTag(DeleteBlogTagDto request)
         {
-            if (request.Id == Guid.Empty || request.Id == null)
+            if (request.Id == null)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var existingTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
+            var blogTag = await _dbConnection.QueryFirstOrDefaultAsync<BlogTag>(
                 "SELECT * FROM BlogTags WHERE Id = @Id",
-                new { request.Id });
+                new { Id = request.Id });
 
-            if (existingTag == null)
+            if (blogTag == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            var sql = @"DELETE FROM BlogTags WHERE Id = @Id";
+            var sql = @"
+                DELETE FROM BlogTags WHERE Id = @Id";
 
-            try
+            var rowsAffected = await _dbConnection.ExecuteAsync(sql, new { Id = request.Id });
+
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(sql, new { request.Id });
                 return true;
             }
-            catch
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -156,30 +162,23 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var sql = @"SELECT * FROM BlogTags 
-                        ORDER BY 
-                        @SortField 
-                        @SortOrder 
-                        OFFSET @PageOffset ROWS 
-                        FETCH NEXT @PageLimit ROWS ONLY";
+            var sql = @"
+                SELECT * FROM BlogTags
+                ORDER BY @SortField @SortOrder
+                OFFSET @PageOffset ROWS
+                FETCH NEXT @PageLimit ROWS ONLY";
 
             var parameters = new
             {
                 SortField = request.SortField ?? "Id",
-                SortOrder = request.SortOrder ?? "ASC",
-                request.PageOffset,
-                request.PageLimit
+                SortOrder = request.SortOrder ?? "asc",
+                PageOffset = request.PageOffset,
+                PageLimit = request.PageLimit
             };
 
-            try
-            {
-                var blogTags = await _dbConnection.QueryAsync<BlogTag>(sql, parameters);
-                return blogTags.ToList();
-            }
-            catch
-            {
-                throw new TechnicalException("DP-500", "Technical Error");
-            }
+            var blogTags = await _dbConnection.QueryAsync<BlogTag>(sql, parameters);
+
+            return blogTags.ToList();
         }
     }
 }
