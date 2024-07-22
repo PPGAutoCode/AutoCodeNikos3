@@ -22,15 +22,20 @@ namespace ProjectName.Services
 
         public async Task<string> CreateImage(CreateImageDto request)
         {
+            // Step 1: Validate the request payload
             if (string.IsNullOrEmpty(request.ImageName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
+            // Step 2: Modify the file name
+            string modifiedFileName = request.ImageName + "_original";
+
+            // Step 3: Create an Image object
             var image = new Image
             {
                 Id = Guid.NewGuid(),
-                ImageName = request.ImageName + "_original",
+                ImageName = modifiedFileName,
                 ImageData = request.ImageData,
                 ImagePath = request.ImagePath,
                 AltText = request.AltText,
@@ -39,16 +44,15 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            const string sql = @"
-                INSERT INTO Images (Id, ImageName, ImageData, ImagePath, AltText, Version, Created, CreatorId)
-                VALUES (@Id, @ImageName, @ImageData, @ImagePath, @AltText, @Version, @Created, @CreatorId)";
+            // Step 4: Insert the newly created Image object to the database
+            const string sql = "INSERT INTO Images (Id, ImageName, ImageData, ImagePath, AltText, Version, Created, CreatorId) VALUES (@Id, @ImageName, @ImageData, @ImagePath, @AltText, @Version, @Created, @CreatorId)";
+            int rowsAffected = await _dbConnection.ExecuteAsync(sql, image);
 
-            try
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(sql, image);
                 return image.Id.ToString();
             }
-            catch (Exception)
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -56,43 +60,42 @@ namespace ProjectName.Services
 
         public async Task<Image> GetImage(ImageRequestDto request)
         {
+            // Step 1: Validate that ImageRequestDto.Id is not null
             if (request.Id == null)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
+            // Step 2: Fetch the Image from the database based on the provided Image ID
             const string sql = "SELECT * FROM Images WHERE Id = @Id";
+            var image = await _dbConnection.QuerySingleOrDefaultAsync<Image>(sql, new { Id = request.Id });
 
-            try
+            if (image != null)
             {
-                var image = await _dbConnection.QuerySingleOrDefaultAsync<Image>(sql, new { Id = request.Id });
-                if (image == null)
-                {
-                    throw new TechnicalException("DP-404", "Technical Error");
-                }
                 return image;
             }
-            catch (Exception)
+            else
             {
-                throw new TechnicalException("DP-500", "Technical Error");
+                throw new TechnicalException("DP-404", "Technical Error");
             }
         }
 
         public async Task<string> UpdateImage(UpdateImageDto request)
         {
+            // Step 1: Validate that the request payload contains the necessary parameters
             if (request.Id == null || string.IsNullOrEmpty(request.ImageName) || request.ImageData == null || string.IsNullOrEmpty(request.ImagePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM Images WHERE Id = @Id";
-            var existingImage = await _dbConnection.QuerySingleOrDefaultAsync<Image>(selectSql, new { Id = request.Id });
-
+            // Step 2: Fetch the Image from the database by Id
+            var existingImage = await GetImage(new ImageRequestDto { Id = request.Id });
             if (existingImage == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
+            // Step 3: Update the Image object with the provided changes
             existingImage.ImageName = request.ImageName;
             existingImage.ImageData = request.ImageData;
             existingImage.ImagePath = request.ImagePath;
@@ -101,18 +104,15 @@ namespace ProjectName.Services
             existingImage.Changed = DateTime.Now;
             existingImage.ChangedUser = request.ChangedUser;
 
-            const string updateSql = @"
-                UPDATE Images 
-                SET ImageName = @ImageName, ImageData = @ImageData, ImagePath = @ImagePath, AltText = @AltText, 
-                    Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser 
-                WHERE Id = @Id";
+            // Step 4: Insert the updated Image object to the database
+            const string updateSql = "UPDATE Images SET ImageName = @ImageName, ImageData = @ImageData, ImagePath = @ImagePath, AltText = @AltText, Version = @Version, Changed = @Changed, ChangedUser = @ChangedUser WHERE Id = @Id";
+            int rowsAffected = await _dbConnection.ExecuteAsync(updateSql, existingImage);
 
-            try
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(updateSql, existingImage);
                 return existingImage.Id.ToString();
             }
-            catch (Exception)
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -120,27 +120,28 @@ namespace ProjectName.Services
 
         public async Task<bool> DeleteImage(DeleteImageDto request)
         {
+            // Step 1: Validate that the request payload contains the necessary parameter
             if (request.Id == null)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            const string selectSql = "SELECT * FROM Images WHERE Id = @Id";
-            var existingImage = await _dbConnection.QuerySingleOrDefaultAsync<Image>(selectSql, new { Id = request.Id });
-
+            // Step 2: Fetch the Image from the database by Id
+            var existingImage = await GetImage(new ImageRequestDto { Id = request.Id });
             if (existingImage == null)
             {
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
+            // Step 3: Delete the Image object from the database
             const string deleteSql = "DELETE FROM Images WHERE Id = @Id";
+            int rowsAffected = await _dbConnection.ExecuteAsync(deleteSql, new { Id = request.Id });
 
-            try
+            if (rowsAffected > 0)
             {
-                await _dbConnection.ExecuteAsync(deleteSql, new { Id = request.Id });
                 return true;
             }
-            catch (Exception)
+            else
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -148,29 +149,21 @@ namespace ProjectName.Services
 
         public async Task<List<Image>> GetListImage(ListImageRequestDto request)
         {
+            // Step 1: Validate that the ListImageRequestDto contains the necessary pagination parameters
             if (request.PageLimit <= 0 || request.PageOffset < 0)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
-            var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
+            // Step 2: Set default sorting values if not provided
+            string sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
+            string sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            var sql = $@"
-                SELECT * FROM Images 
-                ORDER BY {sortField} {sortOrder} 
-                OFFSET {request.PageOffset} ROWS 
-                FETCH NEXT {request.PageLimit} ROWS ONLY";
+            // Step 3: Fetch the list of Images from the database table Images based on the provided pagination parameters and optional sorting
+            string sql = $"SELECT * FROM Images ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+            var images = await _dbConnection.QueryAsync<Image>(sql, new { Offset = request.PageOffset, Limit = request.PageLimit });
 
-            try
-            {
-                var images = await _dbConnection.QueryAsync<Image>(sql);
-                return images.ToList();
-            }
-            catch (Exception)
-            {
-                throw new TechnicalException("DP-500", "Technical Error");
-            }
+            return images.ToList();
         }
 
         public async Task HandleImage(CreateImageDto newImage, Guid? existingImageId, Action<Guid?> updateImageFieldId)
