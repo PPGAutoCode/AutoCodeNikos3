@@ -27,11 +27,10 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var modifiedFileName = request.ImageName + "_original";
             var image = new Image
             {
                 Id = Guid.NewGuid(),
-                ImageName = modifiedFileName,
+                ImageName = request.ImageName + "_original",
                 ImageData = request.ImageData,
                 ImagePath = request.ImagePath,
                 AltText = request.AltText,
@@ -75,7 +74,7 @@ namespace ProjectName.Services
             }
             catch (Exception)
             {
-                throw new TechnicalException("DP-404", "Technical Error");
+                throw new TechnicalException("DP-500", "Technical Error");
             }
         }
 
@@ -181,7 +180,7 @@ namespace ProjectName.Services
                 if (existingImageId != null)
                 {
                     var existingImage = await GetImage(new ImageRequestDto { Id = existingImageId });
-                    if (existingImage != null && !existingImage.ImagePath.SequenceEqual(newImage.ImagePath))
+                    if (existingImage != null && existingImage.ImagePath != newImage.ImagePath)
                     {
                         await DeleteImage(new DeleteImageDto { Id = existingImageId });
                     }
@@ -190,10 +189,13 @@ namespace ProjectName.Services
                 var newImageId = await CreateImage(newImage);
                 updateImageFieldId(Guid.Parse(newImageId));
             }
-            else if (existingImageId != null)
+            else
             {
-                await DeleteImage(new DeleteImageDto { Id = existingImageId });
-                updateImageFieldId(null);
+                if (existingImageId != null)
+                {
+                    await DeleteImage(new DeleteImageDto { Id = existingImageId });
+                    updateImageFieldId(null);
+                }
             }
         }
     }
