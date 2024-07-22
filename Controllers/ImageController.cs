@@ -13,7 +13,6 @@ namespace ProjectName.Controllers
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
-        private readonly SafeExecutor _safeExecutor;
 
         public ImageController(IImageService imageService, SafeExecutor safeExecutor)
         {

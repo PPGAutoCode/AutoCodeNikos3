@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ProjectName.Types;
 using ProjectName.ControllersExceptions;
 
 namespace ProjectName.Controllers
@@ -15,38 +14,17 @@ namespace ProjectName.Controllers
             {
                 return await action();
             }
-            catch (BusinessException bex)
+            catch (BusinessException ex)
             {
-                return new OkObjectResult(new
-                {
-                    exception = new
-                    {
-                        code = bex.Code,
-                        description = bex.Description
-                    }
-                });
+                return new ObjectResult(new { exception = new { code = ex.Code, description = ex.Description } }) { StatusCode = 200 };
             }
-            catch (TechnicalException tex)
+            catch (TechnicalException ex)
             {
-                return new OkObjectResult(new
-                {
-                    exception = new
-                    {
-                        code = tex.Code,
-                        description = tex.Description
-                    }
-                });
+                return new ObjectResult(new { exception = new { code = ex.Code, description = ex.Description } }) { StatusCode = 200 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new OkObjectResult(new
-                {
-                    exception = new
-                    {
-                        code = "1001",
-                        description = "A technical exception has occurred, please contact your system administrator"
-                    }
-                });
+                return new ObjectResult(new { exception = new { code = "1001", description = "A technical exception has occurred, please contact your system administrator" } }) { StatusCode = 200 };
             }
         }
     }
