@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProjectName.Types;
@@ -14,7 +15,7 @@ namespace ProjectName.Interfaces
         /// Creates a new image based on the provided data.
         /// </summary>
         /// <param name="createImageDto">Data transfer object containing information needed to create an image.</param>
-        /// <returns>A string representing the identifier of the newly created image.</returns>
+        /// <returns>A string representing the result of the image creation operation.</returns>
         Task<string> CreateImage(CreateImageDto createImageDto);
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ProjectName.Interfaces
         /// Updates an existing image based on the provided data.
         /// </summary>
         /// <param name="updateImageDto">Data transfer object containing information needed to update an image.</param>
-        /// <returns>A string representing the identifier of the updated image.</returns>
+        /// <returns>A string representing the result of the image update operation.</returns>
         Task<string> UpdateImage(UpdateImageDto updateImageDto);
 
         /// <summary>
@@ -44,5 +45,13 @@ namespace ProjectName.Interfaces
         /// <param name="listImageRequestDto">Data transfer object containing information needed to retrieve a list of images.</param>
         /// <returns>A list of Image objects representing the retrieved images.</returns>
         Task<List<Image>> GetListImage(ListImageRequestDto listImageRequestDto);
+
+        /// <summary>
+        /// Handles an image operation, potentially involving additional actions.
+        /// </summary>
+        /// <param name="createImageDto">Data transfer object containing information needed to create an image.</param>
+        /// <param name="guid">An optional Guid parameter.</param>
+        /// <param name="action">An action to be performed with the Guid.</param>
+        Task HandleImage(CreateImageDto createImageDto, Guid? guid, Action<Guid?> action);
     }
 }
