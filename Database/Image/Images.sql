@@ -1,12 +1,12 @@
-
 CREATE TABLE Images (
     Id uniqueidentifier PRIMARY KEY,
-    FileName nvarchar(100) NOT NULL UNIQUE,
+    FileName nvarchar(100) NOT NULL,
     ImageData varbinary(max) NOT NULL,
-    AltText nvarchar(500) NULL,
-    Version int NULL,
-    Created datetime2(7) NOT NULL,
-    Changed datetime2(7) NOT NULL,
-    CreatorId uniqueidentifier NOT NULL,
-    ChangedUser uniqueidentifier NOT NULL
+    ImagePath nvarchar(500) UNIQUE NOT NULL,
+    AltText nvarchar(500),
+    Version int,
+    Created datetime2(7) NOT NULL UNIQUE,
+    Changed datetime2(7) UNIQUE,
+    CreatorId uniqueidentifier NOT NULL UNIQUE,
+    ChangedUser uniqueidentifier
 );
