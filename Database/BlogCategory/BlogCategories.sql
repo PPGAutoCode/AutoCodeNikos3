@@ -1,6 +1,3 @@
-#Path: BlogCategory
-#File: BlogCategories.sql
-
 CREATE TABLE BlogCategories (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
     Parent UNIQUEIDENTIFIER,
