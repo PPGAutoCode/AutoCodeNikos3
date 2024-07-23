@@ -1,5 +1,4 @@
 
-// File: Author.cs
 namespace ProjectName.Types
 {
     public class Author
@@ -7,6 +6,6 @@ namespace ProjectName.Types
         public Guid Id { get; set; }
         public string Name { get; set; }
         public Guid? Image { get; set; }
-        public string Information { get; set; }
+        public string? Information { get; set; }
     }
 }

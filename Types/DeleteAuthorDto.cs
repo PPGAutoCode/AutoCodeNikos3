@@ -1,5 +1,4 @@
 
-// File: DeleteAuthorDto.cs
 namespace ProjectName.Types
 {
     public class DeleteAuthorDto
