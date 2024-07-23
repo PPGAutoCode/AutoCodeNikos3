@@ -124,7 +124,7 @@ namespace ProjectName.Services
             return existingAuthor.Id.ToString();
         }
 
-        public async Task<string> DeleteAuthor(DeleteAuthorDto request)
+        public async Task<bool> DeleteAuthor(DeleteAuthorDto request)
         {
             // Step 1: Validate Request Payload
             if (request.Id == Guid.Empty)
@@ -160,7 +160,7 @@ namespace ProjectName.Services
             }
 
             // Step 5: Return response.payload = true
-            return "true";
+            return true;
         }
 
         public async Task<List<Author>> GetListAuthor(ListAuthorRequestDto request)

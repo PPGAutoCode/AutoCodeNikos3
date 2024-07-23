@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using ProjectName.ControllersExceptions;
@@ -22,7 +21,7 @@ namespace ProjectName.Services
 
         public async Task<string> CreateAttachment(CreateAttachmentDto request)
         {
-            if (string.IsNullOrEmpty(request.FileName) || request.FileUrl == null)
+            if (string.IsNullOrEmpty(request.FileName) || request.FileUrl == null || string.IsNullOrEmpty(request.FilePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -32,10 +31,11 @@ namespace ProjectName.Services
                 Id = Guid.NewGuid(),
                 FileName = request.FileName,
                 FileUrl = request.FileUrl,
+                FilePath = request.FilePath,
                 Timestamp = DateTime.UtcNow
             };
 
-            const string sql = "INSERT INTO Attachments (Id, FileName, FileUrl, Timestamp) VALUES (@Id, @FileName, @FileUrl, @Timestamp)";
+            const string sql = "INSERT INTO Attachments (Id, FileName, FileUrl, FilePath, Timestamp) VALUES (@Id, @FileName, @FileUrl, @FilePath, @Timestamp)";
             var affectedRows = await _dbConnection.ExecuteAsync(sql, attachment);
 
             if (affectedRows == 0)
@@ -66,7 +66,7 @@ namespace ProjectName.Services
 
         public async Task<string> UpdateAttachment(UpdateAttachmentDto request)
         {
-            if (request.Id == null || string.IsNullOrEmpty(request.FileName) || request.FileUrl == null)
+            if (request.Id == null || string.IsNullOrEmpty(request.FileName) || request.FileUrl == null || string.IsNullOrEmpty(request.FilePath))
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -81,9 +81,10 @@ namespace ProjectName.Services
 
             existingAttachment.FileName = request.FileName;
             existingAttachment.FileUrl = request.FileUrl;
+            existingAttachment.FilePath = request.FilePath;
             existingAttachment.Timestamp = DateTime.UtcNow;
 
-            const string updateSql = "UPDATE Attachments SET FileName = @FileName, FileUrl = @FileUrl, Timestamp = @Timestamp WHERE Id = @Id";
+            const string updateSql = "UPDATE Attachments SET FileName = @FileName, FileUrl = @FileUrl, FilePath = @FilePath, Timestamp = @Timestamp WHERE Id = @Id";
             var affectedRows = await _dbConnection.ExecuteAsync(updateSql, existingAttachment);
 
             if (affectedRows == 0)
@@ -127,23 +128,13 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            var sql = "SELECT * FROM Attachments";
+            var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
+            var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            if (!string.IsNullOrEmpty(request.SortField) && !string.IsNullOrEmpty(request.SortOrder))
-            {
-                sql += $" ORDER BY {request.SortField} {request.SortOrder}";
-            }
+            var sql = $"SELECT * FROM Attachments ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+            var attachments = await _dbConnection.QueryAsync<Attachment>(sql, new { Offset = request.PageOffset, Limit = request.PageLimit });
 
-            sql += " OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
-
-            var attachments = await _dbConnection.QueryAsync<Attachment>(sql, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
-
-            if (attachments == null || !attachments.Any())
-            {
-                throw new TechnicalException("DP-500", "Technical Error");
-            }
-
-            return attachments.ToList();
+            return attachments.AsList();
         }
 
         public async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid?> updateAttachmentFieldId)
@@ -153,7 +144,7 @@ namespace ProjectName.Services
                 if (existingAttachmentId != null)
                 {
                     var existingAttachment = await GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId });
-                    if (!existingAttachment.FileUrl.SequenceEqual(newAttachment.FileUrl))
+                    if (existingAttachment != null && existingAttachment.FilePath != newAttachment.FilePath)
                     {
                         await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
                         var newId = Guid.Parse(await CreateAttachment(newAttachment));
@@ -166,13 +157,10 @@ namespace ProjectName.Services
                     updateAttachmentFieldId(newId);
                 }
             }
-            else
+            else if (existingAttachmentId != null)
             {
-                if (existingAttachmentId != null)
-                {
-                    await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                    updateAttachmentFieldId(null);
-                }
+                await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
+                updateAttachmentFieldId(null);
             }
         }
     }
