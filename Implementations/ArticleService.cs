@@ -33,7 +33,7 @@ namespace ProjectName.Services
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
             // Step 1: Validate all fields of request.payload are not null except from [Summary, Body, Image, PDF, BlogCategories, BlogTags, GoogleDriveID]
-            if (request.Title == null || request.Author == Guid.Empty || request.Langcode == null || request.CreatorId == Guid.Empty)
+            if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.CreatorId == Guid.Empty)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
