@@ -1,5 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(110,28): error CS1061: 'Author' does not contain a definition for 'Details' and no accessible extension method 'Details' accepting a first argument of type 'Author' could be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(110,46): error CS1061: 'UpdateAuthorDto' does not contain a definition for 'Details' and no accessible extension method 'Details' accepting a first argument of type 'UpdateAuthorDto' could be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(46,17): error CS0117: 'Author' does not contain a definition for 'Details'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(46,35): error CS1061: 'CreateAuthorDto' does not contain a definition for 'Details' and no accessible extension method 'Details' accepting a first argument of type 'CreateAuthorDto' could be found (are you missing a using directive or an assembly reference?)
-Error: 4 Error(s)
+Error: 0 Error(s)
