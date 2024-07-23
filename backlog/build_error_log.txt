@@ -1,2 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/Article.cs(20,21): error CS0246: The type or namespace name '_Blog_Tag' could not be found (are you missing a using directive or an assembly reference?)
-Error: 1 Error(s)
+Error: 0 Error(s)

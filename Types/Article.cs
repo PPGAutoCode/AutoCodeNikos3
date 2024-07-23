@@ -16,8 +16,8 @@ namespace ProjectName.Types
         public bool Status { get; set; }
         public bool Sticky { get; set; }
         public bool Promote { get; set; }
-        public List<Guid> BlogCategories { get; set; }
-        public List<_Blog_Tag>? BlogTags { get; set; }
+        public List<BlogCategory> BlogCategories { get; set; }
+        public List<BlogTag>? BlogTags { get; set; }
         public int? Version { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Changed { get; set; }
