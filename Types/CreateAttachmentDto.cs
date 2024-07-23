@@ -5,5 +5,6 @@ namespace ProjectName.Types
     {
         public string FileName { get; set; }
         public byte[] FileUrl { get; set; }
+        public string FilePath { get; set; }
     }
 }
