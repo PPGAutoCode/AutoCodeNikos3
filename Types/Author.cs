@@ -1,4 +1,5 @@
 
+// File: Author.cs
 namespace ProjectName.Types
 {
     public class Author

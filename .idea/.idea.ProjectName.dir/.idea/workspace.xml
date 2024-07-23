@@ -7,7 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="appsetings" />
+    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="appsetings">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,7 +112,7 @@
       <workItem from="1721034795047" duration="52157000" />
       <workItem from="1721495932640" duration="2297000" />
       <workItem from="1721631015848" duration="12845000" />
-      <workItem from="1721669998501" duration="4519000" />
+      <workItem from="1721669998501" duration="5018000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />
