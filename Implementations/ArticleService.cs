@@ -46,7 +46,7 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // Step 3: Get the BlogCategories Ids and fetch the whole entity of BlogCategory
+            // Step 3: Get the BlogCategories Ids from request.BlogCategories
             var blogCategoryIds = new List<Guid>();
             foreach (var categoryId in request.BlogCategories)
             {
@@ -59,7 +59,7 @@ namespace ProjectName.Services
                 blogCategoryIds.Add(blogCategory.Id);
             }
 
-            // Step 4: If request.BlogTags is not null, Get the BlogTags names and fetch the whole entity of BlogTag
+            // Step 4: If request.BlogTags is not null, Get the BlogTags names from request.BlogTags
             var blogTagIds = new List<Guid>();
             if (request.BlogTags != null)
             {
@@ -92,7 +92,7 @@ namespace ProjectName.Services
             Guid? imageId = null;
             if (request.Image != null)
             {
-                var imageIdStr = await _imageService.CreateImage(request.Image);
+                var imageIdStr = await _imageService.UploadImage(request.Image);
                 imageId = Guid.Parse(imageIdStr);
             }
 
@@ -138,17 +138,17 @@ namespace ProjectName.Services
             {
                 try
                 {
-                    var sqlArticle = @"INSERT INTO Articles (Id, Title, Author, Summary, Body, GoogleDriveId, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
-                                       VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
-                    await _dbConnection.ExecuteAsync(sqlArticle, article, transaction);
+                    var insertArticleQuery = @"INSERT INTO Articles (Id, Title, Author, Summary, Body, GoogleDriveId, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
+                                               VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
+                    await _dbConnection.ExecuteAsync(insertArticleQuery, article, transaction);
 
-                    var sqlArticleBlogCategories = @"INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) 
-                                                     VALUES (@Id, @ArticleId, @BlogCategoryId)";
-                    await _dbConnection.ExecuteAsync(sqlArticleBlogCategories, articleBlogCategories, transaction);
+                    var insertArticleBlogCategoriesQuery = @"INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) 
+                                                             VALUES (@Id, @ArticleId, @BlogCategoryId)";
+                    await _dbConnection.ExecuteAsync(insertArticleBlogCategoriesQuery, articleBlogCategories, transaction);
 
-                    var sqlArticleBlogTags = @"INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) 
-                                               VALUES (@Id, @ArticleId, @BlogTagId)";
-                    await _dbConnection.ExecuteAsync(sqlArticleBlogTags, articleBlogTags, transaction);
+                    var insertArticleBlogTagsQuery = @"INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) 
+                                                       VALUES (@Id, @ArticleId, @BlogTagId)";
+                    await _dbConnection.ExecuteAsync(insertArticleBlogTagsQuery, articleBlogTags, transaction);
 
                     transaction.Commit();
                 }
