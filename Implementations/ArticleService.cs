@@ -32,8 +32,8 @@ namespace ProjectName.Services
 
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
-            // Step 1: Validate all fields of request.payload are not null except from [Summary, Body, Image, PDF, BlogCategories, BlogTags, GoogleDriveID]
-            if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.CreatorId == Guid.Empty)
+            // Step 1: Validate the request payload
+            if (request.Title == null || request.Author == Guid.Empty || request.HideScrollSpy == null || request.Langcode == null || request.Status == null || request.Sticky == null || request.Promote == null || request.BlogCategories == null)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -46,7 +46,7 @@ namespace ProjectName.Services
                 throw new TechnicalException("DP-404", "Technical Error");
             }
 
-            // Step 3: Get the BlogCategories Ids from request.BlogCategories and fetch the whole entity of BlogCategory
+            // Step 3: Get the BlogCategories Ids and fetch the whole entity of BlogCategory
             var blogCategoryIds = new List<Guid>();
             foreach (var categoryId in request.BlogCategories)
             {
@@ -59,7 +59,7 @@ namespace ProjectName.Services
                 blogCategoryIds.Add(blogCategory.Id);
             }
 
-            // Step 4: If request.BlogTags is not null, Get the BlogTags names from request.BlogTags and fetch the whole entity of BlogTag
+            // Step 4: If request.BlogTags is not null, Get the BlogTags names and fetch the whole entity of BlogTag
             var blogTagIds = new List<Guid>();
             if (request.BlogTags != null)
             {
@@ -136,17 +136,17 @@ namespace ProjectName.Services
             {
                 try
                 {
-                    var insertArticleQuery = @"INSERT INTO Article (Id, Title, Author, Summary, Body, GoogleDriveID, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
-                                               VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveID, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
-                    await _dbConnection.ExecuteAsync(insertArticleQuery, article, transaction);
+                    var sqlArticle = @"INSERT INTO Articles (Id, Title, Author, Summary, Body, GoogleDriveID, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
+                                       VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveID, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
+                    await _dbConnection.ExecuteAsync(sqlArticle, article, transaction);
 
-                    var insertArticleBlogCategoriesQuery = @"INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) 
-                                                             VALUES (@Id, @ArticleId, @BlogCategoryId)";
-                    await _dbConnection.ExecuteAsync(insertArticleBlogCategoriesQuery, articleBlogCategories, transaction);
+                    var sqlArticleBlogCategories = @"INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) 
+                                                     VALUES (@Id, @ArticleId, @BlogCategoryId)";
+                    await _dbConnection.ExecuteAsync(sqlArticleBlogCategories, articleBlogCategories, transaction);
 
-                    var insertArticleBlogTagsQuery = @"INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) 
-                                                       VALUES (@Id, @ArticleId, @BlogTagId)";
-                    await _dbConnection.ExecuteAsync(insertArticleBlogTagsQuery, articleBlogTags, transaction);
+                    var sqlArticleBlogTags = @"INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) 
+                                               VALUES (@Id, @ArticleId, @BlogTagId)";
+                    await _dbConnection.ExecuteAsync(sqlArticleBlogTags, articleBlogTags, transaction);
 
                     transaction.Commit();
                 }
