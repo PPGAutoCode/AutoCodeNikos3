@@ -1,1 +1,2 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(14,38): error CS0738: 'AttachmentService' does not implement interface member 'IAttachmentService.UploadAttachment(CreateAttachmentDto)'. 'AttachmentService.UploadAttachment(CreateAttachmentDto)' cannot implement 'IAttachmentService.UploadAttachment(CreateAttachmentDto)' because it does not have the matching return type of 'Task'.
+Error: 1 Error(s)
