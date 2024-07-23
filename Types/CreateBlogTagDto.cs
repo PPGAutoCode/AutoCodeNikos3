@@ -1,5 +1,4 @@
 
-// File: CreateBlogTagDto.cs
 namespace ProjectName.Types
 {
     public class CreateBlogTagDto
