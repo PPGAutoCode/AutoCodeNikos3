@@ -81,17 +81,19 @@ namespace ProjectName.Services
             }
 
             // Step 5: Upload Attachment File
-            string pdfId = null;
+            Guid? pdfId = null;
             if (request.PDF != null)
             {
-                pdfId = await _attachmentService.CreateAttachment(request.PDF);
+                var attachmentId = await _attachmentService.UploadAttachment(request.PDF);
+                pdfId = Guid.Parse(attachmentId);
             }
 
             // Step 6: Upload Image File
-            string imageId = null;
+            Guid? imageId = null;
             if (request.Image != null)
             {
-                imageId = await _imageService.CreateImage(request.Image);
+                var imageIdStr = await _imageService.CreateImage(request.Image);
+                imageId = Guid.Parse(imageIdStr);
             }
 
             // Step 7: Create new Article object
@@ -102,10 +104,10 @@ namespace ProjectName.Services
                 Author = request.Author,
                 Summary = request.Summary,
                 Body = request.Body,
-                GoogleDriveID = request.GoogleDriveID,
+                GoogleDriveId = request.GoogleDriveID,
                 HideScrollSpy = request.HideScrollSpy,
-                Image = imageId != null ? Guid.Parse(imageId) : (Guid?)null,
-                PDF = pdfId != null ? Guid.Parse(pdfId) : (Guid?)null,
+                Image = imageId,
+                PDF = pdfId,
                 Langcode = request.Langcode,
                 Status = request.Status,
                 Sticky = request.Sticky,
@@ -136,8 +138,8 @@ namespace ProjectName.Services
             {
                 try
                 {
-                    var sqlArticle = @"INSERT INTO Articles (Id, Title, Author, Summary, Body, GoogleDriveID, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
-                                       VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveID, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
+                    var sqlArticle = @"INSERT INTO Articles (Id, Title, Author, Summary, Body, GoogleDriveId, HideScrollSpy, Image, PDF, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) 
+                                       VALUES (@Id, @Title, @Author, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @Image, @PDF, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)";
                     await _dbConnection.ExecuteAsync(sqlArticle, article, transaction);
 
                     var sqlArticleBlogCategories = @"INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) 
