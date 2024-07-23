@@ -5,6 +5,6 @@ namespace ProjectName.Types
     {
         public string Name { get; set; }
         public CreateImageDto Image { get; set; }
-        public string Details { get; set; }
+        public string Information { get; set; }
     }
 }
