@@ -15,14 +15,14 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="createArticleDto">Data transfer object containing the information needed to create an article.</param>
         /// <returns>A string representing the result of the creation operation.</returns>
-        Task<string> CreateArticle(CreateArticleDto createArticleDto);
+        // Task<string> CreateArticle(CreateArticleDto createArticleDto);
 
-        // /// <summary>
-        // /// Retrieves an article based on the provided request data.
-        // /// </summary>
-        // /// <param name="articleRequestDto">Data transfer object containing the information needed to retrieve an article.</param>
-        // /// <returns>An Article object representing the retrieved article.</returns>
-        // Task<Article> GetArticle(ArticleRequestDto articleRequestDto);
+        /// <summary>
+        /// Retrieves an article based on the provided request data.
+        /// </summary>
+        /// <param name="articleRequestDto">Data transfer object containing the information needed to retrieve an article.</param>
+        /// <returns>An Article object representing the retrieved article.</returns>
+        Task<Article> GetArticle(ArticleRequestDto articleRequestDto);
         //
         // /// <summary>
         // /// Updates an existing article based on the provided data.

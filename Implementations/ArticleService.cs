@@ -50,27 +50,32 @@ namespace ProjectName.Services
 
             // Step 3: Fetch Associated BlogCategories
             var blogCategoryIds = await _dbConnection.QueryAsync<Guid>("SELECT BlogCategoryId FROM ArticleBlogCategories WHERE ArticleId = @ArticleId", new { ArticleId = article.Id });
-            var blogCategories = new List<BlogCategory>();
+            article.BlogCategories = new List<BlogCategory>();
             foreach (var blogCategoryId in blogCategoryIds)
             {
                 var blogCategoryRequestDto = new BlogCategoryRequestDto { Id = blogCategoryId };
                 var blogCategory = await _blogCategoryService.GetBlogCategory(blogCategoryRequestDto);
-                blogCategories.Add(blogCategory);
+                article.BlogCategories.Add(blogCategory);
             }
 
             // Step 4: Fetch Associated BlogTags
             var blogTagIds = await _dbConnection.QueryAsync<Guid>("SELECT BlogTagId FROM ArticleBlogTags WHERE ArticleId = @ArticleId", new { ArticleId = article.Id });
-            var blogTags = new List<BlogTag>();
-            foreach (var blogTagId in blogTagIds)
+            if (blogTagIds.Any())
             {
-                var blogTagRequestDto = new BlogTagRequestDto { Id = blogTagId };
-                var blogTag = await _blogTagService.GetBlogTag(blogTagRequestDto);
-                blogTags.Add(blogTag);
+                article.BlogTags = new List<BlogTag>();
+                foreach (var blogTagId in blogTagIds)
+                {
+                    var blogTagRequestDto = new BlogTagRequestDto { Id = blogTagId };
+                    var blogTag = await _blogTagService.GetBlogTag(blogTagRequestDto);
+                    article.BlogTags.Add(blogTag);
+                }
+            }
+            else
+            {
+                article.BlogTags = null;
             }
 
             // Step 5: Map and Return the Article
-            article.BlogCategories = blogCategories;
-            article.BlogTags = blogTags;
             return article;
         }
     }
