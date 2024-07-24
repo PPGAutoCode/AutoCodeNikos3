@@ -124,7 +124,7 @@ namespace ProjectName.Services
             }
             else
             {
-                throw new TechnicalException("DP-500", "Technical Error");
+                throw new TechnicalException("DP-404", "Technical Error");
             }
         }
 
@@ -138,8 +138,8 @@ namespace ProjectName.Services
             var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
             var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            var sql = $"SELECT * FROM Images ORDER BY {sortField} {sortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
-            var images = await _dbConnection.QueryAsync<Image>(sql, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
+            var sql = $"SELECT * FROM Images ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+            var images = await _dbConnection.QueryAsync<Image>(sql, new { Offset = request.PageOffset, Limit = request.PageLimit });
 
             return images.ToList();
         }
@@ -150,10 +150,14 @@ namespace ProjectName.Services
             {
                 if (existingImageId != null)
                 {
-                    var existingImage = await GetImage(new ImageRequestDto { Id = existingImageId });
+                    var existingImage = await GetImage(new ImageRequestDto { Id = existingImageId.Value });
                     if (existingImage.ImagePath != newImage.ImagePath)
                     {
                         await DeleteImage(new DeleteImageDto { Id = existingImageId });
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
 
@@ -171,7 +175,8 @@ namespace ProjectName.Services
         {
             if (newImage != null)
             {
-                var existingImage = (await GetListImage(new ListImageRequestDto { PageLimit = 1, PageOffset = 0, SortField = "ImagePath", SortOrder = "asc" })).FirstOrDefault(i => i.ImagePath == newImage.ImagePath);
+                const string checkSql = "SELECT * FROM Images WHERE ImagePath = @ImagePath";
+                var existingImage = await _dbConnection.QuerySingleOrDefaultAsync<Image>(checkSql, new { newImage.ImagePath });
 
                 if (existingImage != null)
                 {
@@ -179,8 +184,8 @@ namespace ProjectName.Services
                 }
                 else
                 {
-                    var newImageId = Guid.Parse(await CreateImage(newImage));
-                    return await GetImage(new ImageRequestDto { Id = newImageId });
+                    var newImageId = await CreateImage(newImage);
+                    return await GetImage(new ImageRequestDto { Id = Guid.Parse(newImageId) });
                 }
             }
             else

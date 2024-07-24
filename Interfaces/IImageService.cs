@@ -58,6 +58,6 @@ namespace ProjectName.Interfaces
         /// </summary>
         /// <param name="newAttachment">Optional data transfer object containing information for creating a new image attachment.</param>
         /// <returns>A string representing the result of the image upload operation.</returns>
-        Task<string> UploadImage(CreateImageDto? newAttachment);
+        Task<Image> UploadImage(CreateImageDto? newAttachment);
     }
 }

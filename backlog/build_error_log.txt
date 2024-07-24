@@ -2,5 +2,4 @@ Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/Ar
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.DeleteArticle(DeleteArticleDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.GetArticle(ArticleRequestDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.UpdateArticle(UpdateArticleDto)'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(14,33): error CS0738: 'ImageService' does not implement interface member 'IImageService.UploadImage(CreateImageDto?)'. 'ImageService.UploadImage(CreateImageDto?)' cannot implement 'IImageService.UploadImage(CreateImageDto?)' because it does not have the matching return type of 'Task<string>'.
-Error: 5 Error(s)
+Error: 4 Error(s)
