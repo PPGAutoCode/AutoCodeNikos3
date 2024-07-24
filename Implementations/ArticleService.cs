@@ -32,13 +32,13 @@ namespace ProjectName.Services
 
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
-            // Validation Logic
+            // Step 1: Validate the request payload
             if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Fetch and Map Author
+            // Step 2: Fetch and Map Author
             var authorRequest = new AuthorRequestDto { Id = request.Author };
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
@@ -46,7 +46,7 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-404", "Technical Error");
             }
 
-            // Fetch BlogCategories
+            // Step 3: Fetch BlogCategories
             var blogCategories = new List<BlogCategory>();
             foreach (var categoryId in request.BlogCategories)
             {
@@ -59,7 +59,7 @@ namespace ProjectName.Services
                 blogCategories.Add(blogCategory);
             }
 
-            // Fetch or Create BlogTags
+            // Step 4: Fetch or Create BlogTags
             var blogTags = new List<BlogTag>();
             if (request.BlogTags != null)
             {
@@ -77,21 +77,21 @@ namespace ProjectName.Services
                 }
             }
 
-            // Upload Attachment File
+            // Step 5: Upload Attachment File
             Attachment pdf = null;
             if (request.PDF != null)
             {
                 pdf = await _attachmentService.UploadAttachment(request.PDF);
             }
 
-            // Upload Image File
+            // Step 6: Upload Image File
             Image image = null;
             if (request.Image != null)
             {
                 image = await _imageService.UploadImage(request.Image);
             }
 
-            // Create new Article object
+            // Step 7: Create new Article object
             var article = new Article
             {
                 Id = Guid.NewGuid(),
@@ -112,7 +112,7 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            // Create new list of ArticleBlogCategories objects
+            // Step 8: Create new list of ArticleBlogCategories objects
             var articleBlogCategories = blogCategories.Select(category => new ArticleBlogCategory
             {
                 Id = Guid.NewGuid(),
@@ -120,7 +120,7 @@ namespace ProjectName.Services
                 BlogCategoryId = category.Id
             }).ToList();
 
-            // Create new list of ArticleBlogTags objects
+            // Step 9: Create new list of ArticleBlogTags objects
             var articleBlogTags = blogTags.Select(tag => new ArticleBlogTag
             {
                 Id = Guid.NewGuid(),
@@ -128,7 +128,7 @@ namespace ProjectName.Services
                 BlogTagId = tag.Id
             }).ToList();
 
-            // In a single SQL transaction
+            // Step 10: In a single SQL transaction
             try
             {
                 _dbConnection.Open();
@@ -143,7 +143,7 @@ namespace ProjectName.Services
                     transaction.Commit();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
@@ -153,6 +153,7 @@ namespace ProjectName.Services
                     _dbConnection.Close();
             }
 
+            // Step 11: Return ArticleId from database
             return article.Id.ToString();
         }
     }
