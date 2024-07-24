@@ -32,13 +32,13 @@ namespace ProjectName.Services
 
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
-            // Step 1: Validate the request payload
+            // Validation Logic
             if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Step 2: Fetch and Map Author
+            // Fetch and Map Author
             var authorRequest = new AuthorRequestDto { Id = request.Author };
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
@@ -46,7 +46,7 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-404", "Technical Error");
             }
 
-            // Step 3: Fetch BlogCategories
+            // Fetch BlogCategories
             var blogCategories = new List<BlogCategory>();
             foreach (var categoryId in request.BlogCategories)
             {
@@ -59,7 +59,7 @@ namespace ProjectName.Services
                 blogCategories.Add(blogCategory);
             }
 
-            // Step 4: Fetch or Create BlogTags
+            // Fetch or Create BlogTags
             var blogTags = new List<BlogTag>();
             if (request.BlogTags != null)
             {
@@ -77,21 +77,21 @@ namespace ProjectName.Services
                 }
             }
 
-            // Step 5: Upload Attachment File
+            // Upload Attachment File
             Attachment pdf = null;
             if (request.PDF != null)
             {
                 pdf = await _attachmentService.UploadAttachment(request.PDF);
             }
 
-            // Step 6: Upload Image File
+            // Upload Image File
             Image image = null;
             if (request.Image != null)
             {
                 image = await _imageService.UploadImage(request.Image);
             }
 
-            // Step 7: Create new Article object
+            // Create new Article object
             var article = new Article
             {
                 Id = Guid.NewGuid(),
@@ -112,7 +112,7 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            // Step 8: Create new list of ArticleBlogCategories objects
+            // Create new list of ArticleBlogCategories objects
             var articleBlogCategories = blogCategories.Select(category => new ArticleBlogCategory
             {
                 Id = Guid.NewGuid(),
@@ -120,7 +120,7 @@ namespace ProjectName.Services
                 BlogCategoryId = category.Id
             }).ToList();
 
-            // Step 9: Create new list of ArticleBlogTags objects
+            // Create new list of ArticleBlogTags objects
             var articleBlogTags = blogTags.Select(tag => new ArticleBlogTag
             {
                 Id = Guid.NewGuid(),
@@ -128,32 +128,51 @@ namespace ProjectName.Services
                 BlogTagId = tag.Id
             }).ToList();
 
-            // Step 10: In a single SQL transaction
+            // In a single SQL transaction
             try
             {
                 _dbConnection.Open();
                 using (var transaction = _dbConnection.BeginTransaction())
                 {
-                    await _dbConnection.ExecuteAsync("INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PDFId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PDFId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)", article, transaction);
+                    await _dbConnection.ExecuteAsync("INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PDFId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PDFId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)",
+                        new
+                        {
+                            article.Id,
+                            article.Title,
+                            AuthorId = article.Author.Id,
+                            article.Summary,
+                            article.Body,
+                            article.GoogleDriveId,
+                            article.HideScrollSpy,
+                            ImageId = article.Image?.Id,
+                            PDFId = article.PDF?.Id,
+                            article.Langcode,
+                            article.Status,
+                            article.Sticky,
+                            article.Promote,
+                            article.Version,
+                            article.Created,
+                            article.CreatorId
+                        }, transaction);
 
-                    await _dbConnection.ExecuteAsync("INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) VALUES (@Id, @ArticleId, @BlogCategoryId)", articleBlogCategories, transaction);
+                    await _dbConnection.ExecuteAsync("INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) VALUES (@Id, @ArticleId, @BlogCategoryId)",
+                        articleBlogCategories.Select(abc => new { abc.Id, abc.ArticleId, abc.BlogCategoryId }), transaction);
 
-                    await _dbConnection.ExecuteAsync("INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) VALUES (@Id, @ArticleId, @BlogTagId)", articleBlogTags, transaction);
+                    await _dbConnection.ExecuteAsync("INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) VALUES (@Id, @ArticleId, @BlogTagId)",
+                        articleBlogTags.Select(abt => new { abt.Id, abt.ArticleId, abt.BlogTagId }), transaction);
 
                     transaction.Commit();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
             finally
             {
-                if (_dbConnection.State == ConnectionState.Open)
-                    _dbConnection.Close();
+                _dbConnection.Close();
             }
 
-            // Step 11: Return ArticleId from database
             return article.Id.ToString();
         }
     }
