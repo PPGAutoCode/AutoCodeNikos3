@@ -33,7 +33,7 @@ namespace ProjectName.Services
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
             // Validation Logic
-            if (request == null || string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
+            if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -70,8 +70,8 @@ namespace ProjectName.Services
                     if (blogTag == null)
                     {
                         var createBlogTagDto = new CreateBlogTagDto { Name = tagName };
-                        var blogTagId = await _blogTagService.CreateBlogTag(createBlogTagDto);
-                        blogTag = new BlogTag { Id = Guid.Parse(blogTagId), Name = tagName };
+                        var newBlogTagId = await _blogTagService.CreateBlogTag(createBlogTagDto);
+                        blogTag = new BlogTag { Id = Guid.Parse(newBlogTagId), Name = tagName };
                     }
                     blogTags.Add(blogTag);
                 }
@@ -143,7 +143,7 @@ namespace ProjectName.Services
                     transaction.Commit();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new TechnicalException("DP-500", "Technical Error");
             }
