@@ -7,7 +7,7 @@ namespace ProjectName.Types
         public Guid Author { get; set; }
         public string? Summary { get; set; }
         public string? Body { get; set; }
-        public string? GoogleDriveID { get; set; }
+        public string? GoogleDriveId { get; set; }
         public bool HideScrollSpy { get; set; }
         public CreateImageDto? Image { get; set; }
         public CreateAttachmentDto? PDF { get; set; }

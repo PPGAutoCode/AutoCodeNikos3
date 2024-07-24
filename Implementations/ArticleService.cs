@@ -32,13 +32,13 @@ namespace ProjectName.Services
 
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
-            // Step 1: Validate the request payload
+            // Validation Logic
             if (request == null || string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Step 2: Fetch and Validate Author
+            // Fetch and Map Author
             var authorRequest = new AuthorRequestDto { Id = request.Author };
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
@@ -46,7 +46,7 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-404", "Technical Error");
             }
 
-            // Step 3: Fetch BlogCategories
+            // Fetch BlogCategories
             var blogCategories = new List<BlogCategory>();
             foreach (var categoryId in request.BlogCategories)
             {
@@ -59,7 +59,7 @@ namespace ProjectName.Services
                 blogCategories.Add(blogCategory);
             }
 
-            // Step 4: Fetch or Create BlogTags
+            // Fetch or Create BlogTags
             var blogTags = new List<BlogTag>();
             if (request.BlogTags != null)
             {
@@ -70,27 +70,28 @@ namespace ProjectName.Services
                     if (blogTag == null)
                     {
                         var createBlogTagDto = new CreateBlogTagDto { Name = tagName };
-                        blogTag = new BlogTag { Id = new Guid(await _blogTagService.CreateBlogTag(createBlogTagDto)) };
+                        var blogTagId = await _blogTagService.CreateBlogTag(createBlogTagDto);
+                        blogTag = new BlogTag { Id = Guid.Parse(blogTagId), Name = tagName };
                     }
                     blogTags.Add(blogTag);
                 }
             }
 
-            // Step 5: Upload Attachment File
-            string pdfId = null;
+            // Upload Attachment File
+            Attachment pdf = null;
             if (request.PDF != null)
             {
-                pdfId = await _attachmentService.UploadAttachment(request.PDF);
+                pdf = await _attachmentService.UploadAttachment(request.PDF);
             }
 
-            // Step 6: Upload Image File
-            string imageId = null;
+            // Upload Image File
+            Image image = null;
             if (request.Image != null)
             {
-                imageId = await _imageService.UploadImage(request.Image);
+                image = await _imageService.UploadImage(request.Image);
             }
 
-            // Step 7: Create new Article object
+            // Create new Article object
             var article = new Article
             {
                 Id = Guid.NewGuid(),
@@ -100,8 +101,8 @@ namespace ProjectName.Services
                 Body = request.Body,
                 GoogleDriveId = request.GoogleDriveId,
                 HideScrollSpy = request.HideScrollSpy,
-                Image = imageId != null ? new Image { Id = new Guid(imageId) } : null,
-                PDF = pdfId != null ? new Attachment { Id = new Guid(pdfId) } : null,
+                Image = image,
+                PDF = pdf,
                 Langcode = request.Langcode,
                 Status = request.Status,
                 Sticky = request.Sticky,
@@ -111,7 +112,7 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            // Step 8: Create new list of ArticleBlogCategories objects
+            // Create new list of ArticleBlogCategories objects
             var articleBlogCategories = blogCategories.Select(category => new ArticleBlogCategory
             {
                 Id = Guid.NewGuid(),
@@ -119,7 +120,7 @@ namespace ProjectName.Services
                 BlogCategoryId = category.Id
             }).ToList();
 
-            // Step 9: Create new list of ArticleBlogTags objects
+            // Create new list of ArticleBlogTags objects
             var articleBlogTags = blogTags.Select(tag => new ArticleBlogTag
             {
                 Id = Guid.NewGuid(),
@@ -127,13 +128,13 @@ namespace ProjectName.Services
                 BlogTagId = tag.Id
             }).ToList();
 
-            // Step 10: In a single SQL transaction
+            // In a single SQL transaction
             try
             {
                 _dbConnection.Open();
                 using (var transaction = _dbConnection.BeginTransaction())
                 {
-                    await _dbConnection.ExecuteAsync("INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PdfId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PdfId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)", article, transaction);
+                    await _dbConnection.ExecuteAsync("INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PDFId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PDFId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)", article, transaction);
 
                     await _dbConnection.ExecuteAsync("INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) VALUES (@Id, @ArticleId, @BlogCategoryId)", articleBlogCategories, transaction);
 
