@@ -1,1 +1,2 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.CreateArticle(CreateArticleDto)'
+Error: 1 Error(s)
