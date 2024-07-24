@@ -1,2 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(73,35): error CS0029: Cannot implicitly convert type 'string' to 'ProjectName.Types.BlogTag'
-Error: 1 Error(s)
+Error: 0 Error(s)

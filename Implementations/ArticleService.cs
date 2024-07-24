@@ -33,7 +33,7 @@ namespace ProjectName.Services
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
             // Validation Logic
-            if (request == null || string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
+            if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -43,20 +43,19 @@ namespace ProjectName.Services
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
             {
-                throw new BusinessException("DP-404", "Technical Error");
+                throw new BusinessException("DP-422", "Client Error");
             }
 
             // Fetch BlogCategories
             var blogCategories = new List<BlogCategory>();
             foreach (var categoryId in request.BlogCategories)
             {
-                var blogCategoryRequest = new BlogCategoryRequestDto { Id = categoryId };
-                var blogCategory = await _blogCategoryService.GetBlogCategory(blogCategoryRequest);
-                if (blogCategory == null)
+                var categoryRequest = new BlogCategoryRequestDto { Id = categoryId };
+                var category = await _blogCategoryService.GetBlogCategory(categoryRequest);
+                if (category != null)
                 {
-                    throw new BusinessException("DP-404", "Technical Error");
+                    blogCategories.Add(category);
                 }
-                blogCategories.Add(blogCategory);
             }
 
             // Fetch or Create BlogTags
@@ -65,14 +64,23 @@ namespace ProjectName.Services
             {
                 foreach (var tagName in request.BlogTags)
                 {
-                    var blogTagRequest = new BlogTagRequestDto { Name = tagName };
-                    var blogTag = await _blogTagService.GetBlogTag(blogTagRequest);
-                    if (blogTag == null)
+                    var tagRequest = new BlogTagRequestDto { Name = tagName };
+                    var tag = await _blogTagService.GetBlogTag(tagRequest);
+                    if (tag != null)
                     {
-                        var createBlogTagDto = new CreateBlogTagDto { Name = tagName };
-                        blogTag = await _blogTagService.CreateBlogTag(createBlogTagDto);
+                        blogTags.Add(tag);
                     }
-                    blogTags.Add(blogTag);
+                    else
+                    {
+                        var createTagDto = new CreateBlogTagDto { Name = tagName };
+                        var newTagId = await _blogTagService.CreateBlogTag(createTagDto);
+                        var newTagRequest = new BlogTagRequestDto { Id = Guid.Parse(newTagId) };
+                        var newTag = await _blogTagService.GetBlogTag(newTagRequest);
+                        if (newTag != null)
+                        {
+                            blogTags.Add(newTag);
+                        }
+                    }
                 }
             }
 
@@ -128,53 +136,56 @@ namespace ProjectName.Services
             }).ToList();
 
             // Perform Database Operations in a Single Transaction
-            using (var transaction = _dbConnection.BeginTransaction())
+            try
             {
-                try
-                {
-                    await _dbConnection.ExecuteAsync(
-                        "INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PdfId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PdfId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)",
-                        new
-                        {
-                            article.Id,
-                            article.Title,
-                            AuthorId = article.Author.Id,
-                            article.Summary,
-                            article.Body,
-                            article.GoogleDriveId,
-                            article.HideScrollSpy,
-                            ImageId = article.Image?.Id,
-                            PdfId = article.PDF?.Id,
-                            article.Langcode,
-                            article.Status,
-                            article.Sticky,
-                            article.Promote,
-                            article.Version,
-                            article.Created,
-                            article.CreatorId
-                        },
-                        transaction
-                    );
+                _dbConnection.Open();
+                using var transaction = _dbConnection.BeginTransaction();
 
-                    await _dbConnection.ExecuteAsync(
-                        "INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) VALUES (@Id, @ArticleId, @BlogCategoryId)",
-                        articleBlogCategories,
-                        transaction
-                    );
+                await _dbConnection.ExecuteAsync(
+                    "INSERT INTO Articles (Id, Title, AuthorId, Summary, Body, GoogleDriveId, HideScrollSpy, ImageId, PdfId, Langcode, Status, Sticky, Promote, Version, Created, CreatorId) VALUES (@Id, @Title, @AuthorId, @Summary, @Body, @GoogleDriveId, @HideScrollSpy, @ImageId, @PdfId, @Langcode, @Status, @Sticky, @Promote, @Version, @Created, @CreatorId)",
+                    new
+                    {
+                        article.Id,
+                        article.Title,
+                        AuthorId = article.Author.Id,
+                        article.Summary,
+                        article.Body,
+                        article.GoogleDriveId,
+                        article.HideScrollSpy,
+                        ImageId = article.Image?.Id,
+                        PdfId = article.PDF?.Id,
+                        article.Langcode,
+                        article.Status,
+                        article.Sticky,
+                        article.Promote,
+                        article.Version,
+                        article.Created,
+                        article.CreatorId
+                    },
+                    transaction
+                );
 
-                    await _dbConnection.ExecuteAsync(
-                        "INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) VALUES (@Id, @ArticleId, @BlogTagId)",
-                        articleBlogTags,
-                        transaction
-                    );
+                await _dbConnection.ExecuteAsync(
+                    "INSERT INTO ArticleBlogCategories (Id, ArticleId, BlogCategoryId) VALUES (@Id, @ArticleId, @BlogCategoryId)",
+                    articleBlogCategories,
+                    transaction
+                );
 
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
-                }
+                await _dbConnection.ExecuteAsync(
+                    "INSERT INTO ArticleBlogTags (Id, ArticleId, BlogTagId) VALUES (@Id, @ArticleId, @BlogTagId)",
+                    articleBlogTags,
+                    transaction
+                );
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                throw new TechnicalException("DP-500", "Technical Error");
+            }
+            finally
+            {
+                _dbConnection.Close();
             }
 
             return article.Id.ToString();
