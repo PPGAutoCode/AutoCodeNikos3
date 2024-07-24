@@ -32,13 +32,13 @@ namespace ProjectName.Services
 
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
-            // Step 1: Validate the request payload
-            if (request.Title == null || request.Author == Guid.Empty || request.HideScrollSpy == null || request.Langcode == null || request.Status == null || request.Sticky == null || request.Promote == null || request.BlogCategories == null)
+            // Validation Logic
+            if (request == null || string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Step 2: Fetch and Map Author
+            // Fetch and Map Author
             var authorRequest = new AuthorRequestDto { Id = request.Author };
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
@@ -46,51 +46,51 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-404", "Technical Error");
             }
 
-            // Step 3: Fetch BlogCategories
+            // Fetch BlogCategories
             var blogCategories = new List<BlogCategory>();
             foreach (var categoryId in request.BlogCategories)
             {
-                var categoryRequest = new BlogCategoryRequestDto { Id = categoryId };
-                var category = await _blogCategoryService.GetBlogCategory(categoryRequest);
-                if (category == null)
+                var blogCategoryRequest = new BlogCategoryRequestDto { Id = categoryId };
+                var blogCategory = await _blogCategoryService.GetBlogCategory(blogCategoryRequest);
+                if (blogCategory == null)
                 {
                     throw new BusinessException("DP-404", "Technical Error");
                 }
-                blogCategories.Add(category);
+                blogCategories.Add(blogCategory);
             }
 
-            // Step 4: Fetch or Create BlogTags
+            // Fetch or Create BlogTags
             var blogTags = new List<BlogTag>();
             if (request.BlogTags != null)
             {
                 foreach (var tagName in request.BlogTags)
                 {
-                    var tagRequest = new BlogTagRequestDto { Name = tagName };
-                    var tag = await _blogTagService.GetBlogTag(tagRequest);
-                    if (tag == null)
+                    var blogTagRequest = new BlogTagRequestDto { Name = tagName };
+                    var blogTag = await _blogTagService.GetBlogTag(blogTagRequest);
+                    if (blogTag == null)
                     {
-                        var createTagDto = new CreateBlogTagDto { Name = tagName };
-                        tag = await _blogTagService.CreateBlogTag(createTagDto);
+                        var createBlogTagDto = new CreateBlogTagDto { Name = tagName };
+                        blogTag = await _blogTagService.CreateBlogTag(createBlogTagDto);
                     }
-                    blogTags.Add(tag);
+                    blogTags.Add(blogTag);
                 }
             }
 
-            // Step 5: Upload Attachment File
+            // Upload Attachment File
             Attachment pdf = null;
             if (request.PDF != null)
             {
                 pdf = await _attachmentService.UploadAttachment(request.PDF);
             }
 
-            // Step 6: Upload Image File
+            // Upload Image File
             Image image = null;
             if (request.Image != null)
             {
                 image = await _imageService.UploadImage(request.Image);
             }
 
-            // Step 7: Create new Article object
+            // Create new Article object
             var article = new Article
             {
                 Id = Guid.NewGuid(),
@@ -111,7 +111,7 @@ namespace ProjectName.Services
                 CreatorId = request.CreatorId
             };
 
-            // Step 8: Create new list of ArticleBlogCategories objects
+            // Create new list of ArticleBlogCategories objects
             var articleBlogCategories = blogCategories.Select(category => new ArticleBlogCategory
             {
                 Id = Guid.NewGuid(),
@@ -119,7 +119,7 @@ namespace ProjectName.Services
                 BlogCategoryId = category.Id
             }).ToList();
 
-            // Step 9: Create new list of ArticleBlogTags objects
+            // Create new list of ArticleBlogTags objects
             var articleBlogTags = blogTags.Select(tag => new ArticleBlogTag
             {
                 Id = Guid.NewGuid(),
@@ -127,11 +127,9 @@ namespace ProjectName.Services
                 BlogTagId = tag.Id
             }).ToList();
 
-            // Step 10: Perform Database Operations in a Single Transaction
-            try
+            // Perform Database Operations in a Single Transaction
+            using (var transaction = _dbConnection.BeginTransaction())
             {
-                _dbConnection.Open();
-                using var transaction = _dbConnection.BeginTransaction();
                 try
                 {
                     await _dbConnection.ExecuteAsync(
@@ -172,18 +170,13 @@ namespace ProjectName.Services
 
                     transaction.Commit();
                 }
-                catch
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw new TechnicalException("DP-500", "Technical Error");
                 }
             }
-            finally
-            {
-                _dbConnection.Close();
-            }
 
-            // Step 11: Return ArticleId
             return article.Id.ToString();
         }
     }
