@@ -58,6 +58,6 @@ namespace ProjectName.Interfaces
         /// Uploads an attachment.
         /// </summary>
         /// <param name="newAttachment">The data transfer object for creating a new attachment.</param>
-        Task<string> UploadAttachment(CreateAttachmentDto newAttachment);
+        Task<Attachment> UploadAttachment(CreateAttachmentDto newAttachment);
     }
 }
