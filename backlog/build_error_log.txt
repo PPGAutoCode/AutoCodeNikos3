@@ -1,1 +1,5 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(103,55): error CS1061: 'bool' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'bool' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(107,41): error CS1061: 'bool' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'bool' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(108,41): error CS1061: 'bool' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'bool' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(109,43): error CS1061: 'bool' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'bool' could be found (are you missing a using directive or an assembly reference?)
+Error: 4 Error(s)
