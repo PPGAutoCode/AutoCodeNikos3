@@ -14,70 +14,77 @@ namespace ProjectName.Services
     public class ArticleService : IArticleService
     {
         private readonly IDbConnection _dbConnection;
-        private readonly IAttachmentService _attachmentService;
-        private readonly IImageService _imageService;
+        private readonly IBlogCategoryService _blogCategoryService;
+        private readonly IBlogTagService _blogTagService;
 
-        public ArticleService(IDbConnection dbConnection, IAttachmentService attachmentService, IImageService imageService)
+        public ArticleService(IDbConnection dbConnection, IBlogCategoryService blogCategoryService, IBlogTagService blogTagService)
         {
             _dbConnection = dbConnection;
-            _attachmentService = attachmentService;
-            _imageService = imageService;
+            _blogCategoryService = blogCategoryService;
+            _blogTagService = blogTagService;
         }
 
-        public async Task<bool> DeleteArticle(DeleteArticleDto deleteArticleDto)
+        public async Task<List<Article>> GetListArticle(ListArticleRequestDto request)
         {
-            // Step 1: Validate Request Payload
-            if (deleteArticleDto == null || deleteArticleDto.Id == Guid.Empty)
+            // Step 1: Validate the request
+            if (request.PageLimit <= 0 || request.PageOffset < 0)
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            // Step 2: Fetch Existing Article
-            var article = await _dbConnection.QuerySingleOrDefaultAsync<Article>("SELECT * FROM Articles WHERE Id = @Id", new { Id = deleteArticleDto.Id });
-            if (article == null)
-            {
-                throw new TechnicalException("DP-404", "Technical Error");
-            }
+            // Step 2: Fetch Articles
+            var sql = @"SELECT * FROM Articles 
+                        ORDER BY @SortField @SortOrder 
+                        OFFSET @PageOffset ROWS 
+                        FETCH NEXT @PageLimit ROWS ONLY";
 
-            // Step 3: Delete Associated Attachment
-            if (article.PDF != null)
-            {
-                var deleteAttachmentDto = new DeleteAttachmentDto { Id = article.PDF };
-                await _attachmentService.DeleteAttachment(deleteAttachmentDto);
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("SortField", request.SortField ?? "Id", DbType.String);
+            parameters.Add("SortOrder", request.SortOrder ?? "asc", DbType.String);
+            parameters.Add("PageOffset", request.PageOffset, DbType.Int32);
+            parameters.Add("PageLimit", request.PageLimit, DbType.Int32);
 
-            // Step 4: Delete Related Image
-            if (article.Image != null)
-            {
-                var deleteImageDto = new DeleteImageDto { Id = article.Image };
-                await _imageService.DeleteImage(deleteImageDto);
-            }
+            var articles = await _dbConnection.QueryAsync<Article>(sql, parameters);
 
-            // Step 5: Perform Database Updates in a Single Transaction
-            using (var transaction = _dbConnection.BeginTransaction())
+            // Step 3: Fetch and Map Associated BlogCategories
+            foreach (var article in articles)
             {
-                try
+                var categoryIds = await _dbConnection.QueryAsync<Guid>(
+                    "SELECT BlogCategoryId FROM ArticleBlogCategories WHERE ArticleId = @ArticleId",
+                    new { ArticleId = article.Id });
+
+                var categories = new List<BlogCategory>();
+                foreach (var categoryId in categoryIds)
                 {
-                    // Delete ArticleBlogCategories
-                    await _dbConnection.ExecuteAsync("DELETE FROM ArticleBlogCategories WHERE ArticleId = @ArticleId", new { ArticleId = article.Id }, transaction);
-
-                    // Delete ArticleBlogTags
-                    await _dbConnection.ExecuteAsync("DELETE FROM ArticleBlogTags WHERE ArticleId = @ArticleId", new { ArticleId = article.Id }, transaction);
-
-                    // Delete Article
-                    await _dbConnection.ExecuteAsync("DELETE FROM Articles WHERE Id = @Id", new { Id = article.Id }, transaction);
-
-                    // Commit the transaction
-                    transaction.Commit();
+                    var categoryRequest = new BlogCategoryRequestDto { Id = categoryId };
+                    var category = await _blogCategoryService.GetBlogCategory(categoryRequest);
+                    if (category == null)
+                    {
+                        throw new TechnicalException("DP-404", "Technical Error");
+                    }
+                    categories.Add(category);
                 }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw new TechnicalException("DP-500", "Technical Error");
-                }
+                article.BlogCategories = categories;
             }
 
-            return true;
+            // Step 4: Fetch and Map Related Tags
+            foreach (var article in articles)
+            {
+                var tagNames = await _dbConnection.QueryAsync<string>(
+                    "SELECT BlogTagName FROM ArticleBlogTags WHERE ArticleId = @ArticleId",
+                    new { ArticleId = article.Id });
+
+                var tags = new List<BlogTag>();
+                foreach (var tagName in tagNames)
+                {
+                    var tagRequest = new BlogTagRequestDto { Name = tagName };
+                    var tag = await _blogTagService.GetBlogTag(tagRequest);
+                    tags.Add(tag);
+                }
+                article.BlogTags = tags;
+            }
+
+            return articles.ToList();
         }
     }
 }
