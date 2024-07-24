@@ -24,52 +24,60 @@ namespace ProjectName.Services
             _blogTagService = blogTagService;
         }
 
-        public async Task<List<Article>> GetListArticle(ListArticleRequestDto requestDto)
+        public async Task<List<Article>> GetListArticle(ListArticleRequestDto request)
         {
-            // Validation Logic
-            if (requestDto == null || requestDto.PageLimit <= 0 || requestDto.PageOffset < 0)
+            // Step 1: Validate the request
+            if (request.PageLimit <= 0 || request.PageOffset < 0)
             {
-                throw new BusinessException("DP-422", "Client Error");
+                throw new BusinessException("DP-422", "Invalid pagination parameters.");
             }
 
-            // Fetch Articles
-            string sortField = requestDto.SortField ?? "Id";
-            string sortOrder = requestDto.SortOrder ?? "asc";
+            // Step 2: Fetch Articles
+            string sortField = request.SortField ?? "Id";
+            string sortOrder = request.SortOrder ?? "asc";
             string sql = $"SELECT * FROM Articles ORDER BY {sortField} {sortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
-            var articles = await _dbConnection.QueryAsync<Article>(sql, new { requestDto.PageOffset, requestDto.PageLimit });
+            var articles = await _dbConnection.QueryAsync<Article>(sql, new { request.PageOffset, request.PageLimit });
 
-            // Fetch and Map Associated BlogCategories
+            // Step 3: Fetch and Map Associated BlogCategories
             foreach (var article in articles)
             {
-                sql = "SELECT BlogCategoryId FROM ArticleBlogCategories WHERE ArticleId = @ArticleId";
-                var blogCategoryIds = await _dbConnection.QueryAsync<Guid>(sql, new { ArticleId = article.Id });
-                article.BlogCategories = new List<BlogCategory>();
-                foreach (var blogCategoryId in blogCategoryIds)
+                var blogCategoryIds = await _dbConnection.QueryAsync<Guid>("SELECT BlogCategoryId FROM ArticleBlogCategories WHERE ArticleId = @ArticleId", new { article.Id });
+                var blogCategories = new List<BlogCategory>();
+                foreach (var categoryId in blogCategoryIds)
                 {
-                    var blogCategoryRequestDto = new BlogCategoryRequestDto { Id = blogCategoryId };
+                    var blogCategoryRequestDto = new BlogCategoryRequestDto { Id = categoryId };
                     var blogCategory = await _blogCategoryService.GetBlogCategory(blogCategoryRequestDto);
                     if (blogCategory == null)
                     {
-                        throw new TechnicalException("DP-404", "Technical Error");
+                        throw new TechnicalException("DP-404", "BlogCategory not found.");
                     }
-                    article.BlogCategories.Add(blogCategory);
+                    blogCategories.Add(blogCategory);
                 }
+                article.BlogCategories = blogCategories;
             }
 
-            // Fetch and Map Related Tags
+            // Step 4: Fetch and Map Related Tags
             foreach (var article in articles)
             {
-                sql = "SELECT BlogTagId FROM ArticleBlogTags WHERE ArticleId = @ArticleId";
-                var blogTagIds = await _dbConnection.QueryAsync<Guid>(sql, new { ArticleId = article.Id });
-                article.BlogTags = new List<BlogTag>();
-                foreach (var blogTagId in blogTagIds)
+                var blogTagIds = await _dbConnection.QueryAsync<string>("SELECT BlogTagId FROM ArticleBlogTags WHERE ArticleId = @ArticleId", new { article.Id });
+                if (blogTagIds.Any())
                 {
-                    var blogTagRequestDto = new BlogTagRequestDto { Id = blogTagId };
-                    var blogTag = await _blogTagService.GetBlogTag(blogTagRequestDto);
-                    article.BlogTags.Add(blogTag);
+                    var blogTags = new List<BlogTag>();
+                    foreach (var tagName in blogTagIds)
+                    {
+                        var blogTagRequestDto = new BlogTagRequestDto { Name = tagName };
+                        var blogTag = await _blogTagService.GetBlogTag(blogTagRequestDto);
+                        blogTags.Add(blogTag);
+                    }
+                    article.BlogTags = blogTags;
+                }
+                else
+                {
+                    article.BlogTags = null;
                 }
             }
 
+            // Step 5: Return the list of Articles
             return articles.ToList();
         }
     }
