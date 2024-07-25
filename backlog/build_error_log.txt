@@ -1,1 +1,2 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(77,100): error CS0029: Cannot implicitly convert type 'string' to 'System.Guid?'
+Error: 1 Error(s)
