@@ -59,35 +59,17 @@ namespace ProjectName.Services
 
             // 5. Upload Attachment Files
             string documentationId = null, swaggerId = null, tourId = null;
-
             if (request.Documentation != null)
             {
-                documentationId = await _attachmentService.CreateAttachment(new CreateAttachmentDto
-                {
-                    FileName = request.Documentation.FileName,
-                    FileUrl = request.Documentation.FileUrl,
-                    FilePath = request.Documentation.FilePath
-                });
+                documentationId = await _attachmentService.CreateAttachment(new CreateAttachmentDto { FileName = request.Documentation.FileName, File = request.Documentation.File });
             }
-
             if (request.Swagger != null)
             {
-                swaggerId = await _attachmentService.CreateAttachment(new CreateAttachmentDto
-                {
-                    FileName = request.Swagger.FileName,
-                    FileUrl = request.Swagger.FileUrl,
-                    FilePath = request.Swagger.FilePath
-                });
+                swaggerId = await _attachmentService.CreateAttachment(new CreateAttachmentDto { FileName = request.Swagger.FileName, File = request.Swagger.File });
             }
-
             if (request.Tour != null)
             {
-                tourId = await _attachmentService.CreateAttachment(new CreateAttachmentDto
-                {
-                    FileName = request.Tour.FileName,
-                    FileUrl = request.Tour.FileUrl,
-                    FilePath = request.Tour.FilePath
-                });
+                tourId = await _attachmentService.CreateAttachment(new CreateAttachmentDto { FileName = request.Tour.FileName, File = request.Tour.File });
             }
 
             // 6. Create APIEndpoint object
@@ -124,17 +106,15 @@ namespace ProjectName.Services
                 });
             }
 
-            // 8. In a single SQL transaction
+            // 8. Insert into database in a single transaction
             using (var transaction = _dbConnection.BeginTransaction())
             {
                 try
                 {
-                    // Insert apiEndpoint
                     var insertApiEndpointQuery = @"INSERT INTO APIEndpoints (Id, ApiName, ApiScope, ApiScopeProduction, Deprecated, Description, Documentation, EndpointUrls, AppEnvironment, Swagger, Tour, ApiVersion, Langcode, Sticky, Promote, UrlAlias, Published) 
                                                     VALUES (@Id, @ApiName, @ApiScope, @ApiScopeProduction, @Deprecated, @Description, @Documentation, @EndpointUrls, @AppEnvironment, @Swagger, @Tour, @ApiVersion, @Langcode, @Sticky, @Promote, @UrlAlias, @Published)";
                     await _dbConnection.ExecuteAsync(insertApiEndpointQuery, apiEndpoint, transaction);
 
-                    // Insert apiEndpointTags
                     var insertApiEndpointTagsQuery = @"INSERT INTO APIEndpointTags (Id, APIEndpointId, APITagId) 
                                                         VALUES (@Id, @APIEndpointId, @APITagId)";
                     foreach (var tag in apiEndpointTags)
@@ -142,13 +122,12 @@ namespace ProjectName.Services
                         await _dbConnection.ExecuteAsync(insertApiEndpointTagsQuery, tag, transaction);
                     }
 
-                    // Commit transaction
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new TechnicalException("DP-500", "An error occurred while creating the API endpoint.");
+                    throw new TechnicalException("DP-500", "An error occurred while saving the API endpoint.");
                 }
             }
 
