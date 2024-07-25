@@ -10,7 +10,7 @@ namespace ProjectName.Types
         public string? GoogleDriveId { get; set; }
         public bool HideScrollSpy { get; set; }
         public CreateImageDto? Image { get; set; }
-        public CreateAttachmentDto? PDF { get; set; }
+        public CreateAttachmentDto? Pdf { get; set; }
         public string Langcode { get; set; }
         public bool Status { get; set; }
         public bool Sticky { get; set; }
