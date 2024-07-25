@@ -25,20 +25,18 @@ public class AuthorService : IAuthorService
             throw new BusinessException("DP-422", "Client Error");
         }
 
-        Guid? imageId = null;
-        if (request.Image != null)
-        {
-            var imageResult = await _imageService.CreateImage(request.Image);
-            imageId = Guid.Parse(imageResult);
-        }
-
-        var author = new Author
+        Author author = new Author
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            Image = imageId,
             Details = request.Details
         };
+
+        if (request.Image != null)
+        {
+            var imageId = await _imageService.CreateImage(request.Image);
+            author.Image = Guid.Parse(imageId);
+        }
 
         try
         {
@@ -62,26 +60,28 @@ public class AuthorService : IAuthorService
         }
 
         var author = await _dbConnection.QuerySingleOrDefaultAsync<Author>(
-            "SELECT * FROM Authors WHERE Id = @Id", new { request.Id });
+            "SELECT Id, Name, Image, Details FROM Authors WHERE Id = @Id",
+            new { Id = request.Id });
 
         if (author == null)
         {
             throw new TechnicalException("DP-404", "Technical Error");
         }
 
-        Image image = null;
-        if (author.Image.HasValue)
-        {
-            image = await _imageService.GetImage(new ImageRequestDto { Id = author.Image.Value });
-        }
-
-        return new AuthorDto
+        AuthorDto authorDto = new AuthorDto
         {
             Id = author.Id,
             Name = author.Name,
-            Image = image,
             Details = author.Details
         };
+
+        if (author.Image != null)
+        {
+            var image = await _imageService.GetImage(new ImageRequestDto { Id = author.Image });
+            authorDto.Image = image;
+        }
+
+        return authorDto;
     }
 
     public async Task<string> UpdateAuthor(UpdateAuthorDto request)
@@ -92,7 +92,8 @@ public class AuthorService : IAuthorService
         }
 
         var author = await _dbConnection.QuerySingleOrDefaultAsync<Author>(
-            "SELECT * FROM Authors WHERE Id = @Id", new { request.Id });
+            "SELECT Id, Name, Image, Details FROM Authors WHERE Id = @Id",
+            new { Id = request.Id });
 
         if (author == null)
         {
@@ -101,8 +102,8 @@ public class AuthorService : IAuthorService
 
         if (request.Image != null)
         {
-            var imageResult = await _imageService.UpdateImage(request.Image);
-            author.Image = Guid.Parse(imageResult);
+            var imageId = await _imageService.UpdateImage(request.Image);
+            author.Image = Guid.Parse(imageId);
         }
 
         author.Name = request.Name;
@@ -112,7 +113,7 @@ public class AuthorService : IAuthorService
         {
             await _dbConnection.ExecuteAsync(
                 "UPDATE Authors SET Name = @Name, Image = @Image, Details = @Details WHERE Id = @Id",
-                new { author.Name, author.Image, author.Details, author.Id });
+                author);
         }
         catch (Exception)
         {
@@ -130,22 +131,24 @@ public class AuthorService : IAuthorService
         }
 
         var author = await _dbConnection.QuerySingleOrDefaultAsync<Author>(
-            "SELECT * FROM Authors WHERE Id = @Id", new { request.Id });
+            "SELECT Id, Name, Image, Details FROM Authors WHERE Id = @Id",
+            new { Id = request.Id });
 
         if (author == null)
         {
             throw new TechnicalException("DP-404", "Technical Error");
         }
 
-        if (author.Image.HasValue)
+        if (author.Image != null)
         {
-            await _imageService.DeleteImage(new DeleteImageDto { Id = author.Image.Value });
+            await _imageService.DeleteImage(new DeleteImageDto { Id = author.Image });
         }
 
         try
         {
             await _dbConnection.ExecuteAsync(
-                "DELETE FROM Authors WHERE Id = @Id", new { request.Id });
+                "DELETE FROM Authors WHERE Id = @Id",
+                new { Id = request.Id });
         }
         catch (Exception)
         {
@@ -162,29 +165,31 @@ public class AuthorService : IAuthorService
             throw new BusinessException("DP-422", "Client Error");
         }
 
-        var sortField = request.SortField ?? "Id";
-        var sortOrder = request.SortOrder ?? "asc";
+        string sortField = request.SortField ?? "Id";
+        string sortOrder = request.SortOrder ?? "asc";
 
         var authors = await _dbConnection.QueryAsync<Author>(
-            $"SELECT * FROM Authors ORDER BY {sortField} {sortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY",
-            new { request.PageOffset, request.PageLimit });
+            $"SELECT Id, Name, Image, Details FROM Authors ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
+            new { Offset = request.PageOffset, Limit = request.PageLimit });
 
-        var authorDtos = new List<AuthorDto>();
+        List<AuthorDto> authorDtos = new List<AuthorDto>();
+
         foreach (var author in authors)
         {
-            Image image = null;
-            if (author.Image.HasValue)
-            {
-                image = await _imageService.GetImage(new ImageRequestDto { Id = author.Image.Value });
-            }
-
-            authorDtos.Add(new AuthorDto
+            AuthorDto authorDto = new AuthorDto
             {
                 Id = author.Id,
                 Name = author.Name,
-                Image = image,
                 Details = author.Details
-            });
+            };
+
+            if (author.Image != null)
+            {
+                var image = await _imageService.GetImage(new ImageRequestDto { Id = author.Image });
+                authorDto.Image = image;
+            }
+
+            authorDtos.Add(authorDto);
         }
 
         return authorDtos;

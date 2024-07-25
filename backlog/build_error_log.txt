@@ -1,2 +1,0 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs(31,20): error CS1069: The type name 'SqlConnection' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
-Error: 1 Error(s)
