@@ -2,4 +2,5 @@ Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/Ar
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.GetArticle(ArticleRequestDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.GetListArticle(ListArticleRequestDto)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.UpdateArticle(UpdateArticleDto)'
-Error: 4 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(14,33): error CS0535: 'ImageService' does not implement interface member 'IImageService.UpsertImage(UpdateImageDto)'
+Error: 5 Error(s)
