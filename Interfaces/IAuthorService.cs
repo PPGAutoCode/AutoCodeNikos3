@@ -11,38 +11,38 @@ namespace ProjectName.Interfaces
     public interface IAuthorService
     {
         /// <summary>
-        /// Creates a new author.
+        /// Creates a new author based on the provided data.
         /// </summary>
-        /// <param name="createAuthorDto">The data transfer object containing the information for the new author.</param>
-        /// <returns>A string representing the result of the operation.</returns>
+        /// <param name="createAuthorDto">Data transfer object containing information for creating a new author.</param>
+        /// <returns>A string representing the result of the creation operation.</returns>
         Task<string> CreateAuthor(CreateAuthorDto createAuthorDto);
 
         /// <summary>
         /// Retrieves an author based on the provided request data.
         /// </summary>
-        /// <param name="authorRequestDto">The data transfer object containing the request information for the author.</param>
-        /// <returns>An Author object representing the found author.</returns>
-        Task<Author> GetAuthor(AuthorRequestDto authorRequestDto);
+        /// <param name="authorRequestDto">Data transfer object containing request information for retrieving an author.</param>
+        /// <returns>An AuthorDto object representing the retrieved author.</returns>
+        Task<AuthorDto> GetAuthor(AuthorRequestDto authorRequestDto);
 
         /// <summary>
-        /// Updates an existing author.
+        /// Updates an existing author based on the provided data.
         /// </summary>
-        /// <param name="updateAuthorDto">The data transfer object containing the updated information for the author.</param>
-        /// <returns>A string representing the result of the operation.</returns>
+        /// <param name="updateAuthorDto">Data transfer object containing information for updating an author.</param>
+        /// <returns>A string representing the result of the update operation.</returns>
         Task<string> UpdateAuthor(UpdateAuthorDto updateAuthorDto);
 
         /// <summary>
-        /// Deletes an author based on the provided request data.
+        /// Deletes an author based on the provided data.
         /// </summary>
-        /// <param name="deleteAuthorDto">The data transfer object containing the information for the author to be deleted.</param>
-        /// <returns>A boolean indicating whether the operation was successful.</returns>
+        /// <param name="deleteAuthorDto">Data transfer object containing information for deleting an author.</param>
+        /// <returns>A boolean indicating the success of the deletion operation.</returns>
         Task<bool> DeleteAuthor(DeleteAuthorDto deleteAuthorDto);
 
         /// <summary>
         /// Retrieves a list of authors based on the provided request data.
         /// </summary>
-        /// <param name="listAuthorRequestDto">The data transfer object containing the request information for the list of authors.</param>
-        /// <returns>A list of Author objects representing the found authors.</returns>
+        /// <param name="listAuthorRequestDto">Data transfer object containing request information for retrieving a list of authors.</param>
+        /// <returns>A list of Author objects representing the retrieved authors.</returns>
         Task<List<Author>> GetListAuthor(ListAuthorRequestDto listAuthorRequestDto);
     }
 }

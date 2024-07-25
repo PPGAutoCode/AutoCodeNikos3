@@ -1,2 +1,4 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(12,34): error CS0738: 'AuthorService' does not implement interface member 'IAuthorService.GetAuthor(AuthorRequestDto)'. 'AuthorService.GetAuthor(AuthorRequestDto)' cannot implement 'IAuthorService.GetAuthor(AuthorRequestDto)' because it does not have the matching return type of 'Task<Author>'.
-Error: 1 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AuthorController.cs(37,60): error CS0029: Cannot implicitly convert type 'ProjectName.Types.AuthorDto' to 'ProjectName.Types.Author'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(112,63): error CS1503: Argument 1: cannot convert from 'ProjectName.Types.CreateImageDto' to 'ProjectName.Types.UpdateImageDto'
+Error: 3 Error(s)
