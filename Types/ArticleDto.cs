@@ -1,7 +1,7 @@
 
 namespace ProjectName.Types
 {
-    public class UpdateArticleDto
+    public class ArticleDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -10,14 +10,16 @@ namespace ProjectName.Types
         public string? Body { get; set; }
         public string? GoogleDriveId { get; set; }
         public bool HideScrollSpy { get; set; }
-        public CreateImageDto? Image { get; set; }
-        public CreateAttachmentDto? Pdf { get; set; }
+        public Guid? Image { get; set; }
+        public Guid? Pdf { get; set; }
         public string Langcode { get; set; }
         public bool Status { get; set; }
         public bool Sticky { get; set; }
         public bool Promote { get; set; }
-        public List<Guid> BlogCategories { get; set; }
-        public List<string>? BlogTags { get; set; }
-        public Guid ChangedUser { get; set; }
+        public int? Version { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Changed { get; set; }
+        public Guid CreatorId { get; set; }
+        public Guid? ChangedUser { get; set; }
     }
 }
