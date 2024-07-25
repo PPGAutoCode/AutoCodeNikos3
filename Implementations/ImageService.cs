@@ -68,8 +68,12 @@ namespace ProjectName.Services
                 }
                 return image;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is TechnicalException)
+                {
+                    throw;
+                }
                 throw new TechnicalException("DP-500", "Technical Error");
             }
         }
@@ -139,14 +143,15 @@ namespace ProjectName.Services
                 throw new BusinessException("DP-422", "Client Error");
             }
 
-            request.SortField ??= "Id";
-            request.SortOrder ??= "asc";
+            var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
+            var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
 
-            const string sql = @"SELECT * FROM Images ORDER BY @SortField @SortOrder LIMIT @PageLimit OFFSET @PageOffset";
+            var sql = $@"SELECT * FROM Images ORDER BY {sortField} {sortOrder} 
+                         OFFSET {request.PageOffset} ROWS FETCH NEXT {request.PageLimit} ROWS ONLY";
 
             try
             {
-                var images = await _dbConnection.QueryAsync<Image>(sql, new { request.PageLimit, request.PageOffset, SortField = request.SortField, SortOrder = request.SortOrder });
+                var images = await _dbConnection.QueryAsync<Image>(sql);
                 return images.AsList();
             }
             catch (Exception)
