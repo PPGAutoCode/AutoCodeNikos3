@@ -1,5 +1,3 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(14,26): error CS0246: The type or namespace name 'IAnotherService' could not be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(16,34): error CS0246: The type or namespace name 'IAnotherService' could not be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(22,75): error CS0246: The type or namespace name 'CreateAnotherDto' could not be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(32,72): error CS0246: The type or namespace name 'AnotherRequestDto' could not be found (are you missing a using directive or an assembly reference?)
-Error: 4 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(112,63): error CS1503: Argument 1: cannot convert from 'ProjectName.Types.CreateImageDto' to 'ProjectName.Types.UpdateImageDto'
+Error: 2 Error(s)
