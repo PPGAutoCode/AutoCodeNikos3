@@ -34,7 +34,7 @@ namespace ProjectName.Controllers
             return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _imageService.GetImage(request.Payload);
-                return Ok(new Response<ImageDto> { Payload = result });
+                return Ok(new Response<Image> { Payload = result });
             });
         }
 
