@@ -10,11 +10,11 @@ namespace ProjectName.Types
         public List<string>? ApiTags { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
-        public CreateAttachmentDto Documentation { get; set; }
+        public CreateAttachmentDto? Documentation { get; set; }
         public string? EndpointUrls { get; set; }
         public Guid AppEnvironment { get; set; }
-        public CreateAttachmentDto Swagger { get; set; }
-        public CreateAttachmentDto Tour { get; set; }
+        public CreateAttachmentDto? Swagger { get; set; }
+        public CreateAttachmentDto? Tour { get; set; }
         public string? ApiVersion { get; set; }
         public string Langcode { get; set; }
         public bool? Sticky { get; set; }

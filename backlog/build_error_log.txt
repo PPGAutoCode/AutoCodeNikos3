@@ -1,5 +1,2 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(13,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.CreateAPIEndpoint(CreateAPIEndpointDto)'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(13,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.DeleteAPIEndpoint(DeleteAPIEndpointDto)'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(13,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetAPIEndpoint(APIEndpointRequestDto)'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs(13,39): error CS0535: 'APIEndpointService' does not implement interface member 'IAPIEndpointService.GetListAPIEndpoint(ListAPIEndpointRequestDto)'
-Error: 4 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/APIEndpoint.cs(10,21): error CS0246: The type or namespace name '_ApiTag_' could not be found (are you missing a using directive or an assembly reference?)
+Error: 1 Error(s)
