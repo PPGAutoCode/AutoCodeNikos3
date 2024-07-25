@@ -7,13 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Interfaces/IArticleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/IArticleService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backlog/build_error_log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backlog/build_error_log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backlog/build_log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backlog/build_log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
-    </list>
+    <list default="true" id="c32d5fea-d650-42e9-b8ea-0603cbd202e3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +112,7 @@
       <workItem from="1721631015848" duration="12845000" />
       <workItem from="1721669998501" duration="8413000" />
       <workItem from="1721734895748" duration="4286000" />
-      <workItem from="1721804361856" duration="22994000" />
+      <workItem from="1721804361856" duration="23272000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />
