@@ -12,18 +12,16 @@ namespace ProjectName.Controllers
     public class AttachmentController : ControllerBase
     {
         private readonly IAttachmentService _attachmentService;
-        private readonly SafeExecutor _safeExecutor;
 
-        public AttachmentController(IAttachmentService attachmentService, SafeExecutor safeExecutor)
+        public AttachmentController(IAttachmentService attachmentService)
         {
             _attachmentService = attachmentService;
-            _safeExecutor = safeExecutor;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateAttachment([FromBody] Request<CreateAttachmentDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _attachmentService.CreateAttachment(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -33,7 +31,7 @@ namespace ProjectName.Controllers
         [HttpPost("get")]
         public async Task<IActionResult> GetAttachment([FromBody] Request<AttachmentRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _attachmentService.GetAttachment(request.Payload);
                 return Ok(new Response<Attachment> { Payload = result });
@@ -43,7 +41,7 @@ namespace ProjectName.Controllers
         [HttpPost("update")]
         public async Task<IActionResult> UpdateAttachment([FromBody] Request<UpdateAttachmentDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _attachmentService.UpdateAttachment(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -53,7 +51,7 @@ namespace ProjectName.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteAttachment([FromBody] Request<DeleteAttachmentDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _attachmentService.DeleteAttachment(request.Payload);
                 return Ok(new Response<bool> { Payload = result });
@@ -63,7 +61,7 @@ namespace ProjectName.Controllers
         [HttpPost("getList")]
         public async Task<IActionResult> GetListAttachment([FromBody] Request<ListAttachmentRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _attachmentService.GetListAttachment(request.Payload);
                 return Ok(new Response<List<Attachment>> { Payload = result });
