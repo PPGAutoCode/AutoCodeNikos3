@@ -9,7 +9,7 @@ namespace ProjectName.Types
         public string? Body { get; set; }
         public string? GoogleDriveId { get; set; }
         public bool HideScrollSpy { get; set; }
-        public CreateImageDto? Image { get; set; }
+        public UpdateImageDto? Image { get; set; }
         public UpdateAttachmentDto? Pdf { get; set; }
         public string Langcode { get; set; }
         public bool Status { get; set; }
