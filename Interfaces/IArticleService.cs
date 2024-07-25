@@ -10,12 +10,12 @@ namespace ProjectName.Interfaces
     /// </summary>
     public interface IArticleService
     {
-        // /// <summary>
-        // /// Asynchronously creates a new article.
-        // /// </summary>
-        // /// <param name="createArticleDto">The data transfer object containing the information for the new article.</param>
-        // /// <returns>A task that represents the asynchronous operation. The task result contains the ID of the created article as a string.</returns>
-        // Task<string> CreateArticle(CreateArticleDto createArticleDto);
+        /// <summary>
+        /// Asynchronously creates a new article.
+        /// </summary>
+        /// <param name="createArticleDto">The data transfer object containing the information for the new article.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the ID of the created article as a string.</returns>
+        Task<string> CreateArticle(CreateArticleDto createArticleDto);
 
         // /// <summary>
         // /// Asynchronously retrieves an article based on the provided request data.

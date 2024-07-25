@@ -46,7 +46,7 @@ namespace ProjectName.Interfaces
         Task<List<Image>> GetListImage(ListImageRequestDto listImageRequestDto);
 
         /// <summary>
-        /// Upserts an image based on the provided data transfer object.
+        /// Inserts or updates an image based on the provided data transfer object.
         /// </summary>
         /// <param name="updateImageDto">Data transfer object containing information for upserting an image.</param>
         /// <returns>A string representing the result of the image upsert operation.</returns>

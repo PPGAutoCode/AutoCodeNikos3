@@ -43,7 +43,7 @@ namespace ProjectName.Services
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
             {
-                throw new TechnicalException("DP-404", "Technical Error");
+                throw new TechnicalException("DP-404", "Technical Error Author");
             }
 
             // Step 4: Get the BlogCategories array from request.BlogCategories
@@ -54,7 +54,7 @@ namespace ProjectName.Services
                 var blogCategory = await _blogCategoryService.GetBlogCategory(blogCategoryRequest);
                 if (blogCategory == null)
                 {
-                    throw new TechnicalException("DP-404", "Technical Error");
+                    throw new TechnicalException("DP-404", "Technical Error blogCategories");
                 }
                 blogCategories.Add(blogCategory);
             }

@@ -11,18 +11,24 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectName.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/ArticleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ArticleController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Implementations/ArticleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Implementations/ArticleService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Implementations/AuthorService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Implementations/AuthorService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Implementations/ImageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Implementations/ImageService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interfaces/IArticleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/IArticleService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectName.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectName.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/UpdateImageDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/UpdateImageDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ProjectName.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ProjectName.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/ref/ProjectName.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/obj/ProjectName.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
@@ -67,28 +73,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.ProjectName.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.ProjectName.executor": "Run",
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/dagnikos/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/dagnikos/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
-      &quot;/Users/dagnikos/Library/Application Support/Symbols/src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/Users/dagnikos/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
+      "/Users/dagnikos/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
+      "/Users/dagnikos/Library/Application Support/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="ProjectName" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ProjectName.csproj" />
@@ -133,7 +139,7 @@
       <workItem from="1721631015848" duration="12845000" />
       <workItem from="1721669998501" duration="8413000" />
       <workItem from="1721734895748" duration="4286000" />
-      <workItem from="1721804361856" duration="29165000" />
+      <workItem from="1721804361856" duration="30764000" />
     </task>
     <task id="LOCAL-00001" summary="push program.cs and appsettings json">
       <option name="closed" value="true" />
@@ -193,5 +199,115 @@
     <MESSAGE value="program.cs and appsettings" />
     <MESSAGE value="appsetings" />
     <option name="LAST_COMMIT_MESSAGE" value="appsetings" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>41</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="1689" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1754" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>49</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="2062" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2108" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>56</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="2456" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2529" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>62</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="2696" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2731" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>81</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="3598" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3617" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>89</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="3872" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3893" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>42</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="1767" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1826" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
+          <line>45</line>
+          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
+            <startOffsets>
+              <option value="1889" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1954" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

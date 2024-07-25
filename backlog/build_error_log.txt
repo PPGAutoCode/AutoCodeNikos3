@@ -1,1 +1,6 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/ImageController.cs(37,40): error CS0246: The type or namespace name 'ImageDto' could not be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(102,41): error CS1061: 'UpdateImageDto' does not contain a definition for 'ChangedUser' and no accessible extension method 'ChangedUser' accepting a first argument of type 'UpdateImageDto' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(178,21): error CS0117: 'CreateImageDto' does not contain a definition for 'CreatorId'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(178,41): error CS1061: 'UpdateImageDto' does not contain a definition for 'ChangedUser' and no accessible extension method 'ChangedUser' accepting a first argument of type 'UpdateImageDto' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ImageService.cs(38,37): error CS1061: 'CreateImageDto' does not contain a definition for 'CreatorId' and no accessible extension method 'CreatorId' accepting a first argument of type 'CreateImageDto' could be found (are you missing a using directive or an assembly reference?)
+Error: 5 Error(s)

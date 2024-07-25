@@ -67,7 +67,7 @@ namespace ProjectName.Services
                 var image = await _dbConnection.QuerySingleOrDefaultAsync<Image>(sql, new { request.Id });
                 if (image == null)
                 {
-                    throw new TechnicalException("DP-404", "Technical Error");
+                    throw new TechnicalException("DP-404", "Technical Error Create Image");
                 }
                 return image;
             }

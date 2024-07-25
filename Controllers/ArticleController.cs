@@ -18,15 +18,15 @@ namespace ProjectName.Controllers
             _articleService = articleService;
         }
 
-        // [HttpPost("create")]
-        // public async Task<IActionResult> CreateArticle([FromBody] Request<CreateArticleDto> request)
-        // {
-        //     return await SafeExecutor.ExecuteAsync(async () =>
-        //     {
-        //         var result = await _articleService.CreateArticle(request.Payload);
-        //         return Ok(new Response<string> { Payload = result });
-        //     });
-        // }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateArticle([FromBody] Request<CreateArticleDto> request)
+        {
+            return await SafeExecutor.ExecuteAsync(async () =>
+            {
+                var result = await _articleService.CreateArticle(request.Payload);
+                return Ok(new Response<string> { Payload = result });
+            });
+        }
         
         // [HttpPost("get")]
         // public async Task<IActionResult> GetArticle([FromBody] Request<ArticleRequestDto> request)
