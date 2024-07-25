@@ -162,9 +162,12 @@ public class AuthorService : IAuthorService
             throw new BusinessException("DP-422", "Client Error");
         }
 
+        var sortField = request.SortField ?? "Id";
+        var sortOrder = request.SortOrder ?? "asc";
+
         var authors = await _dbConnection.QueryAsync<Author>(
-            "SELECT * FROM Authors ORDER BY @SortField @SortOrder OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY",
-            new { request.SortField, request.SortOrder, request.PageOffset, request.PageLimit });
+            $"SELECT * FROM Authors ORDER BY {sortField} {sortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY",
+            new { request.PageOffset, request.PageLimit });
 
         var authorDtos = new List<AuthorDto>();
         foreach (var author in authors)
