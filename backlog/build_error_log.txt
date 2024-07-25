@@ -1,4 +1,7 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/ArticleController.cs(36,52): error CS1061: 'IArticleService' does not contain a definition for 'GetArticle' and no accessible extension method 'GetArticle' accepting a first argument of type 'IArticleService' could be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(105,37): error CS1061: 'IImageService' does not contain a definition for 'HandleImage' and no accessible extension method 'HandleImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
-Error: 3 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/Attachment.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'Attachment'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/AttachmentRequestDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'AttachmentRequestDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/CreateAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'CreateAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/DeleteAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'DeleteAttachmentDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/ListAttachmentRequestDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'ListAttachmentRequestDto'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/UpdateAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'UpdateAttachmentDto'
+Error: 6 Error(s)
