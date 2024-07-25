@@ -46,9 +46,9 @@ public class AuthorService : IAuthorService
                 "INSERT INTO Authors (Id, Name, Image, Details) VALUES (@Id, @Name, @Image, @Details)",
                 author);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw new TechnicalException("DP-500", "Technical Error");
+            throw new TechnicalException("DP-500", "Technical Error Author" + ex.Message);
         }
 
         return author.Id.ToString();

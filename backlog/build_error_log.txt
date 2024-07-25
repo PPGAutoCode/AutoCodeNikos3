@@ -1,2 +1,1 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
-Error: 1 Error(s)
+Error: 0 Error(s)

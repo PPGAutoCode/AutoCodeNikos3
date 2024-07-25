@@ -5,7 +5,7 @@ namespace ProjectName.Types
     {
         public Guid? Id { get; set; }
         public string? ImageName { get; set; }
-        public string ImageFile { get; set; }
+        public string? ImageFile { get; set; }
         public string? AltText { get; set; }
         public Guid ChangedUser { get; set; }
     }

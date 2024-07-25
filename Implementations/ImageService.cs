@@ -47,9 +47,9 @@ namespace ProjectName.Services
                 await _dbConnection.ExecuteAsync(sql, image);
                 return image.Id.ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new TechnicalException("DP-500", "Technical Error");
+                throw new TechnicalException("DP-500", "Technical Error CreateImage" +ex.Message);
             }
         }
 
@@ -111,9 +111,9 @@ namespace ProjectName.Services
                 await _dbConnection.ExecuteAsync(sql, image);
                 return image.Id.ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new TechnicalException("DP-500", "Technical Error");
+                throw new TechnicalException("DP-500", "Technical Error UpdateImage" + ex.Message);
             }
         }
 
@@ -137,9 +137,9 @@ namespace ProjectName.Services
                 await _dbConnection.ExecuteAsync(sql, new { request.Id });
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new TechnicalException("DP-500", "Technical Error");
+                throw new TechnicalException("DP-500", "Technical Error DeleteImage"+ ex.Message);
             }
         }
 
