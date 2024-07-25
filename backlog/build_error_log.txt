@@ -1,3 +1,5 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AuthorController.cs(15,39): error CS0723: Cannot declare a variable of static type 'SafeExecutor'
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AuthorController.cs(17,16): error CS0721: 'SafeExecutor': static types cannot be used as parameters
-Error: 2 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(14,26): error CS0246: The type or namespace name 'IAnotherService' could not be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(16,34): error CS0246: The type or namespace name 'IAnotherService' could not be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(22,75): error CS0246: The type or namespace name 'CreateAnotherDto' could not be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AnotherController.cs(32,72): error CS0246: The type or namespace name 'AnotherRequestDto' could not be found (are you missing a using directive or an assembly reference?)
+Error: 4 Error(s)

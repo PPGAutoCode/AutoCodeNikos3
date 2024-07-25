@@ -12,18 +12,16 @@ namespace ProjectName.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
-        private readonly SafeExecutor _safeExecutor;
 
-        public AuthorController(IAuthorService authorService, SafeExecutor safeExecutor)
+        public AuthorController(IAuthorService authorService)
         {
             _authorService = authorService;
-            _safeExecutor = safeExecutor;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateAuthor([FromBody] Request<CreateAuthorDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.CreateAuthor(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -33,7 +31,7 @@ namespace ProjectName.Controllers
         [HttpPost("get")]
         public async Task<IActionResult> GetAuthor([FromBody] Request<AuthorRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.GetAuthor(request.Payload);
                 return Ok(new Response<AuthorDto> { Payload = result });
@@ -43,7 +41,7 @@ namespace ProjectName.Controllers
         [HttpPost("update")]
         public async Task<IActionResult> UpdateAuthor([FromBody] Request<UpdateAuthorDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.UpdateAuthor(request.Payload);
                 return Ok(new Response<string> { Payload = result });
@@ -53,7 +51,7 @@ namespace ProjectName.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteAuthor([FromBody] Request<DeleteAuthorDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.DeleteAuthor(request.Payload);
                 return Ok(new Response<bool> { Payload = result });
@@ -63,7 +61,7 @@ namespace ProjectName.Controllers
         [HttpPost("list")]
         public async Task<IActionResult> GetListAuthor([FromBody] Request<ListAuthorRequestDto> request)
         {
-            return await _safeExecutor.ExecuteAsync(async () =>
+            return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.GetListAuthor(request.Payload);
                 return Ok(new Response<List<Author>> { Payload = result });
