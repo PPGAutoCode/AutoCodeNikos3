@@ -2,191 +2,185 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using ProjectName.Types;
 using ProjectName.Interfaces;
+using ProjectName.Types;
 using ProjectName.ControllersExceptions;
 
-public class AttachmentService : IAttachmentService
+namespace ProjectName.Implementation
 {
-    private readonly IDbConnection _dbConnection;
-
-    public AttachmentService(IDbConnection dbConnection)
+    public class AttachmentService : IAttachmentService
     {
-        _dbConnection = dbConnection;
-    }
+        private readonly IDbConnection _dbConnection;
 
-    public async Task<string> CreateAttachment(CreateAttachmentDto request)
-    {
-        if (string.IsNullOrEmpty(request.FileName) || request.FileUrl == null || string.IsNullOrEmpty(request.FilePath))
+        public AttachmentService(IDbConnection dbConnection)
         {
-            throw new BusinessException("DP-422", "Client Error");
+            _dbConnection = dbConnection;
         }
 
-        var attachment = new Attachment
+        public async Task<string> CreateAttachment(CreateAttachmentDto request)
         {
-            Id = Guid.NewGuid(),
-            FileName = request.FileName,
-            FileUrl = request.FileUrl,
-            FilePath = request.FilePath,
-            Timestamp = DateTime.UtcNow
-        };
-
-        const string sql = "INSERT INTO Attachments (Id, FileName, FileUrl, FilePath, Timestamp) VALUES (@Id, @FileName, @FileUrl, @FilePath, @Timestamp)";
-        var affectedRows = await _dbConnection.ExecuteAsync(sql, attachment);
-
-        if (affectedRows > 0)
-        {
-            return attachment.Id.ToString();
-        }
-        else
-        {
-            throw new TechnicalException("DP-500", "Technical Error");
-        }
-    }
-
-    public async Task<Attachment> GetAttachment(AttachmentRequestDto request)
-    {
-        if (request.Id == null)
-        {
-            throw new BusinessException("DP-422", "Client Error");
-        }
-
-        const string sql = "SELECT * FROM Attachments WHERE Id = @Id";
-        var attachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(sql, new { Id = request.Id });
-
-        if (attachment != null)
-        {
-            return attachment;
-        }
-        else
-        {
-            throw new TechnicalException("DP-404", "Technical Error");
-        }
-    }
-
-    public async Task<string> UpdateAttachment(UpdateAttachmentDto request)
-    {
-        if (request.Id == null || string.IsNullOrEmpty(request.FileName) || request.FileUrl == null || string.IsNullOrEmpty(request.FilePath))
-        {
-            throw new BusinessException("DP-422", "Client Error");
-        }
-
-        const string selectSql = "SELECT * FROM Attachments WHERE Id = @Id";
-        var existingAttachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(selectSql, new { Id = request.Id });
-
-        if (existingAttachment == null)
-        {
-            throw new TechnicalException("DP-404", "Technical Error");
-        }
-
-        existingAttachment.FileName = request.FileName;
-        existingAttachment.FileUrl = request.FileUrl;
-        existingAttachment.FilePath = request.FilePath;
-        existingAttachment.Timestamp = DateTime.UtcNow;
-
-        const string updateSql = "UPDATE Attachments SET FileName = @FileName, FileUrl = @FileUrl, FilePath = @FilePath, Timestamp = @Timestamp WHERE Id = @Id";
-        var affectedRows = await _dbConnection.ExecuteAsync(updateSql, existingAttachment);
-
-        if (affectedRows > 0)
-        {
-            return existingAttachment.Id.ToString();
-        }
-        else
-        {
-            throw new TechnicalException("DP-500", "Technical Error");
-        }
-    }
-
-    public async Task<bool> DeleteAttachment(DeleteAttachmentDto request)
-    {
-        if (request.Id == null)
-        {
-            throw new BusinessException("DP-422", "Client Error");
-        }
-
-        const string selectSql = "SELECT * FROM Attachments WHERE Id = @Id";
-        var existingAttachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(selectSql, new { Id = request.Id });
-
-        if (existingAttachment == null)
-        {
-            throw new TechnicalException("DP-404", "Technical Error");
-        }
-
-        const string deleteSql = "DELETE FROM Attachments WHERE Id = @Id";
-        var affectedRows = await _dbConnection.ExecuteAsync(deleteSql, new { Id = request.Id });
-
-        if (affectedRows > 0)
-        {
-            return true;
-        }
-        else
-        {
-            throw new TechnicalException("DP-500", "Technical Error");
-        }
-    }
-
-    public async Task<List<Attachment>> GetListAttachment(ListAttachmentRequestDto request)
-    {
-        if (request.PageLimit <= 0 || request.PageOffset < 0)
-        {
-            throw new BusinessException("DP-422", "Client Error");
-        }
-
-        var sortField = string.IsNullOrEmpty(request.SortField) ? "Id" : request.SortField;
-        var sortOrder = string.IsNullOrEmpty(request.SortOrder) ? "asc" : request.SortOrder;
-
-        var sql = $"SELECT * FROM Attachments ORDER BY {sortField} {sortOrder} OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
-        var attachments = await _dbConnection.QueryAsync<Attachment>(sql, new { Offset = request.PageOffset, Limit = request.PageLimit });
-
-        return attachments.ToList();
-    }
-
-    public async Task HandleAttachment(CreateAttachmentDto newAttachment, Guid? existingAttachmentId, Action<Guid?> updateAttachmentFieldId)
-    {
-        if (newAttachment != null)
-        {
-            if (existingAttachmentId != null)
+            if (string.IsNullOrEmpty(request.FileName) || string.IsNullOrEmpty(request.File))
             {
-                var existingAttachment = await GetAttachment(new AttachmentRequestDto { Id = existingAttachmentId });
-                if (existingAttachment != null && existingAttachment.FilePath != newAttachment.FilePath)
-                {
-                    await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-                }
+                throw new BusinessException("DP-422", "FileName and File cannot be null.");
             }
 
-            var newAttachmentId = Guid.Parse(await CreateAttachment(newAttachment));
-            updateAttachmentFieldId(newAttachmentId);
-        }
-        else if (existingAttachmentId != null)
-        {
-            await DeleteAttachment(new DeleteAttachmentDto { Id = existingAttachmentId });
-            updateAttachmentFieldId(null);
-        }
-    }
-
-    public async Task<Attachment> UploadAttachment(CreateAttachmentDto? newAttachment)
-    {
-        if (newAttachment != null)
-        {
-            const string checkSql = "SELECT * FROM Attachments WHERE FilePath = @FilePath";
-            var existingAttachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(checkSql, new { FilePath = newAttachment.FilePath });
-
-            if (existingAttachment != null)
+            var attachment = new Attachment
             {
-                return existingAttachment;
+                Id = Guid.NewGuid(),
+                FileName = request.FileName,
+                File = request.File,
+                Timestamp = DateTime.UtcNow
+            };
+
+            var query = "INSERT INTO Attachments (Id, FileName, File, Timestamp) VALUES (@Id, @FileName, @File, @Timestamp)";
+
+            var result = await _dbConnection.ExecuteAsync(query, attachment);
+
+            if (result > 0)
+            {
+                return attachment.Id.ToString();
             }
             else
             {
-                var newAttachmentId = await CreateAttachment(newAttachment);
-                return await GetAttachment(new AttachmentRequestDto { Id = Guid.Parse(newAttachmentId) });
+                throw new TechnicalException("DP-500", "Failed to create attachment.");
             }
         }
-        else
+
+        public async Task<File> GetAttachment(AttachmentRequestDto request)
         {
-            return null;
+            if (request.Id == Guid.Empty)
+            {
+                throw new BusinessException("DP-422", "Id cannot be null.");
+            }
+
+            var query = "SELECT * FROM Attachments WHERE Id = @Id";
+            var attachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(query, new { Id = request.Id });
+
+            if (attachment == null)
+            {
+                throw new TechnicalException("DP-404", "Attachment not found.");
+            }
+
+            return attachment.File;
+        }
+
+        public async Task<string> UpdateAttachment(UpdateAttachmentDto request)
+        {
+            if (request.Id == Guid.Empty)
+            {
+                throw new BusinessException("DP-422", "Id cannot be null.");
+            }
+
+            var query = "SELECT * FROM Attachments WHERE Id = @Id";
+            var attachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(query, new { Id = request.Id });
+
+            if (attachment == null)
+            {
+                throw new TechnicalException("DP-404", "Attachment not found.");
+            }
+
+            if (!string.IsNullOrEmpty(request.FileName))
+            {
+                attachment.FileName = request.FileName;
+            }
+
+            if (!string.IsNullOrEmpty(request.File))
+            {
+                attachment.File = request.File;
+            }
+
+            attachment.Timestamp = DateTime.UtcNow;
+
+            var updateQuery = "UPDATE Attachments SET FileName = @FileName, File = @File, Timestamp = @Timestamp WHERE Id = @Id";
+            var result = await _dbConnection.ExecuteAsync(updateQuery, attachment);
+
+            if (result > 0)
+            {
+                return attachment.Id.ToString();
+            }
+            else
+            {
+                throw new TechnicalException("DP-500", "Failed to update attachment.");
+            }
+        }
+
+        public async Task<bool> DeleteAttachment(DeleteAttachmentDto request)
+        {
+            if (request.Id == Guid.Empty)
+            {
+                throw new BusinessException("DP-422", "Id cannot be null.");
+            }
+
+            var query = "SELECT * FROM Attachments WHERE Id = @Id";
+            var attachment = await _dbConnection.QuerySingleOrDefaultAsync<Attachment>(query, new { Id = request.Id });
+
+            if (attachment == null)
+            {
+                throw new TechnicalException("DP-404", "Attachment not found.");
+            }
+
+            var deleteQuery = "DELETE FROM Attachments WHERE Id = @Id";
+            var result = await _dbConnection.ExecuteAsync(deleteQuery, new { Id = request.Id });
+
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                throw new TechnicalException("DP-500", "Failed to delete attachment.");
+            }
+        }
+
+        public async Task<List<Attachment>> GetListAttachment(ListAttachmentRequestDto request)
+        {
+            if (request.PageLimit <= 0 || request.PageOffset < 0)
+            {
+                throw new BusinessException("DP-422", "PageLimit must be greater than 0 and PageOffset cannot be negative.");
+            }
+
+            if (string.IsNullOrEmpty(request.SortField))
+            {
+                request.SortField = "Id";
+            }
+
+            if (string.IsNullOrEmpty(request.SortOrder))
+            {
+                request.SortOrder = "asc";
+            }
+
+            var query = $"SELECT * FROM Attachments ORDER BY {request.SortField} {request.SortOrder} OFFSET @PageOffset ROWS FETCH NEXT @PageLimit ROWS ONLY";
+            var attachments = await _dbConnection.QueryAsync<Attachment>(query, new { PageOffset = request.PageOffset, PageLimit = request.PageLimit });
+
+            return attachments.AsList();
+        }
+
+        public async Task<string> UpsertAttachment(UpdateAttachmentDto request)
+        {
+            if (request.Id == Guid.Empty)
+            {
+                var createAttachmentDto = new CreateAttachmentDto
+                {
+                    FileName = request.FileName,
+                    File = request.File
+                };
+                return await CreateAttachment(createAttachmentDto);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(request.FileName) || !string.IsNullOrEmpty(request.File))
+                {
+                    return await UpdateAttachment(request);
+                }
+                else
+                {
+                    var deleteRequest = new DeleteAttachmentDto { Id = request.Id };
+                    await DeleteAttachment(deleteRequest);
+                    return request.Id.ToString();
+                }
+            }
         }
     }
 }

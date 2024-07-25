@@ -5,7 +5,6 @@ namespace ProjectName.Types
     {
         public Guid? Id { get; set; }
         public string? FileName { get; set; }
-        public byte[]? FileUrl { get; set; }
-        public string? FilePath { get; set; }
+        public string File { get; set; }
     }
 }

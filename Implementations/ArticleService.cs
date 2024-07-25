@@ -56,7 +56,7 @@ namespace ProjectName.Services
             }
 
             // Step 5: Fetch and Map Author
-            var authorRequestDto = new AuthorRequestDto { Id = articleDto.Author };
+            var authorRequestDto = new AuthorRequestDto { Id = articleDto.AuthorId };
             var author = await _authorService.GetAuthor(authorRequestDto);
             if (author == null)
             {
@@ -65,9 +65,9 @@ namespace ProjectName.Services
 
             // Step 6: Fetch and Map Attachment
             Attachment attachment = null;
-            if (articleDto.Pdf != null)
+            if (articleDto.PdfId != null)
             {
-                var attachmentRequestDto = new AttachmentRequestDto { Id = articleDto.Pdf };
+                var attachmentRequestDto = new AttachmentRequestDto { Id = articleDto.PdfId };
                 attachment = await _attachmentService.GetAttachment(attachmentRequestDto);
                 if (attachment == null)
                 {
@@ -77,9 +77,9 @@ namespace ProjectName.Services
 
             // Step 7: Fetch and Map Image
             Image image = null;
-            if (articleDto.Image != null)
+            if (articleDto.ImageId != null)
             {
-                var imageRequestDto = new ImageRequestDto { Id = articleDto.Image };
+                var imageRequestDto = new ImageRequestDto { Id = articleDto.ImageId };
                 image = await _imageService.GetImage(imageRequestDto);
                 if (image == null)
                 {

@@ -1,2 +1,5 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(14,35): error CS0535: 'ArticleService' does not implement interface member 'IArticleService.CreateArticle(CreateArticleDto)'
-Error: 1 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AttachmentController.cs(15,39): error CS0723: Cannot declare a variable of static type 'SafeExecutor'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Controllers/AttachmentController.cs(17,16): error CS0721: 'SafeExecutor': static types cannot be used as parameters
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(13,38): error CS0738: 'AttachmentService' does not implement interface member 'IAttachmentService.GetAttachment(AttachmentRequestDto)'. 'AttachmentService.GetAttachment(AttachmentRequestDto)' cannot implement 'IAttachmentService.GetAttachment(AttachmentRequestDto)' because it does not have the matching return type of 'Task<Attachment>'.
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(51,33): error CS0718: 'File': static types cannot be used as type arguments
+Error: 4 Error(s)
