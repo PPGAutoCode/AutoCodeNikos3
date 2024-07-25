@@ -33,7 +33,7 @@ namespace ProjectName.Services
         public async Task<string> CreateArticle(CreateArticleDto request)
         {
             // Step 1: Validate the request payload
-            if (string.IsNullOrEmpty(request.Title) || request.Author == Guid.Empty || string.IsNullOrEmpty(request.Langcode) || request.BlogCategories == null || !request.BlogCategories.Any())
+            if (request.Title == null || request.Author == Guid.Empty || request.HideScrollSpy == null || request.Langcode == null || request.Status == null || request.Sticky == null || request.Promote == null || request.BlogCategories == null || !request.BlogCategories.Any())
             {
                 throw new BusinessException("DP-422", "Client Error");
             }
@@ -43,7 +43,7 @@ namespace ProjectName.Services
             var author = await _authorService.GetAuthor(authorRequest);
             if (author == null)
             {
-                throw new BusinessException("DP-404", "Technical Error");
+                throw new BusinessException("DP-422", "Client Error");
             }
 
             // Step 3: Get the BlogCategories from request.BlogCategories
@@ -74,7 +74,8 @@ namespace ProjectName.Services
                     {
                         var createBlogTagDto = new CreateBlogTagDto { Name = tagName };
                         var newBlogTagId = await _blogTagService.CreateBlogTag(createBlogTagDto);
-                        var newBlogTag = await _blogTagService.GetBlogTag(new BlogTagRequestDto { Id = Guid.Parse(newBlogTagId) });
+                        var newBlogTagRequest = new BlogTagRequestDto { Id = Guid.Parse(newBlogTagId) };
+                        var newBlogTag = await _blogTagService.GetBlogTag(newBlogTagRequest);
                         if (newBlogTag != null)
                         {
                             blogTags.Add(newBlogTag);
@@ -106,13 +107,13 @@ namespace ProjectName.Services
                 Summary = request.Summary,
                 Body = request.Body,
                 GoogleDriveId = request.GoogleDriveId,
-                HideScrollSpy = request.HideScrollSpy,
+                HideScrollSpy = request.HideScrollSpy.Value,
                 Image = image,
                 PDF = pdf,
                 Langcode = request.Langcode,
-                Status = request.Status,
-                Sticky = request.Sticky,
-                Promote = request.Promote,
+                Status = request.Status.Value,
+                Sticky = request.Sticky.Value,
+                Promote = request.Promote.Value,
                 Version = 1,
                 Created = DateTime.UtcNow,
                 CreatorId = request.CreatorId

@@ -11,7 +11,7 @@ namespace ProjectName.Types
         public string? GoogleDriveId { get; set; }
         public bool HideScrollSpy { get; set; }
         public Image? Image { get; set; }
-        public Attachment? PDF { get; set; }
+        public Attachment? Pdf { get; set; }
         public string Langcode { get; set; }
         public bool Status { get; set; }
         public bool Sticky { get; set; }
