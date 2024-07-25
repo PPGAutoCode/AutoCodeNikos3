@@ -1,9 +1,8 @@
 #Path: Author
 #File: Authors.sql
-
 CREATE TABLE Authors (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Name NVARCHAR(200) NOT NULL,
-    Image UNIQUEIDENTIFIER NULL,
-    Information NVARCHAR(MAX) NULL
+    Id uniqueidentifier PRIMARY KEY,
+    Name nvarchar(200) NOT NULL,
+    Image uniqueidentifier NULL,
+    Details nvarchar(max) NULL
 );
