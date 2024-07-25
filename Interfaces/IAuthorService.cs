@@ -42,7 +42,7 @@ namespace ProjectName.Interfaces
         /// Retrieves a list of authors based on the provided request data.
         /// </summary>
         /// <param name="listAuthorRequestDto">Data transfer object containing request information for retrieving a list of authors.</param>
-        /// <returns>A list of Author objects.</returns>
-        Task<List<Author>> GetListAuthor(ListAuthorRequestDto listAuthorRequestDto);
+        /// <returns>A list of AuthorDto objects representing the retrieved authors.</returns>
+        Task<List<AuthorDto>> GetListAuthor(ListAuthorRequestDto listAuthorRequestDto);
     }
 }
