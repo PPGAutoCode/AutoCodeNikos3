@@ -7,7 +7,7 @@ namespace ProjectName.Types
         public string ApiName { get; set; }
         public string? ApiScope { get; set; }
         public string? ApiScopeProduction { get; set; }
-        public List<_ApiTag_>? ApiTags { get; set; }
+        public List<ApiTag>? ApiTags { get; set; }
         public bool Deprecated { get; set; }
         public string? Description { get; set; }
         public Guid? Documentation { get; set; }
