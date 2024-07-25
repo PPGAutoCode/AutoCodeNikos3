@@ -1,1 +1,3 @@
-Error: 0 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(105,17): error CS0117: 'Article' does not contain a definition for 'PDF'
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(149,41): error CS1061: 'Article' does not contain a definition for 'PDF' and no accessible extension method 'PDF' accepting a first argument of type 'Article' could be found (are you missing a using directive or an assembly reference?)
+Error: 2 Error(s)
