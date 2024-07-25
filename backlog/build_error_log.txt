@@ -1,2 +1,3 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(13,38): error CS0535: 'AttachmentService' does not implement interface member 'IAttachmentService.UpsertAttachment(UpdateAttachmentDto, Attachment)'
-Error: 1 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(105,37): error CS1061: 'IImageService' does not contain a definition for 'HandleImage' and no accessible extension method 'HandleImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
+Error: 2 Error(s)
