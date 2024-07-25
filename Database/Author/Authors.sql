@@ -1,5 +1,4 @@
-#Path: Author
-#File: Authors.sql
+
 CREATE TABLE Authors (
     Id uniqueidentifier PRIMARY KEY,
     Name nvarchar(200) NOT NULL,
