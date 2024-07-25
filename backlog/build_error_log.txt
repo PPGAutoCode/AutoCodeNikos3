@@ -1,3 +1,2 @@
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/ArticleService.cs(92,45): error CS1061: 'IImageService' does not contain a definition for 'UploadImage' and no accessible extension method 'UploadImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
-Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(105,37): error CS1061: 'IImageService' does not contain a definition for 'HandleImage' and no accessible extension method 'HandleImage' accepting a first argument of type 'IImageService' could be found (are you missing a using directive or an assembly reference?)
-Error: 2 Error(s)
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AuthorService.cs(12,34): error CS0738: 'AuthorService' does not implement interface member 'IAuthorService.GetAuthor(AuthorRequestDto)'. 'AuthorService.GetAuthor(AuthorRequestDto)' cannot implement 'IAuthorService.GetAuthor(AuthorRequestDto)' because it does not have the matching return type of 'Task<Author>'.
+Error: 1 Error(s)
