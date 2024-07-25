@@ -1,7 +1,8 @@
+Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/AttachmentService.cs(13,38): error CS0535: 'AttachmentService' does not implement interface member 'IAttachmentService.UpsertAttachment(UpdateAttachmentDto, Attachment)'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/Attachment.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'Attachment'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/AttachmentRequestDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'AttachmentRequestDto'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/CreateAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'CreateAttachmentDto'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/DeleteAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'DeleteAttachmentDto'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Types/ListAttachmentRequestDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'ListAttachmentRequestDto'
 Error: /Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/UpdateAttachmentDto.cs(4,18): error CS0101: The namespace 'ProjectName.Types' already contains a definition for 'UpdateAttachmentDto'
-Error: 6 Error(s)
+Error: 7 Error(s)
