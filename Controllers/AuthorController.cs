@@ -64,7 +64,7 @@ namespace ProjectName.Controllers
             return await SafeExecutor.ExecuteAsync(async () =>
             {
                 var result = await _authorService.GetListAuthor(request.Payload);
-                return Ok(new Response<List<Author>> { Payload = result });
+                return Ok(new Response<List<AuthorDto>> { Payload = result });
             });
         }
     }
