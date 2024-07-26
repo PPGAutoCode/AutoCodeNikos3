@@ -51,6 +51,7 @@
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Implementations/APIEndpointService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Implementations/AuthorService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/appsettings.Development.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/dagnikos/Projects/AutoCode/tempcode/ProjectName/bin/Debug/net6.0/appsettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -61,7 +62,7 @@
 }</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="Toolset" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -74,7 +75,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.ProjectName.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.ProjectName.executor&quot;: &quot;Run&quot;,
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -207,128 +208,5 @@
     <MESSAGE value="appsetings" />
     <MESSAGE value="program cs" />
     <option name="LAST_COMMIT_MESSAGE" value="program cs" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>41</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="1689" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1754" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>49</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="2062" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2108" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>56</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="2456" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2529" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>62</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="2696" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2731" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>81</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="3598" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3617" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>89</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="3872" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3893" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>42</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="1767" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1826" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/ArticleService.cs</url>
-          <line>45</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/ArticleService.cs" containingFunctionPresentation="Method 'CreateArticle'">
-            <startOffsets>
-              <option value="1889" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1954" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Implementations/AuthorService.cs</url>
-          <line>158</line>
-          <properties documentPath="$PROJECT_DIR$/Implementations/AuthorService.cs" containingFunctionPresentation="Method 'GetListAuthor'">
-            <startOffsets>
-              <option value="4495" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4496" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
